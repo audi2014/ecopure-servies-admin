@@ -4,7 +4,7 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
-import {PlanInNetwork_Title, RoomType_Title} from "../../constants/Enum";
+import {Plan_HasInitial, PLAN_OCCASIONAL, PLAN_OVER_60_DAYS, Plan_Title, RoomType_Title} from "../../constants/Enum";
 import {inNetwork_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {CancelButton, MoneyInput, SubmitButton} from "../../Base/BaseInput";
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 // const EditableCell = () => "EditableCell"
-const EditableCell = ({edition, setEdition, update, room_type, plan, building_id,classes}) => {
+const EditableCell = ({edition, setEdition, update, room_type, plan, building_id, classes, disabled, hasInitial}) => {
 
 
     const [dollars, setDollars] = React.useState(edition.cents ? (edition.cents / 100).toFixed(2) : 0);
@@ -42,7 +42,7 @@ const EditableCell = ({edition, setEdition, update, room_type, plan, building_id
             e.preventDefault();
             const data = {
                 cents: Math.round(dollars * 100) || 0,
-                centsInitial: Math.round(dollarsInitial * 100) || 0,
+                centsInitial: hasInitial ? (Math.round(dollarsInitial * 100) || 0) : 0,
                 room_type,
                 plan,
                 building_id
@@ -50,7 +50,11 @@ const EditableCell = ({edition, setEdition, update, room_type, plan, building_id
             update(data);
         }}>
             <MoneyInput label={'price'} setValue={setDollars} value={dollars}/>
-            <MoneyInput label={'initial'} setValue={setDollarsInitial} value={dollarsInitial}/>
+            {
+                hasInitial
+                    ? <MoneyInput label={'initial'} setValue={setDollarsInitial} value={dollarsInitial}/>
+                    : null
+            }
             <CancelButton onClick={onCancelClick}/>
             <SubmitButton/>
         </form>
@@ -58,7 +62,8 @@ const EditableCell = ({edition, setEdition, update, room_type, plan, building_id
     </TableCell>
 };
 
-const Cell = ({items, room_type, plan, classes, setEdition, building_id}) => {
+const Cell = ({items, room_type, plan, classes, setEdition, building_id, disabled, hasInitial}) => {
+    if (disabled) return <TableCell/>;
     let cents = 0;
     let centsInitial = 0;
     items = items.filter(item => item.room_type === room_type && item.plan === plan);
@@ -71,14 +76,25 @@ const Cell = ({items, room_type, plan, classes, setEdition, building_id}) => {
     }
     const onClick = () => building_id ? setEdition({room_type, plan, cents, centsInitial, building_id}) : null;
 
+
     return <TableCell className={classes.cell} onClick={onClick}>
         <span>{cents ? '$' + (cents / 100).toFixed(2) : '-'}</span>
-        /
-        <span>{centsInitial ? '$' + (centsInitial / 100).toFixed(2) : '-'}</span>
+        {hasInitial ?
+            <span>/{centsInitial ? '$' + (centsInitial / 100).toFixed(2) : '-'}</span>
+            : null
+        }
+
     </TableCell>
 }
 
 export const RoomTypePlanTable = (props) => {
+    const items = props.item.main || [];
+    const plan_count = Object.keys(Plan_Title)
+        .reduce((prev, plan) => {
+            prev[plan] = items.filter(i => i.plan === plan).length;
+            return prev;
+        }, {});
+
     const classes = useStyles();
     const [edition, setEdition] = React.useState({});
 
@@ -102,9 +118,13 @@ export const RoomTypePlanTable = (props) => {
             </TableHead>
             <TableBody>
 
-                {Object.keys(PlanInNetwork_Title).map(plan_key => <TableRow key={plan_key}>
-                    <TableCell component="th" scope="row">
-                        {PlanInNetwork_Title[plan_key]}
+                {Object.keys(Plan_Title).map(plan_key => <TableRow key={plan_key}>
+                    <TableCell
+                        component="th"
+                        scope="row"
+                        style={{textDecoration: plan_count[plan_key] === 0 ? 'line-through' : undefined}}
+                    >
+                        {Plan_Title[plan_key]}
                     </TableCell>
                     {Object.keys(RoomType_Title).map(roomType_key => (
                         edition.room_type === roomType_key && edition.plan === plan_key
@@ -118,15 +138,19 @@ export const RoomTypePlanTable = (props) => {
                             edition={edition}
                             building_id={props.selectedId}
                             update={update}
+                            disabled={plan_key === PLAN_OVER_60_DAYS && !plan_count[PLAN_OCCASIONAL]}
+                            hasInitial={Plan_HasInitial[plan_key]}
                         />)
                         : <Cell
                             classes={classes}
-                            items={props.item.main || []}
+                            items={items}
                             room_type={roomType_key}
                             plan={plan_key}
                             key={roomType_key}
                             setEdition={setEdition}
                             building_id={props.selectedId}
+                            disabled={plan_key === PLAN_OVER_60_DAYS && plan_count[PLAN_OCCASIONAL] === 0}
+                            hasInitial={Plan_HasInitial[plan_key]}
                         />)}
 
                 </TableRow>)}

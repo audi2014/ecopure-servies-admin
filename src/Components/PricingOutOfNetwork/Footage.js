@@ -4,7 +4,7 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
-import {Footage_Title, PlanOutNetwork_Title} from "../../constants/Enum";
+import {Footage_Title, Plan_Title} from "../../constants/Enum";
 import {outOfNetworkFootage_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {CancelButton, FloatInput, Select, SubmitButton} from "../../Base/BaseInput";
@@ -107,9 +107,9 @@ export const FootageTable = (props) => {
             </TableHead>
             <TableBody>
 
-                {Object.keys(PlanOutNetwork_Title).map(plan_key => <TableRow key={plan_key}>
+                {Object.keys(Plan_Title).map(plan_key => <TableRow key={plan_key}>
                     <TableCell component="th" scope="row">
-                        {PlanOutNetwork_Title[plan_key]}
+                        {Plan_Title[plan_key]}
                     </TableCell>
                     {Object.keys(Footage_Title).map(footage_key => (
                         edition.footage === footage_key && edition.plan === plan_key
