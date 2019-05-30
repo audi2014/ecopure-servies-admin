@@ -2,7 +2,6 @@ import React from 'react';
 import {BaseItem} from "../../Base/BaseItem";
 import FormLabel from "@material-ui/core/FormLabel/FormLabel";
 import {RoomTypePlanTable} from "./RoomTypePlanTable";
-import {Over1100} from "./Over1100";
 import BottomNavigation from "@material-ui/core/BottomNavigation/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction/BottomNavigationAction";
 import {RoutingConstants} from "../../constants/RoutingConstants";
@@ -27,7 +26,7 @@ const Navigation = ({location_id}) => <BottomNavigation showLabels>
     <BottomNavigationAction
         to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.addonPricing}`}
         component={Link}
-        label="Add-On Pricing"
+        label="Add-On's/Extra"
         icon={<AddOnIcon/>}
     />
 </BottomNavigation>;
@@ -39,7 +38,6 @@ export const PricingInNetwork = (props) => {
             (item, itemProps) => <div key={props.selectedId}>
                 <FormLabel>In-network Pricing "{listItem.address}"</FormLabel>
                 <RoomTypePlanTable item={item} {...itemProps} />
-                <Over1100 key={listItem.id+'-'+listItem.updated_at} listItem={listItem} item={item} {...itemProps}/>
                 <Navigation location_id={listItem.location_id}/>
             </div>
         }

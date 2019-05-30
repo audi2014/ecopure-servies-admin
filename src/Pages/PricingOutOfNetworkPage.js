@@ -1,8 +1,8 @@
 import React from 'react';
 import {LocationsList} from "../Components/Locations";
 import {
-    getLocations,
-    getPricing_OutOfNetwork_Footage_byLocationId, getPricing_OutOfNetwork_Stairs_byLocationId
+    locations_GetAll,
+    outOfNetworkFootage_GetByLocationId, outOfNetworkStairs_GetByLocationId
 } from "../api/Api";
 import {RoutingConstants} from "../constants/RoutingConstants";
 import {BasePage} from "../Base/BasePage";
@@ -14,10 +14,10 @@ export const PricingOutOfNetworkPage = (props) => {
         ...props,
         ListComponent: LocationsList,
         ItemComponent: PricingOutOfNetwork,
-        fetchItems: getLocations,
+        fetchItems: locations_GetAll,
         fetchById: (id) => Promise.all([
-            getPricing_OutOfNetwork_Footage_byLocationId(id),
-            getPricing_OutOfNetwork_Stairs_byLocationId(id),
+            outOfNetworkFootage_GetByLocationId(id),
+            outOfNetworkStairs_GetByLocationId(id),
         ]).then(array => {
             return {
                 footage: array[0],

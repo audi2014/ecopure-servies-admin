@@ -7,14 +7,23 @@ import CancelIcon from '@material-ui/icons/Close';
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import SaveIcon from '@material-ui/icons/Save';
 
-const valueOrMin = (v, min = null) => (Number.isFinite(min) && v < min) ? min : v;
+const valueOrMin = (value, min = null) => {
+    value = String(value).replace(',', '.');
+    const lastIsDot = value.lastIndexOf('.') === value.length - 1;
+    const parts = value.split('.');
+    let float = String(parts[0] || '') + (parts[1] ? '.' : '') + parts.slice(1).join('');
+    float = Number.parseFloat(float);
+    if (isNaN(float)) float = 0;
+    if (min !== null && float < min) float = min;
+    if (lastIsDot && parts.length === 2) float += '.';
+    return float;
+};
 
 export const MoneyInput = ({label = 'Price', value, setValue, className, min = 0, ...rest}) => <TextField
     {...rest}
     label={label}
     value={value}
-    onChange={e => setValue(valueOrMin(+e.target.value, min))}
-    type="number"
+    onChange={e => setValue(valueOrMin(e.target.value, min))}
     className={className}
     InputLabelProps={{
         shrink: true,
@@ -22,7 +31,9 @@ export const MoneyInput = ({label = 'Price', value, setValue, className, min = 0
     InputProps={{
         startAdornment: (<InputAdornment position="start"><MoneyIcon/></InputAdornment>),
     }}
-
+    inputProps={{
+        min: min,
+    }}
     margin="normal"
 />;
 
@@ -30,7 +41,7 @@ export const FloatInput = ({label, value, setValue, className, min = 0, ...rest}
     {...rest}
     label={label}
     value={value}
-    onChange={e => setValue(valueOrMin(+e.target.value, min))}
+    onChange={e => setValue(valueOrMin(e.target.value, min))}
     type="number"
     className={className}
     InputLabelProps={{

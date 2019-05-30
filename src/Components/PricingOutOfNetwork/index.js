@@ -25,7 +25,7 @@ const Navigation = ({selectedId}) => <BottomNavigation showLabels>
     <BottomNavigationAction
         to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.addonPricing}`}
         component={Link}
-        label="Add-On Pricing"
+        label="Add-On's/Extra"
         icon={<AddOnIcon/>}
     />
 </BottomNavigation>;
@@ -36,7 +36,7 @@ export const PricingOutOfNetwork = (props) => {
             (item, itemProps) => <div key={itemProps.selectedId}>
                 <FormLabel>Out-of-network Pricing
                     "{(props.items.find(v => +v.id === +props.selectedId) || {}).address}"</FormLabel>,
-                <FootageTable item={item} {...itemProps} />,
+                <FootageTable item={item} {...itemProps} />
                 <StairsTable item={item} {...itemProps} />
                 <Navigation selectedId={props.selectedId}/>
             </div>

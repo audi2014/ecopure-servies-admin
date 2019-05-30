@@ -1,7 +1,7 @@
 import React from 'react';
 import {LocationsList} from "../Components/Locations";
 import {
-    getLocations, getPricing_AddOn_byLocationId,
+    locations_GetAll, addOn_GetByLocationId,
 } from "../api/Api";
 import {RoutingConstants} from "../constants/RoutingConstants";
 import {BasePage} from "../Base/BasePage";
@@ -13,8 +13,8 @@ export const PricingAddOnPage = (props) => {
         ...props,
         ListComponent: LocationsList,
         ItemComponent: PricingAddOn,
-        fetchItems: getLocations,
-        fetchById: (id) => getPricing_AddOn_byLocationId(id),
+        fetchItems: locations_GetAll,
+        fetchById: (id) => addOn_GetByLocationId(id),
         renderListItemTitle: (item) => item.address,
         selectedId: props.match.params.id,
         renderListItemTo: (id) => `/${RoutingConstants.locations}/${id}/${RoutingConstants.addonPricing}`,

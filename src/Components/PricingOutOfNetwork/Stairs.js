@@ -4,7 +4,7 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
-import {insertPricing_OutOfNetwork_Stairs} from "../../api/Api";
+import {outOfNetworkStairs_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Stairs_Title} from "../../constants/Enum";
 import {CancelButton, MoneyInput, SubmitButton} from "../../Base/BaseInput";
@@ -73,7 +73,7 @@ export const StairsTable = (props) => {
 
     const update = (data) => {
         setEdition({...data, loading: true})
-        insertPricing_OutOfNetwork_Stairs(data)
+        outOfNetworkStairs_InsertByData(data)
             .then(r => props.reload())
             .then(r => {
                 setEdition({});

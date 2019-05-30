@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-    getBuildings,
-    getPricing_InNetwork_Stairs_byBuildingId,
+    buildings_GetAll,
+    inNetwork_GetByBuildingId,
 } from "../api/Api";
 import {RoutingConstants} from "../constants/RoutingConstants";
 import {BasePage} from "../Base/BasePage";
@@ -14,9 +14,9 @@ export const PricingInNetworkPage = (props) => {
         ...props,
         ListComponent: BuildingsList,
         ItemComponent: PricingInNetwork,
-        fetchItems: () => getBuildings(props.match.params.location_id),
+        fetchItems: () => buildings_GetAll(props.match.params.location_id),
         fetchById: (id) => Promise.all([
-            getPricing_InNetwork_Stairs_byBuildingId(id),
+            inNetwork_GetByBuildingId(id),
         ]).then(array => {
             return {
                 main: array[0],

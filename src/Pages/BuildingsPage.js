@@ -1,7 +1,7 @@
 import {BasePage} from "../Base/BasePage";
 import React from "react";
 import {BuildingsItem, BuildingsList} from "../Components/Buildings";
-import {getBuildingById, getBuildings} from "../api/Api";
+import {buildings_GetById, buildings_GetAll} from "../api/Api";
 import {RoutingConstants} from "../constants/RoutingConstants";
 import {BuildingIcon} from "../icons";
 
@@ -11,13 +11,13 @@ export const BuildingsPage = (props) => {
         ...props,
         ListComponent: BuildingsList,
         ItemComponent: BuildingsItem,
-        fetchItems: getBuildings,
-        fetchById: getBuildingById,
-        renderListItemTitle: (item)=>item.address,
+        fetchItems: buildings_GetAll,
+        fetchById: buildings_GetById,
+        renderListItemTitle: (item) => item.address,
         selectedId: props.match.params.id,
         renderListItemTo: (id) => `/${RoutingConstants.buildings}/${id}`,
-        itemTitle:"Edit building",
-        ListItemIcon:BuildingIcon
+        itemTitle: "Edit building",
+        ListItemIcon: BuildingIcon
     };
     return <BasePage{...p} />
 };

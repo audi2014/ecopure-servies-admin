@@ -5,7 +5,7 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import {Footage_Title, PlanOutNetwork_Title} from "../../constants/Enum";
-import {insertPricing_OutOfNetwork_Footage} from "../../api/Api";
+import {outOfNetworkFootage_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {CancelButton, FloatInput, Select, SubmitButton} from "../../Base/BaseInput";
 
@@ -88,7 +88,7 @@ export const FootageTable = (props) => {
 
     const update = (data) => {
         setEdition({...data, loading: true})
-        insertPricing_OutOfNetwork_Footage(data)
+        outOfNetworkFootage_InsertByData(data)
             .then(r => props.reload())
             .then(r => {
                 setEdition({});

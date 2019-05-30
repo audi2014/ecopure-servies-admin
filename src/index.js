@@ -16,19 +16,13 @@ import {PricingOutOfNetworkPage} from "./Pages/PricingOutOfNetworkPage";
 import {PricingInNetworkPage} from "./Pages/PricingInNetworkPage";
 import {PricingAddOnPage} from "./Pages/PricingAddOnPage";
 
-import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import primaryColor from '@material-ui/core/colors/lightGreen';
+import {Theme} from "./Theme";
 
-const theme = createMuiTheme({
-    palette: {
-        primary: primaryColor,
-        type: 'dark',
-    },
-});
+
 
 const App = () => {
-    return <ThemeProvider theme={theme}>
+    return <ThemeProvider theme={Theme}>
      <HashRouter>
         <AppBar position="static">
             <Toolbar>

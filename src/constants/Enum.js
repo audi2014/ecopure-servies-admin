@@ -48,6 +48,8 @@ export const AddOn_Title = {
     'WINDOWS': 'Windows',
     'CARPET_SHAMPOO': 'Carpet Shampoo',
     'LAUNDRY': 'Laundry',
+    'INSIDE_CABINETS' : 'Inside_cabinets',
+    'CLOSET_ORGANISATION':'Closet organisation',
 };
 export const AddOnValueType_Title = {
     'FIXED': 'Fixed',

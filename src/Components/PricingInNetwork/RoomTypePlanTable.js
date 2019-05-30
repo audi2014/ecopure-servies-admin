@@ -5,7 +5,7 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import {PlanInNetwork_Title, RoomType_Title} from "../../constants/Enum";
-import {insertPricing_InNetwork} from "../../api/Api";
+import {inNetwork_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {CancelButton, MoneyInput, SubmitButton} from "../../Base/BaseInput";
 
@@ -84,7 +84,7 @@ export const RoomTypePlanTable = (props) => {
 
     const update = (data) => {
         setEdition({...data, loading: true})
-        insertPricing_InNetwork(data)
+        inNetwork_InsertByData(data)
             .then(r => props.reload())
             .then(r => {
                 setEdition({});

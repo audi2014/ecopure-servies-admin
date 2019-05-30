@@ -6,9 +6,11 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import {AddOn_Title, AddOnValueType_Title} from "../../constants/Enum";
-import {insertPricing_AddOn, insertPricing_InNetwork} from "../../api/Api";
+import {addOn_InserByData, inNetwork_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {CancelButton, MoneyInput, Select, SubmitButton} from "../../Base/BaseInput";
+import Paper from "@material-ui/core/Paper/Paper";
+import Typography from "@material-ui/core/Typography/Typography";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -103,14 +105,15 @@ export const AddOnTable = (props) => {
 
     const update = (data) => {
         setEdition({...data, loading: true})
-        insertPricing_AddOn(data)
+        addOn_InserByData(data)
             .then(r => props.reload())
             .then(r => {
                 setEdition({});
             })
     };
 
-    return <div className={classes.root}>
+    return <Paper className={classes.root}>
+        <Typography style={{margin:20}} variant="h6">Add-On Pricing</Typography>
         <Table className={classes.table}>
             <TableHead>
                 <TableRow>
@@ -150,6 +153,6 @@ export const AddOnTable = (props) => {
 
 
             </TableBody>
-        </Table></div>;
+        </Table></Paper>;
 
 };

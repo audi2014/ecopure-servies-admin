@@ -29,7 +29,7 @@ const Navigation = ({selectedId}) => <BottomNavigation showLabels>
     <BottomNavigationAction
         to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.addonPricing}`}
         component={Link}
-        label="Add-On Pricing"
+        label="Add-On's/Extra"
         icon={<AddOnIcon/>}
     />
 </BottomNavigation>;
