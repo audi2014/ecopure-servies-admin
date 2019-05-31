@@ -1,11 +1,17 @@
 import {BasePage} from "../Base/BasePage";
 import React from "react";
 import {LocationsItem, LocationsList} from "../Components/Locations";
-import {locations_GetById, locations_GetAll} from "../api/Api";
+import {
+    locations_GetById,
+    locations_GetAll,
+    locations_UpdateById,
+    locations_InsertByData
+} from "../api/Api";
 import {RoutingConstants} from "../constants/RoutingConstants";
 import {LocationIcon} from "../icons";
 
 export const LocationsPage = (props) => {
+    const selectedId = props.match.params.id;
     const p = {
         ...props,
         ListComponent: LocationsList,
@@ -13,10 +19,21 @@ export const LocationsPage = (props) => {
         fetchItems: locations_GetAll,
         fetchById: locations_GetById,
         renderListItemTitle: (item)=>item.address,
-        selectedId: props.match.params.id,
+        selectedId,
         renderListItemTo: (id) => `/${RoutingConstants.locations}/` + id,
         itemTitle:"Edit location",
-        ListItemIcon:LocationIcon
+        ListItemIcon:LocationIcon,
+
+        updateById: locations_UpdateById,
+        insertByData: locations_InsertByData,
+        onDidInsert: (item) => props.history.push(`/${RoutingConstants.locations}/${item.id}`),
+        renderListItemCreate: () => `/${RoutingConstants.locations}/add`,
+        isAdd: selectedId === 'add',
+        creationTemplate: {
+            "page": "",
+            "address": "",
+            "tel": "",
+        },
     };
     return <BasePage{...p} />
 };

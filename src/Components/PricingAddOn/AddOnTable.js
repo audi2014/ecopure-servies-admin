@@ -6,11 +6,12 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import {AddOn_Title, AddOnValueType_Title} from "../../constants/Enum";
-import {addOn_InserByData, inNetwork_InsertByData} from "../../api/Api";
+import {addOn_InserByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {CancelButton, MoneyInput, Select, SubmitButton} from "../../Base/BaseInput";
+import {MoneyInput, Select} from "../../Base/BaseInput";
 import Paper from "@material-ui/core/Paper/Paper";
 import Typography from "@material-ui/core/Typography/Typography";
+import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -21,12 +22,6 @@ const useStyles = makeStyles(theme => ({
     table: {
         minWidth: 650,
     },
-    cell: {
-        '&:hover': {
-            backgroundColor: '#C3C3C3'
-        }
-    },
-
     menu: {
         width: 200,
     },
@@ -43,40 +38,42 @@ const useStyles = makeStyles(theme => ({
 
 
 const EditableCell = ({edition, setEdition, update, addon_type, location_id, classes}) => {
-
-    const [value_type, setValueType] = React.useState(edition.value_type || '');
-    const [dollars, setDollars] = React.useState(edition.cents ? (edition.cents / 100).toFixed(2) : 0);
-
-    const onCancelClick = () => setEdition({});
-
-    return <TableCell>
-        <form noValidate autoComplete="off" onSubmit={e => {
-            e.preventDefault();
-            const data = {
-                cents: Math.round(dollars * 100) || 0,
-                value_type: e.currentTarget[1].value,
-                addon_type,
-                location_id
-            };
-            update(data);
-        }}>
+    return <PriceCellEditable
+        tooltipClassName={classes.container}
+        edition={{
+            ...edition,
+            dollars: centsToDollars(edition.cents),
+            cents: undefined
+        }}
+        setEdition={setEdition}
+        update={
+            state => update({
+                    ...state,
+                    addon_type,
+                    location_id,
+                    dollars: undefined,
+                    cents: dollarsToCents(state.dollars)
+                }
+            )}
+        formClassName
+    >
+        {({state, setState}) => (
             <div className={classes.container}>
-                <MoneyInput className={classes.textField} setValue={setDollars} value={dollars}/>
+                <MoneyInput
+                    className={classes.textField}
+                    setValue={dollars => setState({dollars})}
+                    value={state.dollars}
+                />
                 <Select
                     className={classes.textField}
                     menuClassName={classes.menu}
-                    setValue={setValueType}
-                    value={value_type}
+                    setValue={value_type => setState({value_type})}
+                    value={state.value_type}
                     keyValue={AddOnValueType_Title}
                 />
             </div>
-            <div className={classes.container}>
-                <CancelButton onClick={onCancelClick}/>
-                <SubmitButton/>
-            </div>
-
-        </form>
-    </TableCell>
+        )}
+    </PriceCellEditable>
 };
 
 const Cell = ({items, addon_type, classes, setEdition, location_id}) => {
@@ -92,12 +89,16 @@ const Cell = ({items, addon_type, classes, setEdition, location_id}) => {
     }
     const onClick = () => location_id ? setEdition({addon_type, cents, location_id, value_type}) : null;
 
-    return <TableCell className={classes.cell} onClick={onClick}>
-        <span>{cents ? '$' + (cents / 100).toFixed(2) : '-'}</span>
-        /
-        <span>{AddOnValueType_Title[value_type] || '-'}</span>
-    </TableCell>
-}
+    return <PriceCell onClick={onClick}>
+        {
+            () => <span>{
+                cents ? '$' + centsToDollars(cents) : '-'
+            } / {
+                cents && AddOnValueType_Title[value_type] || '-'
+            }</span>
+        }
+    </PriceCell>
+};
 
 export const AddOnTable = (props) => {
     const classes = useStyles();
@@ -113,7 +114,7 @@ export const AddOnTable = (props) => {
     };
 
     return <Paper className={classes.root}>
-        <Typography style={{margin:20}} variant="h6">Add-On Pricing</Typography>
+        <Typography style={{margin: 20}} variant="h6">Add-On Pricing</Typography>
         <Table className={classes.table}>
             <TableHead>
                 <TableRow>
@@ -123,7 +124,7 @@ export const AddOnTable = (props) => {
             </TableHead>
             <TableBody>
 
-                {Object.keys(AddOn_Title).map(addOnType_key => <TableRow key={addOnType_key}>
+                {Object.keys(AddOn_Title).map(addOnType_key => <TableRow key={addOnType_key} className={classes.row}>
                     <TableCell component="th" scope="row">
                         {AddOn_Title[addOnType_key]}
                     </TableCell>

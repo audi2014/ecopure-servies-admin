@@ -7,6 +7,7 @@ import {
     inNetworkExtraFootage_InsertByData, inNetworkExtraFootage_UpdateById
 } from "../../api/Api";
 
+
 const mapItemCentToDollar = item => {
     return {...item, cents: undefined, dollars: (item.cents / 100).toFixed(2)}
 };
@@ -69,22 +70,19 @@ export const ExtraFootageTable = ({location_id}) => {
     });
 
     return (
-        <MaterialTable
-            options={{
-                paging: false,
-                search: false,
-                headerStyle: {
-                    backgroundColor: 'grey',
-                }
-            }}
-            title="Extra footage Pricing"
-            columns={state.columns}
-            data={() => getData({location_id})}
-            editable={{
-                onRowAdd: rowData => insertData({state, setState, rowData: {...rowData, location_id}}),
-                onRowUpdate: rowData => updateData({state, setState, rowData}),
-                onRowDelete: rowData => deleteData({state, setState, rowData}),
-            }}
-        />
+            <MaterialTable
+                options={{
+                    paging: false,
+                    search: false,
+                }}
+                title="Extra footage Pricing"
+                columns={state.columns}
+                data={() => getData({location_id})}
+                editable={{
+                    onRowAdd: rowData => insertData({state, setState, rowData: {...rowData, location_id}}),
+                    onRowUpdate: rowData => updateData({state, setState, rowData}),
+                    onRowDelete: rowData => deleteData({state, setState, rowData}),
+                }}
+            />
     );
 };

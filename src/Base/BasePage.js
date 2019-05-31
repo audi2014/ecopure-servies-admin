@@ -14,32 +14,44 @@ export const BasePage = ({
                              ItemComponent,
                              fetchItems,
                              fetchById,
+                             updateById,
                              renderListItemTitle,
                              listItemPath,
                              renderListItemTo,
                              selectedId,
                              itemTitle,
                              ListItemIcon,
+                             renderListItemCreate,
+                             creationTemplate,
+                             isAdd,
+                             insertByData,
+                             onDidInsert,
                          }) => {
+
 
     const classes = useStyles();
 
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState(null);
 
+    async function fetchItemsToState() {
+        const result = await fetchItems();
+        if (result) {
+            setItems(result);
+        } else {
+            setItems(false)
+        }
+    }
 
     useEffect(() => {
-        async function fetchItemsToState() {
-            const result = await fetchItems();
-            if(result) {
-                setItems(result);
-            }
-        }
-
         fetchItemsToState();
     }, []);
 
+    if (items === null) return 'loading...'
+    if (items === false) return 'error.'
 
-
+    const handleInsert = (...props) => insertByData(...props)
+        .then(r => r ? onDidInsert(r) : r)
+        .then(r => fetchItemsToState())
     return <div>
         <main>
             <Grid container spacing={3}>
@@ -51,6 +63,7 @@ export const BasePage = ({
                             renderListItemTo={renderListItemTo}
                             selectedId={selectedId}
                             ListItemIcon={ListItemIcon}
+                            renderListItemCreate={renderListItemCreate}
                         /></Paper>
                 </Grid>
                 {
@@ -61,8 +74,13 @@ export const BasePage = ({
                                     setListItems={setItems}
                                     items={items}
                                     fetchById={fetchById}
+                                    updateById={updateById}
+                                    insertByData={handleInsert}
+                                    isAdd={isAdd}
                                     selectedId={selectedId}
                                     itemTitle={itemTitle}
+                                    reloadListItems={fetchItemsToState}
+                                    creationTemplate={creationTemplate}
                                 />
                             </Paper>
                         </Grid>

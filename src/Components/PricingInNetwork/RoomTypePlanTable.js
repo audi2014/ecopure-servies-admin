@@ -4,10 +4,18 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
-import {Plan_HasInitial, PLAN_OCCASIONAL, PLAN_OVER_60_DAYS, Plan_Title, RoomType_Title} from "../../constants/Enum";
+import {
+    AddOnValueType_Title,
+    Plan_HasInitial,
+    PLAN_OCCASIONAL,
+    PLAN_OVER_60_DAYS,
+    Plan_Title,
+    RoomType_Title
+} from "../../constants/Enum";
 import {inNetwork_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {CancelButton, MoneyInput, SubmitButton} from "../../Base/BaseInput";
+import {MoneyInput,} from "../../Base/BaseInput";
+import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,52 +26,61 @@ const useStyles = makeStyles(theme => ({
     table: {
         minWidth: 650,
     },
-    cell: {
-        '&:hover': {
-            backgroundColor: '#C3C3C3'
-        }
-    },
     container: {
         display: 'flex',
         flexWrap: 'wrap',
     },
 }));
-// const EditableCell = () => "EditableCell"
 const EditableCell = ({edition, setEdition, update, room_type, plan, building_id, classes, disabled, hasInitial}) => {
 
+    return <PriceCellEditable
+        edition={{
+            ...edition,
+            dollars: centsToDollars(edition.cents),
+            dollarsInitial: centsToDollars(hasInitial ? edition.centsInitial : 0),
+            cents: undefined,
+            centsInitial: undefined,
+        }}
+        setEdition={setEdition}
+        update={
+            state => update({
+                    ...state,
+                    room_type,
+                    building_id,
+                    plan,
+                    dollars: undefined,
+                    dollarsInitial: undefined,
+                    cents: dollarsToCents(state.dollars || state.dollarsInitial),
+                    centsInitial: hasInitial ? dollarsToCents(state.dollarsInitial || state.dollars) : 0,
+                }
+            )}
+        formClassName={classes.container}
+    >
+        {({state, setState}) => (
+            [
+                <MoneyInput
+                    key={'price'}
+                    label={'price'}
+                    setValue={dollars => setState({dollars})}
+                    value={state.dollars}
+                />,
 
-    const [dollars, setDollars] = React.useState(edition.cents ? (edition.cents / 100).toFixed(2) : 0);
-    const [dollarsInitial, setDollarsInitial] = React.useState(edition.centsInitial ? (edition.centsInitial / 100).toFixed(2) : 0);
-
-    const onCancelClick = () => setEdition({});
-
-    return <TableCell>
-        <form className={classes.container} onSubmit={e => {
-            e.preventDefault();
-            const data = {
-                cents: Math.round(dollars * 100) || 0,
-                centsInitial: hasInitial ? (Math.round(dollarsInitial * 100) || 0) : 0,
-                room_type,
-                plan,
-                building_id
-            };
-            update(data);
-        }}>
-            <MoneyInput label={'price'} setValue={setDollars} value={dollars}/>
-            {
                 hasInitial
-                    ? <MoneyInput label={'initial'} setValue={setDollarsInitial} value={dollarsInitial}/>
+                    ? <MoneyInput
+                        key={'initial'}
+                        label={'initial'}
+                        setValue={dollarsInitial => setState({dollarsInitial})}
+                        value={state.dollarsInitial}/>
                     : null
-            }
-            <CancelButton onClick={onCancelClick}/>
-            <SubmitButton/>
-        </form>
 
-    </TableCell>
+            ]
+        )}
+    </PriceCellEditable>;
 };
 
 const Cell = ({items, room_type, plan, classes, setEdition, building_id, disabled, hasInitial}) => {
     if (disabled) return <TableCell/>;
+    const onClick = () => building_id ? setEdition({room_type, plan, cents, centsInitial, building_id}) : null;
     let cents = 0;
     let centsInitial = 0;
     items = items.filter(item => item.room_type === room_type && item.plan === plan);
@@ -74,18 +91,16 @@ const Cell = ({items, room_type, plan, classes, setEdition, building_id, disable
             console.error('room_type pricing error: room_type & plan of building duplicate');
         }
     }
-    const onClick = () => building_id ? setEdition({room_type, plan, cents, centsInitial, building_id}) : null;
 
-
-    return <TableCell className={classes.cell} onClick={onClick}>
-        <span>{cents ? '$' + (cents / 100).toFixed(2) : '-'}</span>
-        {hasInitial ?
-            <span>/{centsInitial ? '$' + (centsInitial / 100).toFixed(2) : '-'}</span>
-            : null
+    return <PriceCell onClick={onClick}>
+        {
+            () => <span>
+                {cents ? '$' + centsToDollars(cents) : '-'}
+                {hasInitial ? (' / ' + (centsInitial ? '$' + centsToDollars(centsInitial) : '-')) : null}
+                </span>
         }
-
-    </TableCell>
-}
+    </PriceCell>
+};
 
 export const RoomTypePlanTable = (props) => {
     const items = props.item.main || [];

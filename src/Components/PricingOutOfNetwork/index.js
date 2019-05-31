@@ -11,15 +11,9 @@ import {AddOnIcon, BuildingIcon, LocationIcon, PriceIcon} from "../../icons";
 
 const Navigation = ({selectedId}) => <BottomNavigation showLabels>
     <BottomNavigationAction
-        to={`/${RoutingConstants.locations}/`}
+        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.buildings}`}
         component={Link}
-        label="All locations"
-        icon={<LocationIcon/>}
-    />
-    <BottomNavigationAction
-        to={`/${RoutingConstants.buildings}/`}
-        component={Link}
-        label="All buildings"
+        label="buildings in location"
         icon={<BuildingIcon/>}
     />
     <BottomNavigationAction

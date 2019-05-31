@@ -45,7 +45,8 @@ const App = () => {
         <Route exact path={`/${RoutingConstants.locations}/:id`} component={LocationsPage}/>
         <Route exact path={`/${RoutingConstants.locations}/:id/${RoutingConstants.outOfNetworkPricing}`} component={PricingOutOfNetworkPage}/>
         <Route exact path={`/${RoutingConstants.locations}/:id/${RoutingConstants.addonPricing}`} component={PricingAddOnPage}/>
-        <Route exact path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.buildings}`} component={BuildingsOfLocationPage}/>
+         <Route exact path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.buildings}`} component={BuildingsOfLocationPage}/>
+         <Route exact path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.buildings}/:id`} component={BuildingsOfLocationPage}/>
         <Route exact path={`/${RoutingConstants.buildings}`} component={BuildingsPage}/>
         <Route exact path={`/${RoutingConstants.buildings}/:id`} component={BuildingsPage}/>
         <Route exact path={`/${RoutingConstants.buildings}/:id/${RoutingConstants.inNetworkPricing}`} component={PricingInNetworkPage}/>
@@ -56,47 +57,3 @@ const App = () => {
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App/>, rootElement);
-
-/*
-{({stack, setStack}) => {
-            const current = stack.slice(-1)[0];
-            const prevStack = stack.slice(0, stack.length - 1);
-            const PROPS = NAME_PROPS[current.name];
-
-            if (!PROPS) return null;
-
-            const {ItemComponent, ListComponent, fetchItems, fetchById} = PROPS;
-            const listProps = {
-                setId: (id) => {
-                    return setStack([...prevStack, {name: current.name, id}])
-                },
-                id: current.id
-            };
-
-            return <div>
-                <main>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={current.id ? 2 : 8} lg={current.id ? 2 : 8}>
-                            <Paper><ListComponent fetchItems={fetchItems} {...listProps}/></Paper>
-                        </Grid>
-                        {
-                            current.id
-                                ? <Grid item xs={12} md={8} lg={8}>
-                                    <Paper className={classes.root}>
-                                        <ItemComponent key={current.name}
-                                                       fetchById={fetchById}
-                                                       id={current.id}
-                                                       stack={stack}
-                                                       setStack={setStack}
-                                                       setPrev={()=>[...prevStack, {name: current.name, id:null}]}
-                                        />
-                                    </Paper>
-                                </Grid>
-                                : null
-                        }
-                    </Grid>
-
-                </main>
-            </div>
-        }}
- */

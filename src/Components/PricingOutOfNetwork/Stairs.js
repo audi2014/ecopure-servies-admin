@@ -7,7 +7,8 @@ import TableBody from "@material-ui/core/TableBody/TableBody";
 import {outOfNetworkStairs_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Stairs_Title} from "../../constants/Enum";
-import {CancelButton, MoneyInput, SubmitButton} from "../../Base/BaseInput";
+import {CancelButton, FloatInput, MoneyInput, SubmitButton} from "../../Base/BaseInput";
+import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,37 +19,41 @@ const useStyles = makeStyles(theme => ({
     table: {
         minWidth: 650,
     },
-    cell: {
-        '&:hover': {
-            backgroundColor: '#C3C3C3'
-        }
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
     },
     container: {
         display: 'flex',
         flexWrap: 'wrap',
     },
 }));
-const EditableCell = ({edition, setEdition, update, stairs, location_id,classes}) => {
-    const [dollars, setDollars] = React.useState(edition.cents_per_hour ? (edition.cents_per_hour / 100).toFixed(2) : 0);
+const EditableCell = ({edition, setEdition, update, stairs, location_id, classes}) => {
 
-    const onCancelClick = () => setEdition({});
-
-    return <TableCell>
-        <form className={classes.container} onSubmit={e => {
-            e.preventDefault();
-            const data = {
-                cents_per_hour: Math.round(dollars * 100) || 0,
-                stairs,
-                location_id
-            };
-            update(data);
-        }}>
-            <MoneyInput setValue={setDollars} value={dollars}/>
-            <CancelButton onClick={onCancelClick}/>
-            <SubmitButton/>
-        </form>
-
-    </TableCell>
+    return <PriceCellEditable
+        edition={{
+            ...edition,
+            dollars: centsToDollars(edition.cents_per_hour),
+            cents_per_hour: undefined
+        }}
+        setEdition={setEdition}
+        update={
+            state => update({
+                    ...state,
+                    stairs,
+                    location_id,
+                    dollars: undefined,
+                    cents_per_hour: dollarsToCents(state.dollars)
+                }
+            )}
+    >
+        {({state, setState}) => <MoneyInput
+            className={classes.textField}
+            setValue={dollars => setState({dollars})}
+            value={state.dollars}
+        />}
+    </PriceCellEditable>;
 };
 
 const Cell = ({items, stairs, classes, setEdition, location_id}) => {
@@ -62,9 +67,11 @@ const Cell = ({items, stairs, classes, setEdition, location_id}) => {
     }
     const onClick = () => location_id ? setEdition({stairs, cents_per_hour, location_id}) : null;
 
-    return <TableCell className={classes.cell} onClick={onClick}>
-        <span>{cents_per_hour ? '$' + (cents_per_hour / 100).toFixed(2) : '-'}</span>
-    </TableCell>
+    return <PriceCell onClick={onClick}>
+        {
+            () => <span>{cents_per_hour ? '$' + centsToDollars(cents_per_hour) : '-'}</span>
+        }
+    </PriceCell>;
 };
 
 export const StairsTable = (props) => {

@@ -15,16 +15,10 @@ const defaultItem = {};
 
 const Navigation = ({selectedId}) => <BottomNavigation showLabels>
     <BottomNavigationAction
-        to={`/${RoutingConstants.buildings}/`}
+        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.buildings}`}
         component={Link}
-        label="All buildings"
+        label="buildings in location"
         icon={<BuildingIcon/>}
-    />
-    <BottomNavigationAction
-        to={`/${RoutingConstants.locations}/`}
-        component={Link}
-        label="All locations"
-        icon={<LocationIcon/>}
     />
     <BottomNavigationAction
         to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.outOfNetworkPricing}`}
@@ -47,4 +41,4 @@ export const PricingAddOn = (props) => {
             </div>
         }
     </BaseItem>;
-}
+};

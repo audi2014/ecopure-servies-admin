@@ -36,9 +36,6 @@ const Navigation = ({selectedId}) => <BottomNavigation showLabels>
 
 export const LocationsItem = (props) => {
     return <BaseItem {...props}>
-        {(item, itemProps) => <BaseItemView key={item.id} item={item} {...itemProps}>
-            <Navigation selectedId={props.selectedId}/>
-        </BaseItemView>}
-
+        {(item, itemProps) => <Navigation selectedId={props.selectedId}/>}
     </BaseItem>
 };

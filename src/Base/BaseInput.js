@@ -12,8 +12,8 @@ const valueOrMin = (value, min = null) => {
     const lastIsDot = value.lastIndexOf('.') === value.length - 1;
     const parts = value.split('.');
     let float = String(parts[0] || '') + (parts[1] ? '.' : '') + parts.slice(1).join('');
-    float = Number.parseFloat(float);
-    if (isNaN(float)) float = 0;
+    // float = Number.parseFloat(float);
+    if (isNaN(float)) float = Number.parseFloat(float) || 0;
     if (min !== null && float < min) float = min;
     if (lastIsDot && parts.length === 2) float += '.';
     return float;

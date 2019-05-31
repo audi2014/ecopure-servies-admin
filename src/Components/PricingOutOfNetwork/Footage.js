@@ -7,7 +7,8 @@ import TableBody from "@material-ui/core/TableBody/TableBody";
 import {Footage_Title, Plan_Title} from "../../constants/Enum";
 import {outOfNetworkFootage_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {CancelButton, FloatInput, Select, SubmitButton} from "../../Base/BaseInput";
+import {FloatInput,} from "../../Base/BaseInput";
+import {PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,68 +19,67 @@ const useStyles = makeStyles(theme => ({
     table: {
         minWidth: 650,
     },
-    cell: {
-        '&:hover': {
-            backgroundColor: '#C3C3C3'
-        }
-    }
 }));
 const EditableCell = ({edition, setEdition, update, footage, plan, location_id}) => {
 
-    const [hours, setHours] = React.useState(edition.hours ? edition.hours : 0);
-    const [hoursInitial, setHoursInitial] = React.useState(edition.hoursInitial ? edition.hoursInitial : 0);
-    const onCancelClick = () => setEdition({});
+    return <PriceCellEditable
+        edition={{
+            ...edition,
+            hours: edition.hours,
+            hours_initial: edition.hours_initial,
+        }}
+        setEdition={setEdition}
+        update={
+            state => update({
+                    ...state,
+                    footage,
+                    location_id,
+                    plan,
+                    hours: state.hours || state.hours_initial,
+                    hours_initial: state.hours_initial || state.hours,
+                }
+            )}
+    >
+        {({state, setState}) => (
+            [
+                <FloatInput
+                    key={'hours'}
+                    label={'hours'}
+                    min={0}
+                    setValue={hours => setState({hours})}
+                    value={state.hours}
+                />,
+                <FloatInput
+                    key={'initial'}
+                    label={'initial'}
+                    min={0}
+                    setValue={hours_initial => setState({hours_initial})}
+                    value={state.hours_initial}
+                />
 
-    return <TableCell>
-        <form onSubmit={e => {
-            e.preventDefault();
-            const data = {
-                hours: hours || 0,
-                hoursInitial: setHoursInitial || 0,
-                footage,
-                plan,
-                location_id
-            };
-            update(data);
-        }}>
-
-            <FloatInput
-                label={'hours'}
-                min={0}
-                setValue={setHours}
-                value={hours}
-            />
-            <FloatInput
-                label={'initial'}
-                min={0}
-                setValue={setHoursInitial}
-                value={hoursInitial}
-            />
-            <CancelButton onClick={onCancelClick}/>
-            <SubmitButton/>
-        </form>
-
-    </TableCell>
+            ]
+        )}
+    </PriceCellEditable>;
 };
 
 const Cell = ({items, footage, plan, classes, setEdition, location_id}) => {
     let hours = 0;
-    let hoursInitial = 0;
+    let hours_initial = 0;
     items = items.filter(item => item.footage === footage && item.plan === plan);
     if (items.length >= 1) {
         hours = items[0].hours;
-        hoursInitial = items[0].hoursInitial;
+        hours_initial = items[0].hours_initial;
         if (items.length > 1) {
             console.error('footage pricing error: footage & plan of location duplicate');
         }
     }
-    const onClick = () => location_id ? setEdition({footage, plan, hours, hoursInitial, location_id}) : null;
+    const onClick = () => location_id ? setEdition({footage, plan, hours, hours_initial, location_id}) : null;
 
-    return <TableCell className={classes.cell} onClick={onClick}>
-        <span>{hours || '-'} </span>
-        /
-        <span>{hoursInitial || '-'}</span>
-    </TableCell>
+    return <PriceCell onClick={onClick}>
+        {
+            () => <span>{hours || '-'} / {hours_initial || '-'}</span>
+        }
+    </PriceCell>;
 }
 
 export const FootageTable = (props) => {
@@ -96,7 +96,6 @@ export const FootageTable = (props) => {
     };
 
     return <div className={classes.root}>
-        {/*<p>{JSON.stringify(Object.keys(props))} <br/>{JSON.stringify(props)}</p>*/}
         <Table className={classes.table}>
             <TableHead>
                 <TableRow>

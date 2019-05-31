@@ -48,9 +48,12 @@ const _put = (path, data) => fetch(
 
 export const locations_GetAll = () => _get('/locations');
 export const locations_GetById = (id) => _get('/locations/' + id);
+export const locations_UpdateById = (id, data) => _put('/locations/' + id, data);
+export const locations_InsertByData = (data) => _post('/locations/', data);
 
 export const buildings_GetAll = () => _get('/buildings');
-export const building_UpdateById = (id, data) => _put('/buildings/' + id, data);
+export const buildings_UpdateById = (id, data) => _put('/buildings/' + id, data);
+export const buildings_InsertByData = (data) => _post('/buildings', data);
 export const buildings_GetByLocationId = (location_id) => _get('/buildings?location_id=' + location_id);
 export const buildings_GetById = (id) => _get('/buildings/' + id);
 
