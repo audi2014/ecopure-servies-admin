@@ -11,6 +11,7 @@ import RestoreIcon from '@material-ui/icons/CheckCircleOutline';
 import SaveIcon from '@material-ui/icons/Done';
 import ResetIcon from '@material-ui/icons/History';
 import Grid from "@material-ui/core/Grid/Grid";
+import {Spiner} from "../icons";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -56,7 +57,7 @@ const getDiff = (source, state) => {
     return count > 0 ? v : null;
 };
 
-const BaseItemView = ({editableData, itemTitle, isDisabled, children, toggleDisabled, save, isAdd}) => {
+const BaseItemView = ({editableData, itemTitle, isDisabled, children, onToggleDisabled, save, isAdd}) => {
     const classes = useStyles();
     const [state, setState] = useState({...editableData});
     const handleChange = name => event => {
@@ -66,69 +67,77 @@ const BaseItemView = ({editableData, itemTitle, isDisabled, children, toggleDisa
     const onReset = () => setState({...editableData});
     const onSave = () => save(isAdd ? state : diff);
     return <form className={classes.container} noValidate autoComplete="off">
-        <Typography style={{margin: 20}} variant="h6">{itemTitle || 'Edit item'}</Typography>
-        {
-            Object.keys(editableData)
-                .map(key => (
-                    <FormControl fullWidth key={key}>
-                        <TextField
-                            key={key}
-                            id={key}
-                            label={key}
-                            className={classes.textField}
-                            value={state[key] || ''}
-                            onChange={handleChange(key)}
-                            margin="normal"
-                            variant="outlined"
-                        />
-                    </FormControl>
-                ))
-        }
 
-        <Grid
-            container
-            spacing={2}
-            justify="center"
-            alignItems="center"
-            direction="row"
-        >
+        {save ? (<div>
+
+            <Typography style={{margin: 20}} variant="h6">{itemTitle || 'Edit item'}</Typography>
             {
-                toggleDisabled ? (
-                    <Button variant="contained" color="default" className={classes.button} onClick={toggleDisabled}>
-                        {
-                            isDisabled
-                                ? 'Enable'
-                                : 'Disable'
-                        }
-                        {
-                            isDisabled
-                                ? <RestoreIcon className={classes.rightIcon}/>
-                                : <DeleteIcon className={classes.rightIcon}/>
-                        }
-                    </Button>
-                ) : null
-            }
-            {
-                save && !isAdd
-                    ? (<Button disabled={!diff} variant="contained" color="default" className={classes.button}
-                               onClick={onReset}>
-                        Reset
-                        <ResetIcon className={classes.rightIcon}/>
-                    </Button>)
-                    : null
-            }
-            {
-                save
-                    ? (<Button disabled={!diff && !isAdd} variant="contained" color="primary" className={classes.button}
-                               onClick={onSave}>
-                        {isAdd ? 'Create' : 'Save'}
-                        <SaveIcon className={classes.rightIcon}/>
-                    </Button>)
-                    : null
+                Object.keys(editableData)
+                    .map(key => (
+                        <FormControl fullWidth key={key}>
+                            <TextField
+                                key={key}
+                                id={key}
+                                label={key.replace(/_/g,' ')}
+                                className={classes.textField}
+                                value={state[key] || ''}
+                                onChange={handleChange(key)}
+                                margin="normal"
+                                variant="outlined"
+                            />
+                        </FormControl>
+                    ))
             }
 
+            <Grid
+                container
+                spacing={2}
+                justify="center"
+                alignItems="center"
+                direction="row"
+            >
+                {
+                    onToggleDisabled ? (
+                        <Button variant="contained" color="default" className={classes.button}
+                                onClick={onToggleDisabled}>
+                            {
+                                isDisabled
+                                    ? 'Enable'
+                                    : 'Disable'
+                            }
+                            {
+                                isDisabled
+                                    ? <RestoreIcon className={classes.rightIcon}/>
+                                    : <DeleteIcon className={classes.rightIcon}/>
+                            }
+                        </Button>
+                    ) : null
+                }
+                {
+                    save && !isAdd
+                        ? (<Button disabled={!diff} variant="contained" color="default" className={classes.button}
+                                   onClick={onReset}>
+                            Reset
+                            <ResetIcon className={classes.rightIcon}/>
+                        </Button>)
+                        : null
+                }
+                {
+                    save
+                        ? (<Button disabled={!diff && !isAdd} variant="contained" color="primary"
+                                   className={classes.button}
+                                   onClick={onSave}>
+                            {isAdd ? 'Create' : 'Save'}
+                            <SaveIcon className={classes.rightIcon}/>
+                        </Button>)
+                        : null
+                }
 
-        </Grid>
+
+            </Grid>
+
+        </div>) : null}
+
 
         <Grid container spacing={2} className={classes.dense}>
             <Grid item xs={12}>
@@ -145,16 +154,15 @@ const BaseItemCreation = ({insertByData, creationTemplate, children, ...rest}) =
 
     const {id, deleted_at, created_at, updated_at, location_id, building_id, ...editableData} = creationTemplate;
     const childProps = {
+        ...rest,
         isAdd: true,
         save: (editableData) => insertByData({...creationTemplate, ...editableData}),
         editableData,
-        ...rest
     };
     return <BaseItemView key={'add'} {...childProps}>{children(creationTemplate, childProps)}</BaseItemView>;
 };
 
 const BaseItemUpdation = (props) => {
-    if (!props.updateById) return <Typography style={{margin: 20}} variant="h6">Updation not allowed</Typography>;
     if (!props.fetchById) return <Typography style={{margin: 20}} variant="h6">FetchById not allowed</Typography>;
 
 
@@ -164,7 +172,7 @@ const BaseItemUpdation = (props) => {
 
     async function fetchItemToState() {
         const result = await fetchById(selectedId);
-        if(result) {
+        if (result) {
             setItem(result);
         } else {
             setItem(false);
@@ -174,33 +182,39 @@ const BaseItemUpdation = (props) => {
     useEffect(() => {
         fetchItemToState(selectedId);
     }, [selectedId]);
-    if (item === null) return 'loading...';
-    if (item === false) return <Typography style={{margin: 20}} variant="h6">Item not found</Typography>;;
+    if (item === null) return <Spiner/>;
+    if (item === false) return <Typography style={{margin: 20}} variant="h6">Item not found</Typography>;
+
     const {id, deleted_at, created_at, updated_at, location_id, building_id, ...editableData} = item;
     const isDisabled = !!deleted_at;
-    const toggleDisabled = () => props.updateById(id, {
-        deleted_at: isDisabled
-            ? null
-            : Math.round((new Date()).getTime() / 1000)
-    })
-        .then(r => setItem(r))
-        .then(() => props.reloadListItems());
+    const onToggleDisabled = props.updateById
+        ? (() => props.updateById(id, {
+            deleted_at: isDisabled
+                ? null
+                : Math.round((new Date()).getTime() / 1000)
+        })
+            .then(r => setItem(r))
+            .then(() => props.reloadListItems()))
+        : null;
 
-    const save = (diff) => props.updateById(id, diff)
-        .then(r => setItem(r))
-        .then(() => props.reloadListItems())
+    const save = props.updateById
+        ? ((diff) => props.updateById(id, diff)
+            .then(r => setItem(r))
+            .then(() => props.reloadListItems()))
+        : null;
 
     const childProps = {
+        ...rest,
         isAdd: false,
         selectedId,
         isDisabled,
-        toggleDisabled: props.updateById ? toggleDisabled : null,
-        save: props.updateById ? save : null,
+        onToggleDisabled: onToggleDisabled,
+        save: save,
         reload: fetchItemToState,
         item,
         editableData,
-        ...rest
     };
+
 
 
     return <BaseItemView key={item.id} {...childProps}>{children(item, childProps)}</BaseItemView>;

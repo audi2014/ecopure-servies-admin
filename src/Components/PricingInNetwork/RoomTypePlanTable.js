@@ -16,6 +16,7 @@ import {inNetwork_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {MoneyInput,} from "../../Base/BaseInput";
 import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
+import {Spiner} from "../../icons";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -144,7 +145,7 @@ export const RoomTypePlanTable = (props) => {
                     {Object.keys(RoomType_Title).map(roomType_key => (
                         edition.room_type === roomType_key && edition.plan === plan_key
                     )
-                        ? (edition.loading ? 'loading...' : <EditableCell
+                        ? (edition.loading ? <TableCell><Spiner/></TableCell> : <EditableCell
                             classes={classes}
                             room_type={roomType_key}
                             plan={plan_key}

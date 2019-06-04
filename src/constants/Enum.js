@@ -31,7 +31,7 @@ export const PLAN_MOVE_OUT = 'MOVE_OUT';
 export const PLAN_OVER_60_DAYS = 'OVER_60_DAYS';
 export const PLAN_VALUE_PLAN = 'VALUE_PLAN';
 export const Plan_Title = {
-    [PLAN_WEEKLY]: "weekly",
+    [PLAN_WEEKLY]: "Weekly",
     [PLAN_BI_WEEKLY]: "Bi-Weekly",
     [PLAN_MONTHLY]: "Monthly",
     [PLAN_OCCASIONAL]: "Occasional",

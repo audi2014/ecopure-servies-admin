@@ -4,11 +4,12 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
-import {Footage_Title, Plan_Title} from "../../constants/Enum";
+import {Footage_Title, Plan_HasInitial, Plan_Title} from "../../constants/Enum";
 import {outOfNetworkFootage_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {FloatInput,} from "../../Base/BaseInput";
-import {PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
+import {dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
+import {Spiner} from "../../icons";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles(theme => ({
         minWidth: 650,
     },
 }));
-const EditableCell = ({edition, setEdition, update, footage, plan, location_id}) => {
+const EditableCell = ({edition, setEdition, update, footage, plan, location_id, hasInitial = true}) => {
 
     return <PriceCellEditable
         edition={{
@@ -36,7 +37,7 @@ const EditableCell = ({edition, setEdition, update, footage, plan, location_id})
                     location_id,
                     plan,
                     hours: state.hours || state.hours_initial,
-                    hours_initial: state.hours_initial || state.hours,
+                    hours_initial: hasInitial ? state.hours_initial || state.hours : 0,
                 }
             )}
     >
@@ -49,20 +50,20 @@ const EditableCell = ({edition, setEdition, update, footage, plan, location_id})
                     setValue={hours => setState({hours})}
                     value={state.hours}
                 />,
-                <FloatInput
+                hasInitial ? <FloatInput
                     key={'initial'}
                     label={'initial'}
                     min={0}
                     setValue={hours_initial => setState({hours_initial})}
                     value={state.hours_initial}
-                />
+                /> : null,
 
             ]
         )}
     </PriceCellEditable>;
 };
 
-const Cell = ({items, footage, plan, classes, setEdition, location_id}) => {
+const Cell = ({items, footage, plan, classes, setEdition, location_id, hasInitial = true}) => {
     let hours = 0;
     let hours_initial = 0;
     items = items.filter(item => item.footage === footage && item.plan === plan);
@@ -77,7 +78,14 @@ const Cell = ({items, footage, plan, classes, setEdition, location_id}) => {
 
     return <PriceCell onClick={onClick}>
         {
-            () => <span>{hours || '-'} / {hours_initial || '-'}</span>
+            () => <span>
+                {hours || '-'}
+                {
+                    hasInitial
+                        ? ' / ' + (hours_initial || '-')
+                        : null
+                }
+            </span>
         }
     </PriceCell>;
 }
@@ -113,7 +121,7 @@ export const FootageTable = (props) => {
                     {Object.keys(Footage_Title).map(footage_key => (
                         edition.footage === footage_key && edition.plan === plan_key
                     )
-                        ? (edition.loading ? 'loading...' : <EditableCell
+                        ? (edition.loading ? <TableCell><Spiner/></TableCell>: <EditableCell
                             footage={footage_key}
                             plan={plan_key}
                             key={footage_key}
@@ -121,6 +129,7 @@ export const FootageTable = (props) => {
                             edition={edition}
                             location_id={props.selectedId}
                             update={update}
+                            hasInitial={Plan_HasInitial[plan_key]}
                         />)
                         : <Cell
                             classes={classes}
@@ -130,6 +139,7 @@ export const FootageTable = (props) => {
                             key={footage_key}
                             setEdition={setEdition}
                             location_id={props.selectedId}
+                            hasInitial={Plan_HasInitial[plan_key]}
                         />)}
 
                 </TableRow>)}

@@ -1,7 +1,7 @@
 import {BasePage} from "../Base/BasePage";
 import React from "react";
 import {buildings_InsertByData, buildings_UpdateById, buildings_GetById, buildings_GetByLocationId} from "../api/Api";
-import {BuildingsItem, BuildingsList} from "../Components/Buildings";
+import {BuildingsItem, BuildingsList} from "../Components/Buildings/index";
 import {RoutingConstants} from "../constants/RoutingConstants";
 import {BuildingIcon} from "../icons";
 

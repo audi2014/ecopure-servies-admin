@@ -87,6 +87,11 @@ export const Select = ({
 export const CancelButton = ({onClick}) => <IconButton onClick={onClick} color="secondary" aria-label="Cancel">
     <CancelIcon/>
 </IconButton>;
-export const SubmitButton = () => <IconButton type='submit' color="primary" aria-label="Save">
+export const SubmitButton = ({type = 'submit', color = 'primary', label = 'Save', ...props}) => <IconButton
+    type={type}
+    color={color}
+    aria-label={label}
+    {...props}
+>
     <SaveIcon/>
 </IconButton>;

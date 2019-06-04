@@ -1,19 +1,13 @@
-import React from 'react';
-import BottomNavigationAction from "@material-ui/core/BottomNavigationAction/BottomNavigationAction";
 import BottomNavigation from "@material-ui/core/BottomNavigation/BottomNavigation";
-
-import {BaseList} from "../Base/BaseList";
-import {BaseItem, BaseItemView} from "../Base/BaseItem";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction/BottomNavigationAction";
 import {Link} from "react-router-dom";
-import {RoutingConstants} from "../constants/RoutingConstants";
-import {AddOnIcon, BuildingIcon, LocationIcon, PriceIcon} from "../icons";
-
-export const LocationsList = (props) => {
-    return <BaseList {...props}/>;
-};
+import React from "react";
+import {RoutingConstants} from "../../constants/RoutingConstants";
 
 
-const Navigation = ({selectedId}) => <BottomNavigation showLabels>
+import {AddOnIcon, BuildingIcon, PriceIcon} from "../../icons";
+
+export const Navigation = ({selectedId}) => <BottomNavigation showLabels>
     <BottomNavigationAction
         to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.buildings}`}
         component={Link}
@@ -33,9 +27,3 @@ const Navigation = ({selectedId}) => <BottomNavigation showLabels>
         icon={<AddOnIcon/>}
     />
 </BottomNavigation>;
-
-export const LocationsItem = (props) => {
-    return <BaseItem {...props}>
-        {(item, itemProps) => <Navigation selectedId={props.selectedId}/>}
-    </BaseItem>
-};

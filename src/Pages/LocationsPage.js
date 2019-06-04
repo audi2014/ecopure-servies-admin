@@ -1,6 +1,6 @@
 import {BasePage} from "../Base/BasePage";
 import React from "react";
-import {LocationsItem, LocationsList} from "../Components/Locations";
+import {LocationsItem, LocationsList} from "../Components/Locations/index";
 import {
     locations_GetById,
     locations_GetAll,
@@ -33,6 +33,7 @@ export const LocationsPage = (props) => {
             "page": "",
             "address": "",
             "tel": "",
+            "google_place_id": "",
         },
     };
     return <BasePage{...p} />

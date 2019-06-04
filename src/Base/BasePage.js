@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper/Paper";
 import Grid from "@material-ui/core/Grid/Grid";
+import {Spiner} from "../icons";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -46,7 +47,7 @@ export const BasePage = ({
         fetchItemsToState();
     }, []);
 
-    if (items === null) return 'loading...'
+    if (items === null) return <Spiner/>
     if (items === false) return 'error.'
 
     const handleInsert = (...props) => insertByData(...props)

@@ -5,7 +5,7 @@ import {
 } from "../api/Api";
 import {RoutingConstants} from "../constants/RoutingConstants";
 import {BasePage} from "../Base/BasePage";
-import {BuildingsList} from "../Components/Buildings";
+import {BuildingsList} from "../Components/Buildings/index";
 import {PricingInNetwork} from "../Components/PricingInNetwork";
 import {BuildingIcon} from "../icons";
 

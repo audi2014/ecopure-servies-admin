@@ -1,6 +1,6 @@
 import {BasePage} from "../Base/BasePage";
 import React from "react";
-import {BuildingsItem, BuildingsList} from "../Components/Buildings";
+import {BuildingsItem, BuildingsList} from "../Components/Buildings/index";
 import {buildings_GetById, buildings_GetAll, buildings_UpdateById} from "../api/Api";
 import {RoutingConstants} from "../constants/RoutingConstants";
 import {BuildingIcon} from "../icons";

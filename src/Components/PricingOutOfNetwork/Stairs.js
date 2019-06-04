@@ -9,6 +9,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Stairs_Title} from "../../constants/Enum";
 import {CancelButton, FloatInput, MoneyInput, SubmitButton} from "../../Base/BaseInput";
 import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
+import {Spiner} from "../../icons";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -106,7 +107,7 @@ export const StairsTable = (props) => {
                             edition.stairs === stairs_key
                                 ? (
                                     edition.loading
-                                        ? 'loading...'
+                                        ? <TableCell><Spiner/></TableCell>
                                         : <EditableCell
                                             classes={classes}
                                             stairs={stairs_key}
