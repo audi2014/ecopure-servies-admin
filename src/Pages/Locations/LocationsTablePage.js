@@ -2,14 +2,13 @@ import React from "react";
 import {
     buildings_GetByLocationId, buildingsLarge_GetByLocationId,
     locations_GetAll,
-} from "../api/Api";
-import {RoutingConstants} from "../constants/RoutingConstants";
-import {BaseTablePage} from "../Base/BaseTablePage";
+} from "../../api/Api";
+import {RoutingConstants} from "../../constants/RoutingConstants";
+import {BaseTablePage} from "../../Base/BaseTablePage";
 import Link from "@material-ui/core/Link/Link";
-import {Config} from "../constants/Config";
-import {buildColumnsFrom, mapColumnsKeyValueDeletedThrough, mapColumnsKeyValueProp} from "./tools";
-import {BuildingsPage} from "./BuildingsPage";
-import {BuildingsOfPreloadedLocation} from "./BuildingsOfLocationPage";
+import {Config} from "../../constants/Config";
+import {buildColumnsFrom, mapColumnsKeyValueDeletedThrough, mapColumnsKeyValueProp} from "./../tools";
+import {BuildingsOfPreloadedLocationTablePage} from "./../Buildings/BuildingsOfLocationTablePage";
 
 
 const columns = buildColumnsFrom([
@@ -31,14 +30,15 @@ const columns = buildColumnsFrom([
 ]);
 
 
-export const LocationsPage = ({match, history, fetchItems = locations_GetAll, title = "Locations"}) => {
+export const LocationsTablePage = ({match, history, fetchItems = locations_GetAll, title = "Locations"}) => {
     return <BaseTablePage
-        title={title}
+        onAddClick={()=>history.push(`/${RoutingConstants.locations}/add`)}
+        renderTitle={() => title}
         fetchItems={fetchItems}
-        onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.locations}/${rowData.id}`)}
+        onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.locations}/${rowData.id}/edit`)}
         detailPanel={rowData => {
             return <div style={{margin: 10}}>
-                <BuildingsOfPreloadedLocation
+                <BuildingsOfPreloadedLocationTablePage
                     match={match}
                     history={history}
                     location={rowData}

@@ -90,14 +90,14 @@ const Cell = ({items, footage, plan, classes, setEdition, location_id, hasInitia
     </PriceCell>;
 }
 
-export const FootageTable = (props) => {
+export const FootageTable = ({reload, location_id, footage = []}) => {
     const classes = useStyles();
     const [edition, setEdition] = React.useState({});
 
     const update = (data) => {
         setEdition({...data, loading: true})
         outOfNetworkFootage_InsertByData(data)
-            .then(r => props.reload())
+            .then(r => reload())
             .then(r => {
                 setEdition({});
             })
@@ -127,18 +127,18 @@ export const FootageTable = (props) => {
                             key={footage_key}
                             setEdition={setEdition}
                             edition={edition}
-                            location_id={props.selectedId}
+                            location_id={location_id}
                             update={update}
                             hasInitial={Plan_HasInitial[plan_key]}
                         />)
                         : <Cell
                             classes={classes}
-                            items={props.item.footage || []}
+                            items={footage || []}
                             footage={footage_key}
                             plan={plan_key}
                             key={footage_key}
                             setEdition={setEdition}
-                            location_id={props.selectedId}
+                            location_id={location_id}
                             hasInitial={Plan_HasInitial[plan_key]}
                         />)}
 

@@ -1,27 +1,25 @@
+import React from 'react';
 import BottomNavigation from "@material-ui/core/BottomNavigation/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction/BottomNavigationAction";
-import {Link} from "react-router-dom";
-import React from "react";
 import {RoutingConstants} from "../../constants/RoutingConstants";
+import {Link} from "react-router-dom";
+import {AddOnIcon, BuildingIcon, LocationIcon, PriceIcon} from "../../icons";
 
-
-import {AddOnIcon, BuildingIcon, PriceIcon} from "../../icons";
-
-export const Navigation = ({selectedId}) => <BottomNavigation showLabels>
+export const PricingInNetworkNavigation = ({location_id, building_id}) => <BottomNavigation showLabels>
     <BottomNavigationAction
-        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.buildings}`}
+        to={`/${RoutingConstants.buildings}/${building_id}/edit`}
         component={Link}
-        label="buildings in location"
+        label="Edit building"
         icon={<BuildingIcon/>}
     />
     <BottomNavigationAction
-        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.outOfNetworkPricing}`}
+        to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.outOfNetworkPricing}`}
         component={Link}
         label="Out Of Network Pricing"
         icon={<PriceIcon/>}
     />
     <BottomNavigationAction
-        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.addonPricing}`}
+        to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.addonPricing}`}
         component={Link}
         label="Add-On's/Extra"
         icon={<AddOnIcon/>}

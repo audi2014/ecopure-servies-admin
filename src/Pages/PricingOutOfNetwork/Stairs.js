@@ -75,21 +75,20 @@ const Cell = ({items, stairs, classes, setEdition, location_id}) => {
     </PriceCell>;
 };
 
-export const StairsTable = (props) => {
+export const StairsTable = ({reload, location_id, stairs = []}) => {
     const classes = useStyles();
     const [edition, setEdition] = React.useState({});
 
     const update = (data) => {
         setEdition({...data, loading: true})
         outOfNetworkStairs_InsertByData(data)
-            .then(r => props.reload())
+            .then(r => reload())
             .then(r => {
                 setEdition({});
             })
     };
 
     return <div className={classes.root}>
-        {/*<p>{JSON.stringify(Object.keys(props))} <br/>{JSON.stringify(props)}</p>*/}
         <Table className={classes.table}>
             <TableHead>
                 <TableRow>
@@ -114,17 +113,17 @@ export const StairsTable = (props) => {
                                             key={stairs_key}
                                             setEdition={setEdition}
                                             edition={edition}
-                                            location_id={props.selectedId}
+                                            location_id={location_id}
                                             update={update}
                                         />
                                 )
                                 : <Cell
                                     classes={classes}
-                                    items={props.item.stairs || []}
+                                    items={stairs || []}
                                     stairs={stairs_key}
                                     key={stairs_key}
                                     setEdition={setEdition}
-                                    location_id={props.selectedId}
+                                    location_id={location_id}
                                 />
                         }
                     </TableRow>

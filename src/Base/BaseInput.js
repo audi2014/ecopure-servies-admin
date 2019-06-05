@@ -57,10 +57,15 @@ export const Select = ({
                            value, setValue,
                            keyValue = {},
                            errorValue = '',
-                           errorTitle = 'N/A'
+                           errorTitle = 'N/A',
+                           label = 'Label',
+                           variant="outlined",
+                           ...rest
                        }) => <TextField
+    {...rest}
+    variant={variant}
     select
-    label="Type"
+    label={label}
     className={className}
     value={value}
     onChange={e => setValue(e.target.value)}

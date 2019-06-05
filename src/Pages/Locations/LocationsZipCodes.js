@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useState} from "react";
 import {
+    locations_GetAll,
     locationsZipcode_DeleteById,
     locationsZipcode_GetByLocationId,
     locationsZipcode_InsertByData
@@ -11,6 +12,7 @@ import FormControl from "@material-ui/core/FormControl/FormControl";
 import {SubmitButton} from "../../Base/BaseInput";
 import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
 import {makeStyles} from "@material-ui/core";
+import {makeUsingLoadingById} from "../tools";
 
 const useStyles = makeStyles(theme => ({
     spacingLR: {
@@ -59,31 +61,25 @@ const View = ({items, insertByZipCode, deleteById, ...props}) => {
     </div>
 };
 
-export const ZipCodes = ({location_id}) => {
-    const [items, setItems] = useState(null);
 
-    async function fetchItemToState() {
-        const result = await locationsZipcode_GetByLocationId(location_id);
-        if (result) {
-            setItems(result);
-        } else {
-            setItems(false);
-        }
-    }
+const use_load_locationsZipcode_GetByLocationId = makeUsingLoadingById(locationsZipcode_GetByLocationId);
 
-    useEffect(() => {
-        fetchItemToState(location_id);
-    }, [location_id]);
+
+export const LocationsZipCodes = ({location_id}) => {
+
+
+    const [items, _, reload] = use_load_locationsZipcode_GetByLocationId(location_id);
+
     if (items === null) return 'loading...';
     if (items === false) return 'error.';
 
     const insertByZipCode = (zipcode) => locationsZipcode_InsertByData({location_id, zipcode})
         .then(r => {
-            fetchItemToState();
+            reload();
         });
     const deleteById = (id) => locationsZipcode_DeleteById(id)
         .then(r => {
-            fetchItemToState();
+            reload();
         });
 
     return <View
@@ -92,4 +88,4 @@ export const ZipCodes = ({location_id}) => {
         deleteById={deleteById}
         insertByZipCode={insertByZipCode}
     />
-}
+};

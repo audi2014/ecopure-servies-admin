@@ -66,6 +66,7 @@ const EditableCell = ({edition, setEdition, update, addon_type, location_id, cla
                     value={state.dollars}
                 />
                 <Select
+                    label={'Type'}
                     className={classes.textField}
                     menuClassName={classes.menu}
                     setValue={value_type => setState({value_type})}
@@ -101,14 +102,14 @@ const Cell = ({items, addon_type, classes, setEdition, location_id}) => {
     </PriceCell>
 };
 
-export const AddOnTable = (props) => {
+export const AddOnTable = ({reload, location_id, addons=[]}) => {
     const classes = useStyles();
     const [edition, setEdition] = React.useState({});
 
     const update = (data) => {
         setEdition({...data, loading: true})
         addOn_InserByData(data)
-            .then(r => props.reload())
+            .then(r => reload())
             .then(r => {
                 setEdition({});
             })
@@ -138,7 +139,7 @@ export const AddOnTable = (props) => {
                                 key={addOnType_key}
                                 setEdition={setEdition}
                                 edition={edition}
-                                location_id={props.selectedId}
+                                location_id={location_id}
                                 update={update}
                             />)
                             : <Cell
@@ -146,8 +147,8 @@ export const AddOnTable = (props) => {
                                 addon_type={addOnType_key}
                                 key={addOnType_key}
                                 setEdition={setEdition}
-                                location_id={props.selectedId}
-                                items={props.item || []}
+                                location_id={location_id}
+                                items={addons || []}
                             />
                     }
 

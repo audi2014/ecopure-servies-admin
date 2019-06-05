@@ -103,11 +103,16 @@ const Cell = ({items, room_type, plan, classes, setEdition, building_id, disable
     </PriceCell>
 };
 
-export const RoomTypePlanTable = (props) => {
-    const items = props.item.main || [];
-    const plan_count = Object.keys(Plan_Title)
+export const RoomTypePlanTable = ({pricingInNetwork, reload, selectedId}) => {
+    const items = pricingInNetwork || [];
+    const plan_cents = Object.keys(Plan_Title)
         .reduce((prev, plan) => {
-            prev[plan] = items.filter(i => i.plan === plan).length;
+            prev[plan] = items
+                .filter(i => i.plan === plan)
+                .reduce(
+                    (sum,item)=>sum+=((+item.cents || 0) + (+item.centsInitial || 0)),
+                    0
+                );
             return prev;
         }, {});
 
@@ -117,7 +122,7 @@ export const RoomTypePlanTable = (props) => {
     const update = (data) => {
         setEdition({...data, loading: true})
         inNetwork_InsertByData(data)
-            .then(r => props.reload())
+            .then(r => reload())
             .then(r => {
                 setEdition({});
             })
@@ -134,42 +139,45 @@ export const RoomTypePlanTable = (props) => {
             </TableHead>
             <TableBody>
 
-                {Object.keys(Plan_Title).map(plan_key => <TableRow key={plan_key}>
-                    <TableCell
-                        component="th"
-                        scope="row"
-                        style={{textDecoration: plan_count[plan_key] === 0 ? 'line-through' : undefined}}
-                    >
-                        {Plan_Title[plan_key]}
-                    </TableCell>
-                    {Object.keys(RoomType_Title).map(roomType_key => (
-                        edition.room_type === roomType_key && edition.plan === plan_key
-                    )
-                        ? (edition.loading ? <TableCell><Spinner/></TableCell> : <EditableCell
-                            classes={classes}
-                            room_type={roomType_key}
-                            plan={plan_key}
-                            key={roomType_key}
-                            setEdition={setEdition}
-                            edition={edition}
-                            building_id={props.selectedId}
-                            update={update}
-                            disabled={plan_key === PLAN_OVER_60_DAYS && !plan_count[PLAN_OCCASIONAL]}
-                            hasInitial={Plan_HasInitial[plan_key]}
-                        />)
-                        : <Cell
-                            classes={classes}
-                            items={items}
-                            room_type={roomType_key}
-                            plan={plan_key}
-                            key={roomType_key}
-                            setEdition={setEdition}
-                            building_id={props.selectedId}
-                            disabled={plan_key === PLAN_OVER_60_DAYS && plan_count[PLAN_OCCASIONAL] === 0}
-                            hasInitial={Plan_HasInitial[plan_key]}
-                        />)}
+                {Object.keys(Plan_Title).map(plan_key => {
 
-                </TableRow>)}
+                    return <TableRow key={plan_key}>
+                        <TableCell
+                            component="th"
+                            scope="row"
+                            style={{textDecoration: !plan_cents[plan_key] ? 'line-through' : undefined}}
+                        >
+                            {Plan_Title[plan_key]}
+                        </TableCell>
+                        {Object.keys(RoomType_Title).map(roomType_key => (
+                            edition.room_type === roomType_key && edition.plan === plan_key
+                        )
+                            ? (edition.loading ? <TableCell><Spinner/></TableCell> : <EditableCell
+                                classes={classes}
+                                room_type={roomType_key}
+                                plan={plan_key}
+                                key={roomType_key}
+                                setEdition={setEdition}
+                                edition={edition}
+                                building_id={selectedId}
+                                update={update}
+                                disabled={plan_key === PLAN_OVER_60_DAYS && !plan_cents[PLAN_OCCASIONAL]}
+                                hasInitial={Plan_HasInitial[plan_key]}
+                            />)
+                            : <Cell
+                                classes={classes}
+                                items={items}
+                                room_type={roomType_key}
+                                plan={plan_key}
+                                key={roomType_key}
+                                setEdition={setEdition}
+                                building_id={selectedId}
+                                disabled={plan_key === PLAN_OVER_60_DAYS && !plan_cents[PLAN_OCCASIONAL]}
+                                hasInitial={Plan_HasInitial[plan_key]}
+                            />)}
+
+                    </TableRow>
+                })}
 
 
             </TableBody>

@@ -7,7 +7,7 @@ import {RoutingConstants} from "../../constants/RoutingConstants";
 import LocationPlanIcon from '@material-ui/icons/AccountBalance';
 import {BuildingIcon} from "../../icons";
 
-export const  Navigation = ({selectedId}) => <BottomNavigation showLabels>
+export const  BuildingsItemNavigation = ({selectedId}) => <BottomNavigation showLabels>
     <BottomNavigationAction
         to={`/${RoutingConstants.buildings}/`}
         component={Link}

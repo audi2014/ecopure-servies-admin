@@ -4,7 +4,6 @@ import React from "react";
 import {makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
-
     textField: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
@@ -12,21 +11,49 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export const EditableFields = ({data, onKeyValueChange}) => {
+export const EditableFields = ({data, onKeyValueChange, editableTemplate = null}) => {
     const classes = useStyles();
-    return Object.keys(data)
-        .map(key => (
-            <FormControl fullWidth key={key}>
-                <TextField
-                    key={key}
-                    id={key}
-                    label={key.replace(/_/g, ' ')}
-                    className={classes.textField}
-                    value={data[key] || ''}
-                    onChange={e => onKeyValueChange(key, e.target.value)}
-                    margin="normal"
-                    variant="outlined"
-                />
-            </FormControl>
-        ));
+    if (editableTemplate) {
+        return editableTemplate
+            .map(item => <FormControl fullWidth key={item.field}>
+                    {
+                        item.Input
+                            ? <item.Input
+                                key={item.field}
+                                className={classes.textField}
+                                fieldData={item}
+                                value={data[item.field] || ''}
+                                setValue={value => onKeyValueChange(item.field, value)}
+                            />
+                            : <TextField
+                                key={item.field}
+                                id={item.field}
+                                label={item.title || item.field.replace(/_/g, ' ')}
+                                className={classes.textField}
+                                value={data[item.field] || ''}
+                                onChange={e => onKeyValueChange(item.field, e.target.value)}
+                                margin="normal"
+                                variant="outlined"
+                            />
+                    }
+                </FormControl>
+            )
+    } else {
+        return Object.keys(data)
+            .map(key => (
+                <FormControl fullWidth key={key}>
+                    <TextField
+                        key={key}
+                        id={key}
+                        label={key.replace(/_/g, ' ')}
+                        className={classes.textField}
+                        value={data[key] || ''}
+                        onChange={e => onKeyValueChange(key, e.target.value)}
+                        margin="normal"
+                        variant="outlined"
+                    />
+                </FormControl>
+            ));
+    }
+
 };

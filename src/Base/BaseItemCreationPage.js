@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {BaseItem} from "./BaseItem";
+import {makeEditableData} from "./tools";
 
-const BaseItemCreationPage = ({insertByData, creationTemplate, title}) => {
-    const {id, deleted_at, created_at, updated_at, location_id, building_id, ...editableData} = creationTemplate;
+export const BaseItemCreationPage = ({insertByData, renderTitle, editableTemplate = null}) => {
+    const editableData = makeEditableData({}, editableTemplate);
     return <BaseItem
-        ditableData={editableData}
-        title={title}
-        onSave={(editableData) => insertByData({...creationTemplate, ...editableData})}
+        editableData={editableData}
+        editableTemplate={editableTemplate}
+        title={renderTitle ? renderTitle(editableData) : 'Add Item'}
+        onSave={(editableData) => insertByData({...editableData})}
         isAdd={true}
     />;
 };

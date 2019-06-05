@@ -2,8 +2,10 @@ import React, {useState, useEffect} from 'react';
 import Typography from "@material-ui/core/Typography/Typography";
 import {Spinner} from "../icons";
 import {BaseItem} from "./BaseItem";
+import {makeEditableData} from "./tools";
 
-export const BaseItemUpdationPage = ({title, fetchById, updateById, selectedId, children, ...rest}) => {
+
+export const BaseItemUpdationPage = ({renderTitle, fetchById, updateById, selectedId, children, editableTemplate = null, ...rest}) => {
     const [item, setItem] = useState(null);
 
     async function fetchItemToState() {
@@ -22,7 +24,10 @@ export const BaseItemUpdationPage = ({title, fetchById, updateById, selectedId, 
     if (item === null) return <Spinner/>;
     if (item === false) return <Typography style={{margin: 20}} variant="h6">Item not found</Typography>;
 
-    const {id, deleted_at, created_at, updated_at, location_id, building_id, ...editableData} = item;
+    const editableData = makeEditableData(item, editableTemplate);
+
+    const {id, deleted_at,} = item;
+
     const isDisabled = !!deleted_at;
     const onToggleDisabled = updateById
         ? () => updateById(id, {
@@ -36,9 +41,10 @@ export const BaseItemUpdationPage = ({title, fetchById, updateById, selectedId, 
 
 
     return <BaseItem
-        key={item.id}
+        key={id}
         editableData={editableData}
-        title={title}
+        editableTemplate={editableTemplate}
+        title={renderTitle ? renderTitle(item) : 'Edit Item'}
         isDisabled={isDisabled}
         children={children}
         onToggleDisabled={onToggleDisabled}

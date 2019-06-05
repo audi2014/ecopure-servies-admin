@@ -1,34 +1,33 @@
 import React from "react";
 
-import {BaseItemUpdationPage} from "../Base/BaseItemUpdationPage";
-import {locations_GetById, locations_UpdateById} from "../api/Api";
-import {ZipCodes} from "../Components/Locations/ZipCodes";
+import {BaseItemUpdationPage} from "../../Base/BaseItemUpdationPage";
+import {locations_GetById, locations_UpdateById} from "../../api/Api";
+import {LocationsZipCodes} from "./LocationsZipCodes";
 import Typography from "@material-ui/core/Typography/Typography";
 import Link from "@material-ui/core/Link/Link";
-import {Navigation} from "../Components/Locations/Navigation";
+import {LocationsNavigation} from "./LocationsNavigation";
+import {locationsEditableTemplate} from "./LocationsAddPage";
 
-export const EditLocationPage = ({match, history, onChange = null, fetchById=locations_GetById}) => {
+export const LocationsEditPage = ({match, history, onChange = null, fetchById=locations_GetById}) => {
     const selectedId = match.params.id;
     return <BaseItemUpdationPage
+        editableTemplate={locationsEditableTemplate}
         title={'Edit Location'}
         fetchById={fetchById}
         updateById={(id, data) => locations_UpdateById(id, data).then(r => {
-            if (onChange) onChange(selectedId)
-            // if (r && r.id) {
-            //     history.push(`/${RoutingConstants.locations}/${r.id}`)
-            // }
+            if (onChange) onChange(selectedId);
         })}
         selectedId={match.params.id}
     >
         {
             (item, itemProps) => <>
-                <ZipCodes location_id={selectedId}/>
+                <LocationsZipCodes location_id={selectedId}/>
                 <Typography style={{margin: 20}} variant="h6">
                     <Link
                         href='https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder'>How
                         to get Google place id?</Link>
                 </Typography>
-                <Navigation selectedId={selectedId}/>
+                <LocationsNavigation selectedId={selectedId}/>
             </>
         }
     </BaseItemUpdationPage>

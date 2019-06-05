@@ -5,7 +5,6 @@ import Grid from "@material-ui/core/Grid/Grid";
 import {ButtonCreate, ButtonReset, ButtonSave, ButtonToggleDisable} from "./Buttons";
 import React from "react";
 import {makeStyles} from "@material-ui/core";
-import Paper from "@material-ui/core/Paper/Paper";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -29,7 +28,7 @@ const getDiff = (source, state) => {
     return count > 0 ? v : null;
 };
 
-export const BaseItem = ({editableData, title, isDisabled, children, onToggleDisabled, onSave, isAdd}) => {
+export const BaseItem = ({editableData, editableTemplate, title, isDisabled, children, onToggleDisabled, onSave, isAdd}) => {
     const classes = useStyles();
     const [state, setState] = useState({...editableData});
     const handleKeyValueChange = (key, value) => {
@@ -42,7 +41,7 @@ export const BaseItem = ({editableData, title, isDisabled, children, onToggleDis
         {
             title ? <Typography style={{margin: 20}} variant="h6">{title}</Typography> : null
         }
-        <EditableFields onKeyValueChange={handleKeyValueChange} data={state}/>
+        <EditableFields onKeyValueChange={handleKeyValueChange} data={state} editableTemplate={editableTemplate}/>
 
         <Grid
             container

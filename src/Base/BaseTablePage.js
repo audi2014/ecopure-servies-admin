@@ -1,12 +1,9 @@
 import MaterialTable from "material-table";
 import React from "react";
-
-import {MuiThemeProvider} from '@material-ui/core/styles';
-import {theme} from "../Template";
+import AddIcon from '@material-ui/icons/Add';
 import {withTheme} from "../Theme";
-
-
 import {StylesProvider, createGenerateClassName} from '@material-ui/styles';
+import Fab from "@material-ui/core/Fab/Fab";
 
 const generateClassName = createGenerateClassName({
     productionPrefix: 'mt',
@@ -30,14 +27,27 @@ const _BaseTablePage = (({
                              options = defaultOptions,
                              fetchItems = defaultFetch,
                              columns = defaultColumns,
-                             title = defaultTitle,
+                             renderTitle = null,
+                             onAddClick = null,
                              ...rest
                          }) => {
 
     return <MaterialTable
-
+        {...rest}
         options={options}
-        title={title}
+        title={<span style={{
+            display: 'flex',
+            alignItems: 'baseline',
+        }}>
+            {renderTitle ? renderTitle() : defaultTitle}
+            {
+                onAddClick ?
+                    <Fab onClick={onAddClick} style={{margin: 10}} size="small" color="primary"
+                         aria-label="Create">
+                        <AddIcon/>
+                    </Fab> : null
+            }
+        </span>}
         columns={columns}
         data={
             (query) => fetchItems(query)
@@ -54,7 +64,6 @@ const _BaseTablePage = (({
                 })
                 .then(data => data ? {data} : {data: []})
         }
-        {...rest}
     />
 });
 

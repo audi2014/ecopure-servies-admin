@@ -1,0 +1,21 @@
+import React from 'react';
+import BottomNavigation from "@material-ui/core/BottomNavigation/BottomNavigation";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction/BottomNavigationAction";
+import {RoutingConstants} from "../../constants/RoutingConstants";
+import {Link} from "react-router-dom";
+import {BuildingIcon, PriceIcon} from "../../icons";
+
+export const PricingAddOnNavigation = ({selectedId}) => <BottomNavigation showLabels>
+    <BottomNavigationAction
+        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.buildings}`}
+        component={Link}
+        label="Buildings in location"
+        icon={<BuildingIcon/>}
+    />
+    <BottomNavigationAction
+        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.outOfNetworkPricing}`}
+        component={Link}
+        label="Out Of Network Pricing"
+        icon={<PriceIcon/>}
+    />
+</BottomNavigation>;
