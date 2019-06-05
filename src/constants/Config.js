@@ -7,4 +7,4 @@ const ConfigLocal = {
     apiBaseUrl: 'http://localhost:8080',
 };
 
-export const Config = ConfigLocal;
+export const Config = ConfigDevRemote;
