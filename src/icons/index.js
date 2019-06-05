@@ -11,4 +11,4 @@ export const PriceIcon = MonetizationOn;
 export const AddOnIcon = Extension;
 
 
-export const Spiner = () => <CircularProgress size={20}  />;
+export const Spinner = () => <CircularProgress size={20}  />;

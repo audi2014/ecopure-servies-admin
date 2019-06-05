@@ -1,17 +1,16 @@
 {
-  "homepage": "http://52.62.149.101/dev-dashboard",
   "name": "ecopure-dev-dashboard",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
-    "@material-ui/core": "4.0.0",
-    "@material-ui/icons": "4.0.0",
+    "@material-ui/core": "^4.0.2",
+    "@material-ui/icons": "4.0.1",
     "material-table": "^1.39.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
-    "react-router-dom": "^5.0.0",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "2.1.8"
   },
   "devDependencies": {

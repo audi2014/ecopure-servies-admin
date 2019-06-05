@@ -1,25 +1,33 @@
-import {BasePage} from "../Base/BasePage";
 import React from "react";
-import {BuildingsItem, BuildingsList} from "../Components/Buildings/index";
-import {buildings_GetById, buildings_GetAll, buildings_UpdateById} from "../api/Api";
+import {BaseTablePage} from "../Base/BaseTablePage";
+import {buildingsLarge_GetAll} from "../api/Api";
 import {RoutingConstants} from "../constants/RoutingConstants";
-import {BuildingIcon} from "../icons";
+import {buildColumnsFrom, mapColumnsKeyValueDeletedThrough, mapColumnsKeyValueProp} from "./tools";
+import Link from "@material-ui/core/Link/Link";
+import {Config} from "../constants/Config";
 
 
-export const BuildingsPage = (props) => {
-    const p = {
-        ...props,
-        ListComponent: BuildingsList,
-        ItemComponent: BuildingsItem,
-        fetchItems: buildings_GetAll,
-        fetchById: buildings_GetById,
-        updateById: buildings_UpdateById,
+const columns = buildColumnsFrom([
+    mapColumnsKeyValueProp('title')({
+        location_name: 'Location Name',
+        name: 'Building Name',
+        address: 'Building Address',
+        zipcode: 'Building Zip-Code',
+    }),
 
-        renderListItemTitle: (item) => item.address,
-        selectedId: props.match.params.id,
-        renderListItemTo: (id) => `/${RoutingConstants.buildings}/${id}`,
-        itemTitle: "Edit building",
-        ListItemIcon: BuildingIcon
-    };
-    return <BasePage{...p} />
+    mapColumnsKeyValueProp('defaultGroupOrder')({
+        location_name: 0,
+    }),
+    mapColumnsKeyValueDeletedThrough,
+]);
+
+
+export const BuildingsPage = ({match, history, fetchItems = buildingsLarge_GetAll, title = "Buildings"}) => {
+    return <BaseTablePage
+        title={title}
+        fetchItems={fetchItems}
+        onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}`)}
+        columns={columns}
+
+    />
 };

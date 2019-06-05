@@ -56,11 +56,11 @@ export const locationsZipcode_DeleteById = (id) => _delete(`/locations-zipcode/$
 export const locationsZipcode_InsertByData = (data) => _post(`/locations-zipcode`, data);
 
 
-export const buildings_GetAll = () => _get(`/buildings?is_deleted=null`);
+export const buildingsLarge_GetAll = () => _get(`/buildings-large?is_deleted=null`);
+export const buildingsLarge_GetById = (id) => _get(`/buildings-large/${id}`);
+export const buildingsLarge_GetByLocationId = (location_id) => _get(`/buildings-large?location_id=${location_id}`);
 export const buildings_UpdateById = (id, data) => _put(`/buildings/${id}`, data);
 export const buildings_InsertByData = (data) => _post(`/buildings`, data);
-export const buildings_GetByLocationId = (location_id) => _get(`/buildings?location_id=${location_id}`);
-export const buildings_GetById = (id) => _get(`/buildings/${id}`);
 
 export const outOfNetworkFootage_GetByLocationId = (location_id) => _get('/pricing/out-of-network/footage?location_id=' + location_id);
 export const outOfNetworkFootage_InsertByData = (data) => _post('/pricing/out-of-network/footage', data);

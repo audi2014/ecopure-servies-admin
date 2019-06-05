@@ -9,7 +9,7 @@ import {outOfNetworkFootage_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {FloatInput,} from "../../Base/BaseInput";
 import {dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
-import {Spiner} from "../../icons";
+import {Spinner} from "../../icons";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -121,7 +121,7 @@ export const FootageTable = (props) => {
                     {Object.keys(Footage_Title).map(footage_key => (
                         edition.footage === footage_key && edition.plan === plan_key
                     )
-                        ? (edition.loading ? <TableCell><Spiner/></TableCell>: <EditableCell
+                        ? (edition.loading ? <TableCell><Spinner/></TableCell>: <EditableCell
                             footage={footage_key}
                             plan={plan_key}
                             key={footage_key}

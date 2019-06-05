@@ -12,7 +12,7 @@ import {MoneyInput, Select} from "../../Base/BaseInput";
 import Paper from "@material-ui/core/Paper/Paper";
 import Typography from "@material-ui/core/Typography/Typography";
 import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
-import {Spiner} from "../../icons";
+import {Spinner} from "../../icons";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -132,7 +132,7 @@ export const AddOnTable = (props) => {
                     {
                         edition.addon_type === addOnType_key
 
-                            ? (edition.loading ? <TableCell><Spiner/></TableCell> : <EditableCell
+                            ? (edition.loading ? <TableCell><Spinner/></TableCell> : <EditableCell
                                 classes={classes}
                                 addon_type={addOnType_key}
                                 key={addOnType_key}

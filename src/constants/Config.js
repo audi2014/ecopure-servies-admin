@@ -1,4 +1,10 @@
-export const Config = {
+const ConfigDevRemote = {
     apiBaseUrl: "http://52.62.149.101/api",
-    // apiBaseUrl: 'http://localhost:8080',
-}
+    wordpressBaseUrl:"http://52.62.149.101"
+};
+const ConfigLocal = {
+    ...ConfigDevRemote,
+    apiBaseUrl: 'http://localhost:8080',
+};
+
+export const Config = ConfigLocal;

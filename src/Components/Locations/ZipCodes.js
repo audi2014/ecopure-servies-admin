@@ -13,8 +13,7 @@ import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
 import {makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
-
-    textField: {
+    spacingLR: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
     },
@@ -27,17 +26,20 @@ const View = ({items, insertByZipCode, deleteById, ...props}) => {
     const handleNewZipCodeChange = (e) => setNewZipCode(Number.parseInt(e.target.value) || '');
     return <div>
         <Typography style={{margin: 20}} variant="h6">Zip Codes</Typography>
-        {items.map(item => <Chip
-            key={item.zipcode}
-            color="primary"
-            onDelete={() => deleteById(item.id)}
-            variant="outlined"
-            label={item.zipcode}
-        />)}
+        <div
+            className={classes.spacingLR}>
+            {items.map(item => <Chip
+                key={item.zipcode}
+                color="primary"
+                onDelete={() => deleteById(item.id)}
+                variant="outlined"
+                label={item.zipcode}
+            />)}
+        </div>
         <div>
             <FormControl>
                 <TextField
-                    className={classes.textField}
+                    className={classes.spacingLR}
                     label="Add new Zip"
                     value={newZipCode || ''}
                     onChange={handleNewZipCodeChange}
@@ -47,7 +49,7 @@ const View = ({items, insertByZipCode, deleteById, ...props}) => {
                         endAdornment: (<InputAdornment position="end">
                             <SubmitButton
                                 type={'button'}
-                                onClick={() => insertByZipCode(newZipCode).then(r=>setNewZipCode(''))}
+                                onClick={() => insertByZipCode(newZipCode).then(r => setNewZipCode(''))}
                             />
                         </InputAdornment>),
                     }}

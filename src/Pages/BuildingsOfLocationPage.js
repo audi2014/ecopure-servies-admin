@@ -1,36 +1,63 @@
-import {BasePage} from "../Base/BasePage";
 import React from "react";
-import {buildings_InsertByData, buildings_UpdateById, buildings_GetById, buildings_GetByLocationId} from "../api/Api";
-import {BuildingsItem, BuildingsList} from "../Components/Buildings/index";
+import {BaseTablePage} from "../Base/BaseTablePage";
+import {buildingsLarge_GetByLocationId, locations_GetById} from "../api/Api";
 import {RoutingConstants} from "../constants/RoutingConstants";
-import {BuildingIcon} from "../icons";
+import {buildColumnsFrom, mapColumnsKeyValueDeletedThrough, mapColumnsKeyValueProp} from "./tools";
 
 
-export const BuildingsOfLocationPage = (props) => {
-    const location_id = props.match.params.location_id;
-    const selectedId = props.match.params.id;
-    const p = {
-        ...props,
-        ListComponent: BuildingsList,
-        ItemComponent: BuildingsItem,
-        fetchItems: () => buildings_GetByLocationId(location_id),
-        fetchById: buildings_GetById,
-        renderListItemTitle: (item) => item.address,
-        selectedId: selectedId,
-        renderListItemTo: (id) => `/${RoutingConstants.locations}/${location_id}/${RoutingConstants.buildings}/${id}`,
-        renderListItemCreate: () => `/${RoutingConstants.locations}/${location_id}/${RoutingConstants.buildings}/add`,
-        isAdd: selectedId === 'add',
-        creationTemplate: {
-            "location_id": location_id,
-            "name": "",
-            "address": "",
-            "zipcode": "",
-        },
-        updateById: buildings_UpdateById,
-        insertByData: buildings_InsertByData,
-        onDidInsert: (item) => props.history.push(`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.buildings}/${item.id}`),
-        itemTitle: "Edit building",
-        ListItemIcon: BuildingIcon
-    };
-    return <BasePage{...p} />
+const columns = buildColumnsFrom([
+    mapColumnsKeyValueProp('title')({
+        location_name: 'Location Name',
+        name: 'Building Name',
+        address: 'Building Address',
+        zipcode: 'Building Zip-Code',
+    }),
+    mapColumnsKeyValueDeletedThrough,
+]);
+
+const useLocationLoading = (location_id) => {
+    const [location, setLocation] = React.useState(null);
+
+    async function fetchItemToState(id) {
+        const result = await locations_GetById(id);
+        if (result) {
+            setLocation(result);
+        } else {
+            setLocation(false);
+        }
+    }
+
+    React.useEffect(() => {
+        fetchItemToState(location_id);
+    }, [location_id]);
+
+    return [location, setLocation, fetchItemToState]
+};
+
+
+export const BuildingsOfLocationPage = ({match, history, fetchItems = buildingsLarge_GetByLocationId, title = "Buildings"}) => {
+    const location_id = location ? +location.id : match.params.location_id;
+    const [location, setLocation, reload] = useLocationLoading(location_id)
+
+
+    return <BaseTablePage
+        title={`${title}${location ? ' of "' + location.name + '"' : ''}`}
+        fetchItems={() => fetchItems(location_id)}
+        onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}`)}
+        columns={columns}
+
+    />
+};
+
+export const BuildingsOfPreloadedLocation = ({match, history, fetchItems = buildingsLarge_GetByLocationId, location}) => {
+    const location_id = +location.id;
+    const title = `Buildings of "${location.name || '#' + location.id}"`;
+
+    return <BaseTablePage
+        title={title}
+        fetchItems={() => fetchItems(location_id)}
+        onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}`)}
+        columns={columns}
+
+    />
 };
