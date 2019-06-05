@@ -13,10 +13,10 @@ import {Select} from "../../Base/BaseInput";
 
 const columns = buildColumnsFrom([
     mapColumnsKeyValueProp('title')({
-        location_name: 'Location Name',
         name: 'Building Name',
         address: 'Building Address',
-        zipcode: 'Building Zip-Code',
+        // zipcode: 'Building Zip-Code',
+        location_name: 'Location Name',
     }),
     mapColumnsKeyValueProp('render')({
         location_name: (rowData) => rowData.location_name || 'Location #' + rowData.location_id,
@@ -48,8 +48,9 @@ export const BuildingsTablePage = ({match, history, fetchItems = buildingsLarge_
         renderTitle={() => <React.Fragment>
             {title}
             <Select
+                label={'Filter Locations'}
                 errorValue={false}
-                keyValue={LocationsId_Name} label={'Locations'}
+                keyValue={LocationsId_Name}
                 value={filtered_location_id}
                 setValue={setLocationId}
                 style={{width: 200, marginLeft: 10}}/>

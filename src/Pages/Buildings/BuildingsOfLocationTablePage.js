@@ -12,10 +12,10 @@ import {
 
 const columns = buildColumnsFrom([
     mapColumnsKeyValueProp('title')({
-        location_name: 'Location Name',
         name: 'Building Name',
         address: 'Building Address',
-        zipcode: 'Building Zip-Code',
+        location_name: 'Location Name',
+        // zipcode: 'Building Zip-Code',
     }),
     mapColumnsKeyValueDeletedThrough,
 ]);
