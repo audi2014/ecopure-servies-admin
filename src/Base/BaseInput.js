@@ -59,7 +59,7 @@ export const Select = ({
                            errorValue = '',
                            errorTitle = 'N/A',
                            label = 'Label',
-                           variant="outlined",
+                           variant = "outlined",
                            ...rest
                        }) => <TextField
     {...rest}
@@ -76,10 +76,14 @@ export const Select = ({
     }}
     margin="normal"
 >
-    <MenuItem disabled value={errorValue}>
-        {errorTitle}
-    </MenuItem>
-    {Object.keys(keyValue)
+    {
+        errorValue !== false
+            ? <MenuItem disabled value={errorValue}>
+                {errorTitle}
+            </MenuItem> : null
+    }
+
+    {Object.keys(keyValue).sort((a, b) => isNaN(b) - isNaN(a))
         .map(type =>
             <MenuItem key={type}
                       value={type}>

@@ -26,11 +26,28 @@ const defaultTitle = 'Table Title';
 const _BaseTablePage = (({
                              options = defaultOptions,
                              fetchItems = defaultFetch,
+                             staticData = false,
                              columns = defaultColumns,
                              renderTitle = null,
                              onAddClick = null,
                              ...rest
                          }) => {
+
+    const data = staticData === false
+        ? (query) => fetchItems(query)
+            .then(items => {
+                if (items) {
+                    return items.sort((a, b) => {
+                        if (!!a.deleted_at === b.deleted_at) {
+                            return a.id - b.id
+                        } else {
+                            return !!a.deleted_at - !!b.deleted_at
+                        }
+                    })
+                }
+            })
+            .then(data => data ? {data} : {data: []})
+        : staticData
 
     return <MaterialTable
         {...rest}
@@ -49,21 +66,7 @@ const _BaseTablePage = (({
             }
         </span>}
         columns={columns}
-        data={
-            (query) => fetchItems(query)
-                .then(items => {
-                    if (items) {
-                        return items.sort((a, b) => {
-                            if (!!a.deleted_at === b.deleted_at) {
-                                return a.id - b.id
-                            } else {
-                                return !!a.deleted_at - !!b.deleted_at
-                            }
-                        })
-                    }
-                })
-                .then(data => data ? {data} : {data: []})
-        }
+        data={data}
     />
 });
 
