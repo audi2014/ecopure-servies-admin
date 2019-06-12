@@ -12,7 +12,7 @@ export const LocationsEditPage = ({match, history, onChange = null, fetchById=lo
     const selectedId = match.params.id;
     return <BaseItemUpdationPage
         editableTemplate={locationsEditableTemplate}
-        title={'Edit Location'}
+        renderTitle={() => 'Location'}
         fetchById={fetchById}
         updateById={(id, data) => locations_UpdateById(id, data).then(r => {
             if (onChange) onChange(selectedId);
@@ -27,7 +27,7 @@ export const LocationsEditPage = ({match, history, onChange = null, fetchById=lo
                         href='https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder'>How
                         to get Google place id?</Link>
                 </Typography>
-                <LocationsNavigation selectedId={selectedId}/>
+                <LocationsNavigation location_id={selectedId}/>
             </>
         }
     </BaseItemUpdationPage>

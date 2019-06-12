@@ -30,7 +30,11 @@ export const PricingInNetworkPage = ({match, history, onChange = null, building_
             reload={reloadPricingInNetwork}
             selectedId={building_id}
         />
-        <ImportInnetwork building_id={+building.id} reload={reloadPricingInNetwork} location_id={+building.location_id}/>
+        <ImportInnetwork pricingInNetwork={pricingInNetwork}
+                         building_id={+building.id}
+                         reload={reloadPricingInNetwork}
+                         location_id={+building.location_id}
+        />
         <PricingInNetworkNavigation building_id={building_id} location_id={building.location_id}/>
     </div>;
 };

@@ -5,21 +5,21 @@ import React from "react";
 import {RoutingConstants} from "../../constants/RoutingConstants";
 import {AddOnIcon, BuildingIcon, PriceIcon} from "../../icons";
 
-export const LocationsNavigation = ({selectedId}) => <BottomNavigation showLabels>
+export const LocationsNavigation = ({location_id}) => <BottomNavigation showLabels>
     <BottomNavigationAction
-        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.buildings}`}
+        to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.buildings}`}
         component={Link}
         label="buildings in location"
         icon={<BuildingIcon/>}
     />
     <BottomNavigationAction
-        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.outOfNetworkPricing}`}
+        to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.outOfNetworkPricing}`}
         component={Link}
         label="Out Of Network Pricing"
         icon={<PriceIcon/>}
     />
     <BottomNavigationAction
-        to={`/${RoutingConstants.locations}/${selectedId}/${RoutingConstants.addonPricing}`}
+        to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.addonPricing}`}
         component={Link}
         label="Add-On's/Extra"
         icon={<AddOnIcon/>}

@@ -8,7 +8,6 @@ import {
     AddOnValueType_Title,
     Plan_HasInitial,
     PLAN_OCCASIONAL,
-    PLAN_OVER_60_DAYS,
     Plan_Title,
     RoomType_Title
 } from "../../constants/Enum";
@@ -161,7 +160,6 @@ export const RoomTypePlanTable = ({pricingInNetwork, reload, selectedId}) => {
                                 edition={edition}
                                 building_id={selectedId}
                                 update={update}
-                                disabled={plan_key === PLAN_OVER_60_DAYS && !plan_cents[PLAN_OCCASIONAL]}
                                 hasInitial={Plan_HasInitial[plan_key]}
                             />)
                             : <Cell
@@ -172,7 +170,6 @@ export const RoomTypePlanTable = ({pricingInNetwork, reload, selectedId}) => {
                                 key={roomType_key}
                                 setEdition={setEdition}
                                 building_id={selectedId}
-                                disabled={plan_key === PLAN_OVER_60_DAYS && !plan_cents[PLAN_OCCASIONAL]}
                                 hasInitial={Plan_HasInitial[plan_key]}
                             />)}
 

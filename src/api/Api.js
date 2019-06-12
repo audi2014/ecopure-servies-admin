@@ -58,7 +58,7 @@ export const locationsZipcode_InsertByData = (data) => _post(`/locations-zipcode
 
 export const buildingsLarge_GetAll = () => _get(`/buildings-large?is_deleted=null`);
 export const buildingsLarge_GetById = (id) => _get(`/buildings-large/${id}`);
-export const buildingsLarge_GetByLocationId = (location_id) => _get(`/buildings-large?location_id=${location_id}`);
+export const buildingsLarge_GetByLocationId = (location_id) => _get(`/buildings-large?location_id=${location_id}&is_deleted=null`);
 export const buildings_UpdateById = (id, data) => _put(`/buildings/${id}`, data);
 export const buildings_InsertByData = (data) => _post(`/buildings`, data);
 
@@ -70,6 +70,7 @@ export const outOfNetworkStairs_InsertByData = (data) => _post('/pricing/out-of-
 
 export const inNetwork_GetByBuildingId = (building_id) => _get('/pricing/in-network?building_id=' + building_id);
 export const inNetwork_InsertByData = (data) => _post('/pricing/in-network', data);
+export const inNetwork_DeleteById = (id) => _delete('/pricing/in-network/'+id);
 
 
 export const inNetworkExtraFootage_GetByLocationId = (location_id) => _get('/pricing/in-network-extra-footage?location_id=' + location_id);

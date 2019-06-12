@@ -61,7 +61,7 @@ export const BuildingsEditPage = ({
     >
         {
             (item, itemProps) => <>
-                <BuildingsItemNavigation selectedId={selectedId}/>
+                <BuildingsItemNavigation building_id={selectedId}/>
             </>
         }
     </BaseItemUpdationPage>
