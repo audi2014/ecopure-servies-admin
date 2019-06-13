@@ -28,7 +28,7 @@ export const PricingOutOfNetworkPage = ({match, history, onChange = null, locati
 
     return <div>
         <Typography style={{margin: 20}} variant="h6">
-            Out-of-network Pricing of Location "{location.name || 'N/A'}"
+            Regular Pricing of Location "{location.name || 'N/A'}"
         </Typography>
         <FootageTable reload={reloadFootage} location_id={location_id} footage={footage}/>
         <StairsTable reload={reloadStairs} location_id={location_id} stairs={stairs}/>

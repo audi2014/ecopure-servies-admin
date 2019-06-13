@@ -3,9 +3,8 @@ import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
 import MoneyIcon from '@material-ui/icons/MonetizationOn';
 import TextField from "@material-ui/core/TextField/TextField";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
-import CancelIcon from '@material-ui/icons/Close';
 import IconButton from "@material-ui/core/IconButton/IconButton";
-import SaveIcon from '@material-ui/icons/Save';
+import {CancelIcon, SaveIcon} from "../icons";
 
 const valueOrMin = (value, min = null) => {
     value = String(value).replace(',', '.');

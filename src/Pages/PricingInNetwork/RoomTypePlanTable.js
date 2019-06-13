@@ -11,7 +11,7 @@ import {
     Plan_Title,
     RoomType_Title
 } from "../../constants/Enum";
-import {inNetwork_InsertByData} from "../../api/Api";
+import {inNetworkPrices_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {MoneyInput,} from "../../Base/BaseInput";
 import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
         flexWrap: 'wrap',
     },
 }));
-const EditableCell = ({edition, setEdition, update, room_type, plan, building_id, classes, disabled, hasInitial}) => {
+const EditableCell = ({edition, setEdition, update, room_type, plan, custom_pricing_model_id, location_id, classes, disabled, hasInitial}) => {
 
     return <PriceCellEditable
         edition={{
@@ -46,7 +46,8 @@ const EditableCell = ({edition, setEdition, update, room_type, plan, building_id
             state => update({
                     ...state,
                     room_type,
-                    building_id,
+                    custom_pricing_model_id,
+                    location_id,
                     plan,
                     dollars: undefined,
                     dollarsInitial: undefined,
@@ -78,9 +79,11 @@ const EditableCell = ({edition, setEdition, update, room_type, plan, building_id
     </PriceCellEditable>;
 };
 
-const Cell = ({items, room_type, plan, classes, setEdition, building_id, disabled, hasInitial}) => {
+const Cell = ({items, room_type, plan, classes, setEdition, custom_pricing_model_id, location_id, disabled, hasInitial}) => {
     if (disabled) return <TableCell/>;
-    const onClick = () => building_id ? setEdition({room_type, plan, cents, centsInitial, building_id}) : null;
+    const onClick = () => (location_id && custom_pricing_model_id)
+        ? setEdition({room_type, plan, cents, centsInitial, custom_pricing_model_id, location_id})
+        : null;
     let cents = 0;
     let centsInitial = 0;
     items = items.filter(item => item.room_type === room_type && item.plan === plan);
@@ -88,7 +91,7 @@ const Cell = ({items, room_type, plan, classes, setEdition, building_id, disable
         cents = items[0].cents;
         centsInitial = items[0].centsInitial;
         if (items.length > 1) {
-            console.error('room_type pricing error: room_type & plan of building duplicate');
+            console.error('room_type pricing error: room_type & plan of model duplicate');
         }
     }
 
@@ -102,14 +105,15 @@ const Cell = ({items, room_type, plan, classes, setEdition, building_id, disable
     </PriceCell>
 };
 
-export const RoomTypePlanTable = ({pricingInNetwork, reload, selectedId}) => {
+
+export const RoomTypePlanTable = ({pricingInNetwork, reload, location_id, custom_pricing_model_id}) => {
     const items = pricingInNetwork || [];
     const plan_cents = Object.keys(Plan_Title)
         .reduce((prev, plan) => {
             prev[plan] = items
                 .filter(i => i.plan === plan)
                 .reduce(
-                    (sum,item)=>sum+=((+item.cents || 0) + (+item.centsInitial || 0)),
+                    (sum, item) => sum += ((+item.cents || 0) + (+item.centsInitial || 0)),
                     0
                 );
             return prev;
@@ -120,7 +124,7 @@ export const RoomTypePlanTable = ({pricingInNetwork, reload, selectedId}) => {
 
     const update = (data) => {
         setEdition({...data, loading: true})
-        inNetwork_InsertByData(data)
+        inNetworkPrices_InsertByData(data)
             .then(r => reload())
             .then(r => {
                 setEdition({});
@@ -158,7 +162,8 @@ export const RoomTypePlanTable = ({pricingInNetwork, reload, selectedId}) => {
                                 key={roomType_key}
                                 setEdition={setEdition}
                                 edition={edition}
-                                building_id={selectedId}
+                                location_id={location_id}
+                                custom_pricing_model_id={custom_pricing_model_id}
                                 update={update}
                                 hasInitial={Plan_HasInitial[plan_key]}
                             />)
@@ -169,7 +174,8 @@ export const RoomTypePlanTable = ({pricingInNetwork, reload, selectedId}) => {
                                 plan={plan_key}
                                 key={roomType_key}
                                 setEdition={setEdition}
-                                building_id={selectedId}
+                                location_id={location_id}
+                                custom_pricing_model_id={custom_pricing_model_id}
                                 hasInitial={Plan_HasInitial[plan_key]}
                             />)}
 

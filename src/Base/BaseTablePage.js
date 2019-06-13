@@ -1,9 +1,9 @@
 import MaterialTable from "material-table";
 import React from "react";
-import AddIcon from '@material-ui/icons/Add';
 import {withTheme} from "../Theme";
 import {StylesProvider, createGenerateClassName} from '@material-ui/styles';
 import Fab from "@material-ui/core/Fab/Fab";
+import {AddIcon} from "../icons";
 
 const generateClassName = createGenerateClassName({
     productionPrefix: 'mt',

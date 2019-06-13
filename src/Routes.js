@@ -56,7 +56,12 @@ export const AppRoutes = () => <React.Fragment>
     />
     <Route
         exact
-        path={`/${RoutingConstants.buildings}/:id/${RoutingConstants.inNetworkPricing}`}
+        path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/:id/edit`}
+        component={PricingInNetworkPage}
+    />
+    <Route
+        exact
+        path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/add`}
         component={PricingInNetworkPage}
     />
     <Route

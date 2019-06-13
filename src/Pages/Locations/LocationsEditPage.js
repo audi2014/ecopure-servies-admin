@@ -7,8 +7,11 @@ import Typography from "@material-ui/core/Typography/Typography";
 import Link from "@material-ui/core/Link/Link";
 import {LocationsNavigation} from "./LocationsNavigation";
 import {locationsEditableTemplate} from "./LocationsAddPage";
+import {TabBar} from "../../Base/TabBar";
+import {PricingModelsTable} from "./PricingModelsTable";
 
-export const LocationsEditPage = ({match, history, onChange = null, fetchById=locations_GetById}) => {
+
+const View = ({match, history, onChange = null, fetchById = locations_GetById}) => {
     const selectedId = match.params.id;
     return <BaseItemUpdationPage
         editableTemplate={locationsEditableTemplate}
@@ -31,4 +34,15 @@ export const LocationsEditPage = ({match, history, onChange = null, fetchById=lo
             </>
         }
     </BaseItemUpdationPage>
+};
+
+
+export const LocationsEditPage = (props) => {
+    return <TabBar
+        defaultIndex={1}
+        label_render={{
+            'Location': () => <View {...props}/>,
+            'Pricing': () => <PricingModelsTable {...props}/>,
+        }}
+    />;
 };
