@@ -30,13 +30,21 @@ export const BaseItemUpdationPage = ({renderTitle, fetchById, updateById, select
 
     const isDisabled = !!deleted_at;
     const onToggleDisabled = updateById
-        ? () => updateById(id, {
-            deleted_at: isDisabled ? null : Math.round((new Date()).getTime() / 1000)
-        }).then(r => fetchItemToState())
+        ? () => updateById(
+            id,
+            {
+                deleted_at: isDisabled ? null : Math.round((new Date()).getTime() / 1000)
+            },
+            item
+        )
+            .then(r => fetchItemToState())
+            .catch(e => alert(e))
         : null;
 
     const onSave = updateById
-        ? (diff) => updateById(id, diff).then(r => fetchItemToState())
+        ? (diff) => updateById(id, diff, item)
+            .then(r => fetchItemToState())
+            .catch(e => alert(e))
         : null;
 
 
@@ -52,7 +60,7 @@ export const BaseItemUpdationPage = ({renderTitle, fetchById, updateById, select
         isAdd={false}
 
     >{
-        children(
+        children ? children(
             item,
             {
                 selectedId,
@@ -60,7 +68,7 @@ export const BaseItemUpdationPage = ({renderTitle, fetchById, updateById, select
                 item,
                 editableData,
             }
-        )
+        ) : null
     }</BaseItem>;
 
 

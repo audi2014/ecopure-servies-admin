@@ -4,5 +4,6 @@ export const RoutingConstants = {
     addonPricing: 'pricing/add-on',
     inNetworkPricing: 'pricing/in-network',
     buildings: 'buildings',
+    editPricingOfLocation: 'edit-pricing'
 };
 

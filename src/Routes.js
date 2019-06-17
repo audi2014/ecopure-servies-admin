@@ -17,7 +17,7 @@ export const AppRoutes = () => <React.Fragment>
     <Route
         exact
         path="/"
-        component={HomePage}
+        component={LocationsTablePage}
     />
     <Route
         exact
@@ -27,6 +27,11 @@ export const AppRoutes = () => <React.Fragment>
     <Route
         exact
         path={`/${RoutingConstants.locations}/:id/edit`}
+        component={LocationsEditPage}
+    />
+    <Route
+        exact
+        path={`/${RoutingConstants.locations}/:id/${RoutingConstants.editPricingOfLocation}`}
         component={LocationsEditPage}
     />
     <Route

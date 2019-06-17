@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    buildings_GetByLocationId, buildingsLarge_GetByLocationId,
     locations_GetAll,
 } from "../../api/Api";
 import {RoutingConstants} from "../../constants/RoutingConstants";

@@ -8,7 +8,6 @@ import {Spinner} from "../../icons";
 import {makeUsingLoadingById} from "../tools";
 import {ExtraFootageTable} from "./ExtraFootageTable";
 import {AddOnTable} from "./AddOnTable";
-import {PricingAddOnNavigation} from "./PricingAddOnNavigation";
 
 const use_load_addOn_GetByLocationId = makeUsingLoadingById(addOn_GetByLocationId);
 const use_load_locations_GetById = makeUsingLoadingById(locations_GetById);
@@ -30,7 +29,6 @@ export const PricingAddOnPage = ({match, history, onChange = null, location_id =
             addons={addons}
         />
         <ExtraFootageTable location_id={location_id}/>
-        <PricingAddOnNavigation location_id={location_id}/>
 
     </div>;
 };

@@ -80,8 +80,10 @@ export const inNetworkPrices_InsertByData = (data) => _post('/pricing/in-network
 export const inNetworkPrices_DeleteById = (id) => _delete('/pricing/in-network/' + id);
 
 export const inNetworkModel_GetByLocationId = (location_id) => _get(`/pricing/in-network-model?location_id=${location_id}&is_deleted=null`);
+export const inNetworkModel_GetAll = (id) => _get(`/pricing/in-network-model?is_deleted=null`);
 export const inNetworkModel_GetById = (id) => _get(`/pricing/in-network-model/${id}`);
 export const inNetworkModel_DeleteById = (id) => _delete(`/pricing/in-network-model/${id}`);
-export const inNetworkModel_UpdateById = (id,data) => _put(`/pricing/in-network-model/${id}`, data);
+export const inNetworkModel_UpdateById = (id, data) => _put(`/pricing/in-network-model/${id}`, data);
+export const inNetworkModel_InsertByData = (data) => _post  (`/pricing/in-network-model`, data);
 
 

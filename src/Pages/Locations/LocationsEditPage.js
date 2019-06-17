@@ -5,10 +5,10 @@ import {locations_GetById, locations_UpdateById} from "../../api/Api";
 import {LocationsZipCodes} from "./LocationsZipCodes";
 import Typography from "@material-ui/core/Typography/Typography";
 import Link from "@material-ui/core/Link/Link";
-import {LocationsNavigation} from "./LocationsNavigation";
 import {locationsEditableTemplate} from "./LocationsAddPage";
 import {TabBar} from "../../Base/TabBar";
 import {PricingModelsTable} from "./PricingModelsTable";
+import {RoutingConstants} from "../../constants/RoutingConstants";
 
 
 const View = ({match, history, onChange = null, fetchById = locations_GetById}) => {
@@ -30,7 +30,6 @@ const View = ({match, history, onChange = null, fetchById = locations_GetById}) 
                         href='https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder'>How
                         to get Google place id?</Link>
                 </Typography>
-                <LocationsNavigation location_id={selectedId}/>
             </>
         }
     </BaseItemUpdationPage>
@@ -38,11 +37,21 @@ const View = ({match, history, onChange = null, fetchById = locations_GetById}) 
 
 
 export const LocationsEditPage = (props) => {
+    const location_id = props.match.params.id;
     return <TabBar
-        defaultIndex={1}
-        label_render={{
-            'Location': () => <View {...props}/>,
-            'Pricing': () => <PricingModelsTable {...props}/>,
-        }}
+        history={props.history}
+        location={props.location}
+        items={[
+            {
+                label: 'Location',
+                render: () => <View {...props}/>,
+                href: `/${RoutingConstants.locations}/${location_id}/edit`
+            },
+            {
+                label: 'Pricing',
+                render: () => <PricingModelsTable {...props}/>,
+                href: `/${RoutingConstants.locations}/${location_id}/${RoutingConstants.editPricingOfLocation}`
+            }
+        ]}
     />;
 };

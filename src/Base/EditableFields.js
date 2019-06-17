@@ -23,6 +23,7 @@ export const EditableFields = ({data, onKeyValueChange, editableTemplate = null}
                                 className={classes.textField}
                                 fieldData={item}
                                 value={data[item.field] || ''}
+                                data={data}
                                 setValue={value => onKeyValueChange(item.field, value)}
                             />
                             : <TextField

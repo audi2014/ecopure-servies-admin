@@ -1,108 +1,156 @@
 import React, {Fragment} from "react";
 import {
-    inNetworkModel_GetById, inNetworkModel_UpdateById, inNetworkPrices_GetByModelId,
+    inNetworkModel_GetById, inNetworkModel_InsertByData, inNetworkModel_UpdateById, inNetworkPrices_GetByModelId,
 } from "../../api/Api";
 import {RoomTypePlanTable} from "./RoomTypePlanTable";
 import {AddIcon, CancelIcon, EditIcon, SaveIcon, Spinner} from "../../icons";
 import Typography from "@material-ui/core/Typography/Typography";
-import {PricingInNetworkNavigation} from "./PricingInNetworkNavigation";
 import {makeUsingLoadingById} from "../tools";
-import {ImportInnetwork} from "./ImportInnetwork";
-import {Link} from "react-router-dom";
-import {RoutingConstants} from "../../constants/RoutingConstants";
+// import {ImportInnetwork} from "./ImportInnetwork";
 import Fab from "@material-ui/core/Fab/Fab";
 import TextField from "@material-ui/core/TextField/TextField";
-import Button from "@material-ui/core/Button/Button";
 import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
-import {CancelButton} from "../../Base/BaseInput";
+import {RoutingConstants} from "../../constants/RoutingConstants";
+import {ImportInnetwork} from "./ImportInnetwork";
 
 
 const use_load_inNetworkModel_GetById = makeUsingLoadingById(inNetworkModel_GetById);
-const use_load_inNetworkPrices_GetByModelId = makeUsingLoadingById(inNetworkPrices_GetByModelId);
+;
 
-// inNetworkModel_UpdateById
 
-const EditModelName = ({model, loading}) => {
-    const initialName = model.name || "";
+const EditModelView = ({isLoading, setName, name, onSave, onCancel}) => <Fragment>
+    <TextField
+        label={"Model Name"}
+        value={name}
+        onChange={e => setName(e.target.value)}
+        margin="normal"
+        variant="outlined"
+        InputProps={{
+            endAdornment: <InputAdornment position="end">
+                {
+                    isLoading
+                        ? <Spinner/>
+                        : <Fab size="small" color="primary" aria-label="Cancel" onClick={onSave}>
+                            <SaveIcon/>
+                        </Fab>
+
+                }
+                {
+                    isLoading
+                        ? null
+                        : <Fab size="small" aria-label="Cancel"
+                               onClick={onCancel}>
+                            <CancelIcon/>
+                        </Fab>
+                }
+
+            </InputAdornment>
+        }}
+    />
+</Fragment>;
+
+const EditModelName = ({custom_pricing_model_id, location_id}) => {
+
+    const [model,] = use_load_inNetworkModel_GetById(custom_pricing_model_id);
+
+    const initialName = model ? model.name : '';
     const [name, setName] = React.useState(initialName);
     const [isEdit, setEdit] = React.useState(false);
     const [isLoading, setLoading] = React.useState(false);
-    const handleSave = () => {
+
+    React.useEffect(() => {
+        setName(initialName);
+    }, [model]);
+
+
+    if (model === false) return 'error.';
+    if (!model) return <Spinner/>;
+
+    const handleUpdateClick = () => {
         setLoading(true);
-        inNetworkModel_UpdateById(model.id, {name})
+        inNetworkModel_UpdateById(custom_pricing_model_id, {name})
             .then(r => {
-                setName(r.name);
-                setEdit(false);
+                if (r) {
+                    setName(r.name);
+                    setEdit(false);
+                }
                 setLoading(false);
             })
     };
-    return isEdit ? <Fragment>
-        <TextField
-            label={"Model Name"}
-            value={name}
-            onChange={e => setName(e.target.value)}
-            margin="normal"
-            variant="outlined"
-            InputProps={{
-                endAdornment: <InputAdornment position="end">
-                    {
-                        isLoading
-                            ? <Spinner/>
-                            : <Fab size="small" color="primary" aria-label="Cancel" onClick={handleSave}>
-                                <SaveIcon/>
-                            </Fab>
-
-                    }
-                    {
-                        isLoading
-                            ? null
-                            : <Fab size="small" aria-label="Cancel"
-                                   onClick={() => setEdit(false) || setName(initialName)}>
-                                <CancelIcon/>
-                            </Fab>
-                    }
-
-                </InputAdornment>
-            }}
-        />
-    </Fragment> : <Fab
+    const handleCancelClick = () => {
+        setEdit(false);
+        setName(initialName)
+    };
+    return isEdit ? <EditModelView
+        onSave={handleUpdateClick}
+        onCancel={handleCancelClick}
+        isLoading={isLoading}
+        setName={setName}
+        name={name}
+    /> : <Fab
         onClick={() => setEdit(true)}
         variant="extended"
-        style={{margin: 10}}
+        style={{margin: 20}}
         size="small"
         color="primary"
         aria-label="Create">
-        Custom Pricing Model "{name}"&nbsp;<EditIcon/>
+        {name || 'Untitled Model'}&nbsp;<EditIcon/>
     </Fab>
 }
 
-export const PricingInNetworkPage = ({match, history, onChange = null}) => {
+const CreateModel = ({location_id, initialName = '', history}) => {
+    const [name, setName] = React.useState(initialName);
+    const [isLoading, setLoading] = React.useState(false);
+
+    const handleCancelClick = () => history.push(`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.editPricingOfLocation}`);
+    const handleInsertClick = () => {
+        setLoading(true);
+        inNetworkModel_InsertByData({name, location_id})
+            .then(r => {
+                if (r) history.push(
+                    `/${RoutingConstants.locations}/${location_id}/${RoutingConstants.inNetworkPricing}/${r.id}/edit`
+                );
+            })
+    };
+    return <EditModelView
+        onSave={handleInsertClick}
+        onCancel={handleCancelClick}
+        isLoading={isLoading}
+        setName={setName}
+        name={name}
+    />
+};
+
+export const PricingInNetworkPage = ({match, history}) => {
     const custom_pricing_model_id = match.params.id;
     const location_id = match.params.location_id;
-    if (!custom_pricing_model_id) return 'empty param `id` in route';
     if (!location_id) return 'empty param `location_id` in route';
 
-    const [model,] = use_load_inNetworkModel_GetById(custom_pricing_model_id);
-    const [pricingInNetwork, _, reloadPricingInNetwork] = use_load_inNetworkPrices_GetByModelId(custom_pricing_model_id);
-
-    if (model === false || pricingInNetwork === false) return 'error.';
-    if (!model || !pricingInNetwork) return <Spinner/>;
 
     return <div>
         <Typography style={{margin: 20}} variant="h6">
-            <EditModelName model={model}/>
+            {
+                custom_pricing_model_id
+                    ? <EditModelName
+                        custom_pricing_model_id={custom_pricing_model_id}
+                    />
+                    : <CreateModel
+                        location_id={location_id}
+                        history={history}
+                        initialName={''}
+                    />
+            }
+
         </Typography>
-        <RoomTypePlanTable
-            pricingInNetwork={pricingInNetwork}
-            reload={reloadPricingInNetwork}
-            location_id={location_id}
-            custom_pricing_model_id={custom_pricing_model_id}
-        />
-        {/*<ImportInnetwork pricingInNetwork={pricingInNetwork}*/}
-        {/*building_id={+building.id}*/}
-        {/*reload={reloadPricingInNetwork}*/}
-        {/*location_id={+building.location_id}*/}
-        {/*/>*/}
-        {/*<PricingInNetworkNavigation building_id={building_id} location_id={building.location_id}/>*/}
+        {
+            custom_pricing_model_id
+                ? <RoomTypePlanTable
+                    location_id={location_id}
+                    custom_pricing_model_id={custom_pricing_model_id}
+                />
+                : null
+        }
+
+
     </div>;
 };

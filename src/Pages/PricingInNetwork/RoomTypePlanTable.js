@@ -11,11 +11,13 @@ import {
     Plan_Title,
     RoomType_Title
 } from "../../constants/Enum";
-import {inNetworkPrices_InsertByData} from "../../api/Api";
+import {inNetworkPrices_GetByModelId, inNetworkPrices_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {MoneyInput,} from "../../Base/BaseInput";
 import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
 import {Spinner} from "../../icons";
+import {makeUsingLoadingById} from "../tools";
+import {ImportInnetwork} from "./ImportInnetwork";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -86,7 +88,7 @@ const Cell = ({items, room_type, plan, classes, setEdition, custom_pricing_model
         : null;
     let cents = 0;
     let centsInitial = 0;
-    items = items.filter(item => item.room_type === room_type && item.plan === plan);
+    items = items.filter(item => item.room_type === room_type && item.plan === plan && +item.custom_pricing_model_id === +custom_pricing_model_id);
     if (items.length >= 1) {
         cents = items[0].cents;
         centsInitial = items[0].centsInitial;
@@ -106,7 +108,16 @@ const Cell = ({items, room_type, plan, classes, setEdition, custom_pricing_model
 };
 
 
-export const RoomTypePlanTable = ({pricingInNetwork, reload, location_id, custom_pricing_model_id}) => {
+const use_load_inNetworkPrices_GetByModelId = makeUsingLoadingById(inNetworkPrices_GetByModelId)
+export const RoomTypePlanTable = ({location_id, custom_pricing_model_id}) => {
+
+    const [pricingInNetwork, _, reload] = use_load_inNetworkPrices_GetByModelId(custom_pricing_model_id);
+    const classes = useStyles();
+    const [edition, setEdition] = React.useState({});
+    if (pricingInNetwork === false) return 'error.';
+    if (!pricingInNetwork) return <Spinner/>;
+
+
     const items = pricingInNetwork || [];
     const plan_cents = Object.keys(Plan_Title)
         .reduce((prev, plan) => {
@@ -119,8 +130,6 @@ export const RoomTypePlanTable = ({pricingInNetwork, reload, location_id, custom
             return prev;
         }, {});
 
-    const classes = useStyles();
-    const [edition, setEdition] = React.useState({});
 
     const update = (data) => {
         setEdition({...data, loading: true})
@@ -155,7 +164,7 @@ export const RoomTypePlanTable = ({pricingInNetwork, reload, location_id, custom
                         {Object.keys(RoomType_Title).map(roomType_key => (
                             edition.room_type === roomType_key && edition.plan === plan_key
                         )
-                            ? (edition.loading ? <TableCell><Spinner/></TableCell> : <EditableCell
+                            ? (edition.loading ? <TableCell key={roomType_key}><Spinner/></TableCell> : <EditableCell
                                 classes={classes}
                                 room_type={roomType_key}
                                 plan={plan_key}
@@ -184,6 +193,13 @@ export const RoomTypePlanTable = ({pricingInNetwork, reload, location_id, custom
 
 
             </TableBody>
-        </Table></div>;
+        </Table>
+        <ImportInnetwork
+            pricingInNetwork={pricingInNetwork || []}
+            custom_pricing_model_id={custom_pricing_model_id}
+            reload={reload}
+            location_id={location_id}
+        />
+    </div>;
 
 };

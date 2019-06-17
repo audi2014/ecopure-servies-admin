@@ -9,7 +9,8 @@ const useStyles = makeStyles(theme => ({
     cell: {
         '&:hover': {
             backgroundColor: '#C3C3C3'
-        }
+        },
+        cursor: 'text',
     },
 }));
 
@@ -25,12 +26,11 @@ export const PriceCellEditable = ({
                                       ...props
                                   }) => {
     const [state, setState] = React.useState(edition);
-    const classes = useStyles();
     const mergeState = nextState => setState({...state, ...nextState});
 
     const onCancelClick = () => setEdition({});
 
-    return <TableCell {...props} className={classes}>
+    return <TableCell {...props}>
         <form className={formClassName} onSubmit={e => {
             e.preventDefault();
             update(state);
@@ -53,8 +53,10 @@ export const PriceCellEditable = ({
 };
 
 export const PriceCell = ({disabled, onClick, children, ...props}) => {
+
+    const classes = useStyles();
     if (disabled) return <TableCell {...props} />;
-    return <TableCell {...props} onClick={onClick} >
+    return <TableCell {...props} onClick={onClick} className={classes.cell}>
         {children()}
     </TableCell>
 };

@@ -9,7 +9,6 @@ import Typography from "@material-ui/core/Typography/Typography";
 import {makeUsingLoadingById} from "../tools";
 import {FootageTable} from "./Footage";
 import {StairsTable} from "./Stairs";
-import {PricingOutOfNetworkNavigation} from "./PricingOutOfNetworkNavigation";
 
 const use_load_outOfNetworkFootage_GetByLocationId = makeUsingLoadingById(outOfNetworkFootage_GetByLocationId);
 const use_load_outOfNetworkStairs_GetByLocationId = makeUsingLoadingById(outOfNetworkStairs_GetByLocationId);
@@ -32,7 +31,6 @@ export const PricingOutOfNetworkPage = ({match, history, onChange = null, locati
         </Typography>
         <FootageTable reload={reloadFootage} location_id={location_id} footage={footage}/>
         <StairsTable reload={reloadStairs} location_id={location_id} stairs={stairs}/>
-        <PricingOutOfNetworkNavigation location_id={location_id}/>
 
     </div>;
 };

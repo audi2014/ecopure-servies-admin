@@ -13,6 +13,7 @@ import {makeUsingLoadingById} from "../tools";
 import {inNetworkModel_DeleteById, inNetworkModel_GetByLocationId} from "../../api/Api";
 import Fab from "@material-ui/core/Fab/Fab";
 import Typography from "@material-ui/core/Typography/Typography";
+import IconButton from "@material-ui/core/IconButton/IconButton";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -45,6 +46,7 @@ export const PricingModelsTable = ({match}) => {
     const classes = useStyles();
     const [items, _, reload] = use_load_inNetworkModel_GetByLocationId(location_id);
     const onDeleteClick = (item) => () => {
+        //todo: styled popup
         if (window.confirm(`Confirm deleting model "${item.name}", id:"${item.id}"`)) {
             return inNetworkModel_DeleteById(item.id).then(r => reload())
         }
@@ -62,7 +64,7 @@ export const PricingModelsTable = ({match}) => {
                 style={{margin: 10}}
                 size="small"
                 color="primary"
-                 aria-label="Create">
+                aria-label="Create">
                 <AddIcon/>
             </Fab>
         </span>
@@ -77,16 +79,15 @@ export const PricingModelsTable = ({match}) => {
                 <Row
                     renderActions={
                         () =>
-                            <Fab
+                            <IconButton
                                 color="primary"
                                 className={classes.button}
+                                aria-label="Edit"
                                 component={Link}
                                 to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.outOfNetworkPricing}`}
-                                variant="extended" aria-label="Edit"
                             >
-                                Edit Model&nbsp;
                                 <EditIcon/>
-                            </Fab>
+                            </IconButton>
 
                     }
                     title={'Regular'}
@@ -94,52 +95,51 @@ export const PricingModelsTable = ({match}) => {
                 />
                 <Row
                     renderActions={
-                        () => <Fab
+                        () => <IconButton
                             color="primary"
                             className={classes.button}
                             component={Link}
                             to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.addonPricing}`}
-                            variant="extended" aria-label="Edit"
+                            aria-label="Edit"
                         >
-                            Edit Model&nbsp;
                             <EditIcon/>
-                        </Fab>
+                        </IconButton>
                     }
                     title={'Add-On'}
                     Icon={AddOnIcon}
                 />
-                {items === false ? 'Error. Loading Custom Models was Failed' : null}
-                {items === null ? <Spinner/> : null}
+                {items === false ?
+                    <TableRow><TableCell>Error. Loading Pricing Models was Failed</TableCell></TableRow> : null}
+                {items === null ? <TableRow><TableCell><Spinner/></TableCell><TableCell></TableCell></TableRow> : null}
                 {
                     (items || []).map(item => <Row
+                        key={item.id}
                         renderActions={
                             () => <React.Fragment>
 
-                                <Fab
+                                <IconButton
                                     color="primary"
                                     className={classes.button}
                                     component={Link}
                                     to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.inNetworkPricing}/${item.id}/edit`}
-                                    variant="extended" aria-label="Edit"
+                                    aria-label="Edit"
                                 >
-                                    Edit Model&nbsp;
                                     <EditIcon/>
-                                </Fab>
+                                </IconButton>
 
-                                <Fab
+                                <IconButton
                                     onClick={onDeleteClick(item)}
                                     className={classes.button}
-                                    aria-label="Delete">
+                                    aria-label="Delete"
+                                >
                                     <DeleteIcon/>
-                                </Fab>
+                                </IconButton>
                             </React.Fragment>
                         }
-                        title={`Custom #${item.id} ${item.name}`}
+                        title={`${item.name || 'Untitled Model '+item.id}`}
                         Icon={CustomModelIcon}
                     />)
                 }
-
-
             </TableBody>
         </Table>
     </React.Fragment>

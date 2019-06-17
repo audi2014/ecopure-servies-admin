@@ -1,6 +1,6 @@
 import React from "react";
 import {BaseTablePage} from "../../Base/BaseTablePage";
-import {buildingsLarge_GetByLocationId, locations_GetAll, locations_GetById} from "../../api/Api";
+import {buildingsLarge_GetByLocationId, locations_GetById} from "../../api/Api";
 import {RoutingConstants} from "../../constants/RoutingConstants";
 import {
     buildColumnsFrom,
