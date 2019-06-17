@@ -1,6 +1,5 @@
 import React from "react";
 import {Route} from "react-router-dom";
-import {HomePage} from "./Pages/HomePage";
 import {RoutingConstants} from "./constants/RoutingConstants";
 import {LocationsTablePage} from "./Pages/Locations/LocationsTablePage";
 import {LocationsEditPage} from "./Pages/Locations/LocationsEditPage";

@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, {useState} from "react";
 import {
     locations_GetAll,
     locationsZipcode_DeleteById,
@@ -25,7 +25,7 @@ const View = ({items, insertByZipCode, deleteById, ...props}) => {
     const [newZipCode, setNewZipCode] = useState('');
     const classes = useStyles();
 
-    const handleNewZipCodeChange = (e) => setNewZipCode(Number.parseInt(e.target.value) || '');
+    const handleNewZipCodeChange = (e) => setNewZipCode(String(e.target.value).replace(/\D/g, ''));
     return <div>
         <Typography style={{margin: 20}} variant="h6">Zip Codes</Typography>
         <div
@@ -66,10 +66,7 @@ const use_load_locationsZipcode_GetByLocationId = makeUsingLoadingById(locations
 
 
 export const LocationsZipCodes = ({location_id}) => {
-
-
-    const [items, _, reload] = use_load_locationsZipcode_GetByLocationId(location_id);
-
+    const [items, reload] = use_load_locationsZipcode_GetByLocationId(location_id);
     if (items === null) return 'loading...';
     if (items === false) return 'error.';
 

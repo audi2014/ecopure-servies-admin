@@ -15,7 +15,7 @@ const use_load_inNetworkPrices_GetAll = makeUsingLoadingById(inNetworkModel_GetA
 
 export const BuildingsAddPage = ({match, history, onChange = null, fetchById = locations_GetById}) => {
     const [locations] = use_load_locations_GetAll();
-    const [pricingInNetwork,] = use_load_inNetworkPrices_GetAll();
+    const [pricingInNetwork] = use_load_inNetworkPrices_GetAll();
     return <BaseItemCreationPage
         editableTemplate={makeBuildingsEditableTemplate(locations, pricingInNetwork)}
         renderTitle={() => 'Create Building'}

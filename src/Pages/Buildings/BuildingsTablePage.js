@@ -33,7 +33,7 @@ const use_load_locations_GetAll = makeUsingLoadingById(locations_GetAll);
 
 export const BuildingsTablePage = ({match, history, fetchItems = buildingsLarge_GetAll, title = "Buildings"}) => {
     const [locations] = use_load_locations_GetAll();
-    const [buildings, _, reload] = use_load_buildingsLarge_GetAll();
+    const [buildings] = use_load_buildingsLarge_GetAll();
     const [filtered_location_id, setLocationId] = React.useState('all');
     const LocationsId_Name = (locations || []).reduce((prev, curr) => {
         prev[curr.id] = curr.name || 'Location #' + curr.id;

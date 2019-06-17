@@ -5,9 +5,7 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import {
-    AddOnValueType_Title,
     Plan_HasInitial,
-    PLAN_OCCASIONAL,
     Plan_Title,
     RoomType_Title
 } from "../../constants/Enum";
@@ -88,11 +86,15 @@ const Cell = ({items, room_type, plan, classes, setEdition, custom_pricing_model
         : null;
     let cents = 0;
     let centsInitial = 0;
-    items = items.filter(item => item.room_type === room_type && item.plan === plan && +item.custom_pricing_model_id === +custom_pricing_model_id);
+    items = items.filter(item => item.room_type === room_type
+        && item.plan === plan
+        && +item.custom_pricing_model_id === +custom_pricing_model_id
+    );
     if (items.length >= 1) {
         cents = items[0].cents;
         centsInitial = items[0].centsInitial;
         if (items.length > 1) {
+            debugger;
             console.error('room_type pricing error: room_type & plan of model duplicate');
         }
     }
@@ -111,7 +113,7 @@ const Cell = ({items, room_type, plan, classes, setEdition, custom_pricing_model
 const use_load_inNetworkPrices_GetByModelId = makeUsingLoadingById(inNetworkPrices_GetByModelId)
 export const RoomTypePlanTable = ({location_id, custom_pricing_model_id}) => {
 
-    const [pricingInNetwork, _, reload] = use_load_inNetworkPrices_GetByModelId(custom_pricing_model_id);
+    const [pricingInNetwork, reload] = use_load_inNetworkPrices_GetByModelId(custom_pricing_model_id);
     const classes = useStyles();
     const [edition, setEdition] = React.useState({});
     if (pricingInNetwork === false) return 'error.';

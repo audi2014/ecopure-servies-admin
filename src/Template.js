@@ -72,9 +72,6 @@ const Bar = () => {
                     <IconButton color="inherit"><BuildingIcon/></IconButton> Buildings
                 </Link>
             </nav>
-            {/*<Button href="#" color="primary" variant="outlined" className={classes.link}>*/}
-            {/*Login*/}
-            {/*</Button>*/}
         </Toolbar>
     </AppBar>
 }

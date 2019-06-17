@@ -14,6 +14,9 @@ import {inNetworkModel_DeleteById, inNetworkModel_GetByLocationId} from "../../a
 import Fab from "@material-ui/core/Fab/Fab";
 import Typography from "@material-ui/core/Typography/Typography";
 import IconButton from "@material-ui/core/IconButton/IconButton";
+import {ManagerPreferencesContext} from "../../ManagerPreferencesContext";
+import {ModelNameOrDefault} from "../../Base/tools";
+import {ConfirmOperationDialog} from "../../Base/ConfirmOperationDialog";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -41,16 +44,91 @@ const Row = ({title, Icon, renderActions}) => <TableRow>
     </TableCell>
 </TableRow>;
 
+const ModelsTable = ({classes, preferences, items, showDeleteDialog, location_id}) => <Table>
+    <TableHead>
+        <TableRow>
+            <TableCell>Name Of Model</TableCell>
+            <TableCell>Actions</TableCell>
+        </TableRow>
+    </TableHead>
+    <TableBody>
+        <Row
+            renderActions={
+                () =>
+                    <IconButton
+                        color="primary"
+                        className={classes.button}
+                        aria-label="Edit"
+                        component={Link}
+                        to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.outOfNetworkPricing}`}
+                    >
+                        <EditIcon/>
+                    </IconButton>
+
+            }
+            title={ModelNameOrDefault(preferences.regularPricingModelName)}
+            Icon={RegularIcon}
+        />
+        <Row
+            renderActions={
+                () => <IconButton
+                    color="primary"
+                    className={classes.button}
+                    component={Link}
+                    to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.addonPricing}`}
+                    aria-label="Edit"
+                >
+                    <EditIcon/>
+                </IconButton>
+            }
+            title={ModelNameOrDefault(preferences.addOnsPricingModelName)}
+            Icon={AddOnIcon}
+        />
+        {items === false ?
+            <TableRow><TableCell>Error. Loading Pricing Models was
+                Failed</TableCell></TableRow> : null}
+        {items === null ?
+            <TableRow><TableCell><Spinner/></TableCell><TableCell/></TableRow> : null}
+
+        {
+            (items || []).map(item => <Row
+                key={item.id}
+                renderActions={
+                    () => <React.Fragment>
+
+                        <IconButton
+                            color="primary"
+                            className={classes.button}
+                            component={Link}
+                            to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.inNetworkPricing}/${item.id}/edit`}
+                            aria-label="Edit"
+                        >
+                            <EditIcon/>
+                        </IconButton>
+
+                        <IconButton
+                            onClick={() => showDeleteDialog(item)}
+                            className={classes.button}
+                            aria-label="Delete"
+                        >
+                            <DeleteIcon/>
+                        </IconButton>
+                    </React.Fragment>
+                }
+                title={ModelNameOrDefault(item.name, item.id)}
+                Icon={CustomModelIcon}
+            />)
+        }
+    </TableBody>
+</Table>;
+
 export const PricingModelsTable = ({match}) => {
+    const {preferences} = React.useContext(ManagerPreferencesContext);
+
     const location_id = match.params.id;
     const classes = useStyles();
-    const [items, _, reload] = use_load_inNetworkModel_GetByLocationId(location_id);
-    const onDeleteClick = (item) => () => {
-        //todo: styled popup
-        if (window.confirm(`Confirm deleting model "${item.name}", id:"${item.id}"`)) {
-            return inNetworkModel_DeleteById(item.id).then(r => reload())
-        }
-    };
+    const [items, reload, setInNetworkModels] = use_load_inNetworkModel_GetByLocationId(location_id);
+
     return <React.Fragment>
         <span style={{
             margin: 10,
@@ -68,79 +146,27 @@ export const PricingModelsTable = ({match}) => {
                 <AddIcon/>
             </Fab>
         </span>
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell>Name Of Model</TableCell>
-                    <TableCell>Actions</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                <Row
-                    renderActions={
-                        () =>
-                            <IconButton
-                                color="primary"
-                                className={classes.button}
-                                aria-label="Edit"
-                                component={Link}
-                                to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.outOfNetworkPricing}`}
-                            >
-                                <EditIcon/>
-                            </IconButton>
-
-                    }
-                    title={'Regular'}
-                    Icon={RegularIcon}
-                />
-                <Row
-                    renderActions={
-                        () => <IconButton
-                            color="primary"
-                            className={classes.button}
-                            component={Link}
-                            to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.addonPricing}`}
-                            aria-label="Edit"
-                        >
-                            <EditIcon/>
-                        </IconButton>
-                    }
-                    title={'Add-On'}
-                    Icon={AddOnIcon}
-                />
-                {items === false ?
-                    <TableRow><TableCell>Error. Loading Pricing Models was Failed</TableCell></TableRow> : null}
-                {items === null ? <TableRow><TableCell><Spinner/></TableCell><TableCell></TableCell></TableRow> : null}
-                {
-                    (items || []).map(item => <Row
-                        key={item.id}
-                        renderActions={
-                            () => <React.Fragment>
-
-                                <IconButton
-                                    color="primary"
-                                    className={classes.button}
-                                    component={Link}
-                                    to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.inNetworkPricing}/${item.id}/edit`}
-                                    aria-label="Edit"
-                                >
-                                    <EditIcon/>
-                                </IconButton>
-
-                                <IconButton
-                                    onClick={onDeleteClick(item)}
-                                    className={classes.button}
-                                    aria-label="Delete"
-                                >
-                                    <DeleteIcon/>
-                                </IconButton>
-                            </React.Fragment>
-                        }
-                        title={`${item.name || 'Untitled Model '+item.id}`}
-                        Icon={CustomModelIcon}
-                    />)
+        <ConfirmOperationDialog
+            focusOnCancel={true}
+            rightCancel={true}
+            renderOkTitle={item => 'Delete'}
+            renderCancelTitle={item => 'Cancel'}
+            onOk={
+                item => {
+                    setInNetworkModels(null);
+                    return inNetworkModel_DeleteById(item.id).then(r => reload())
                 }
-            </TableBody>
-        </Table>
+            }
+            renderTitle={item => `Are you sure you want to delete "${ModelNameOrDefault(item.name, item.id)}"?`}
+        >
+            {
+                showDeleteDialog => <ModelsTable
+                    location_id={location_id}
+                    items={items}
+                    classes={classes}
+                    preferences={preferences}
+                    showDeleteDialog={showDeleteDialog}/>
+            }
+        </ConfirmOperationDialog>
     </React.Fragment>
 };

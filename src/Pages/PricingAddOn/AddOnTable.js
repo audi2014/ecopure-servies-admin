@@ -6,7 +6,7 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import {AddOn_Title, AddOnValueType_Title} from "../../constants/Enum";
-import {addOn_InserByData} from "../../api/Api";
+import {addOn_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {MoneyInput, Select} from "../../Base/BaseInput";
 import Paper from "@material-ui/core/Paper/Paper";
@@ -96,7 +96,7 @@ const Cell = ({items, addon_type, classes, setEdition, location_id}) => {
             () => <span>{
                 cents ? '$' + centsToDollars(cents) : '-'
             } / {
-                cents && AddOnValueType_Title[value_type] || '-'
+                (cents && AddOnValueType_Title[value_type]) || '-'
             }</span>
         }
     </PriceCell>
@@ -108,7 +108,7 @@ export const AddOnTable = ({reload, location_id, addons=[]}) => {
 
     const update = (data) => {
         setEdition({...data, loading: true})
-        addOn_InserByData(data)
+        addOn_InsertByData(data)
             .then(r => reload())
             .then(r => {
                 setEdition({});

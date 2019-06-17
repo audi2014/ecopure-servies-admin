@@ -26,12 +26,12 @@ const use_load_locations_GetById = makeUsingLoadingById(locations_GetById);
 
 export const BuildingsOfLocationTablePage = ({match, history, fetchItems = buildingsLarge_GetByLocationId, title = "Buildings"}) => {
     const location_id = location ? +location.id : match.params.location_id;
-    const [location, ] = use_load_locations_GetById(location_id)
+    const [location] = use_load_locations_GetById(location_id)
 
 
     return <BaseTablePage
-        renderTitle={()=>getBuildingsTableNameByLocation(location, title)}
-        onAddClick={()=>history.push(`/${RoutingConstants.buildings}/add`)}
+        renderTitle={() => getBuildingsTableNameByLocation(location, title)}
+        onAddClick={() => history.push(`/${RoutingConstants.buildings}/add`)}
         fetchItems={() => fetchItems(location_id)}
         onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}/edit`)}
         columns={columns}
@@ -43,8 +43,8 @@ export const BuildingsOfPreloadedLocationTablePage = ({match, history, fetchItem
     const location_id = +location.id;
 
     return <BaseTablePage
-        renderTitle={()=>getBuildingsTableNameByLocation(location, title)}
-        onAddClick={()=>history.push(`/${RoutingConstants.buildings}/add`)}
+        renderTitle={() => getBuildingsTableNameByLocation(location, title)}
+        onAddClick={() => history.push(`/${RoutingConstants.buildings}/add`)}
 
         fetchItems={() => fetchItems(location_id)}
         onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}/edit`)}

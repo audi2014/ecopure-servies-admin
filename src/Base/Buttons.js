@@ -2,6 +2,10 @@ import Button from "@material-ui/core/Button/Button";
 import React from "react";
 import {CheckCircleOutline, Done, HighlightOff, History} from '@material-ui/icons';
 import {makeStyles} from "@material-ui/core";
+import {Link as RouterLink} from "react-router-dom";
+import {RoutingConstants} from "../constants/RoutingConstants";
+import {DeleteIcon, GoBack} from "../icons";
+import Fab from "@material-ui/core/Fab/Fab";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -54,13 +58,26 @@ export const ButtonToggleDisable = ({onClick, isDisabled}) => {
                    onClick={onClick}>
         {
             isDisabled
-                ? 'Enable'
-                : 'Disable'
+                ? 'Restore'
+                : 'Delete'
         }
         {
             isDisabled
-                ? <HighlightOff className={classes.rightIcon}/>
-                : <CheckCircleOutline className={classes.rightIcon}/>
+                ? <CheckCircleOutline className={classes.rightIcon}/>
+                : <DeleteIcon color="secondary" className={classes.rightIcon}/>
         }
     </Button>
 };
+
+export const ButtonGoToPricingModelsTable = ({location_id}) => <Fab
+    component={RouterLink}
+    to={`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.editPricingOfLocation}`}
+    style={{
+        marginTop: 20,
+        marginBottom: 20,
+        marginRight: 20,
+    }}
+    size="small"
+    color="primary"
+    aria-label="Back"><GoBack/>
+</Fab>;

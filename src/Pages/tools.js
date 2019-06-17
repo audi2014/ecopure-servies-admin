@@ -63,7 +63,7 @@ export const makeUsingLoadingById = fetchByIdPromise => (id = null) => {
         reload();
     }, [id]);
 
-    return [state, setState, reload];
+    return [state, reload, setState];
 };
 
 

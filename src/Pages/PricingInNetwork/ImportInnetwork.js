@@ -18,7 +18,7 @@ const use_load_inNetworkModel_GetByLocationId = makeUsingLoadingById(inNetworkMo
 
 
 export const ImportInnetwork = ({location_id, custom_pricing_model_id, reload, pricingInNetwork = []}) => {
-    const [models,] = use_load_inNetworkModel_GetByLocationId(location_id);
+    const [models] = use_load_inNetworkModel_GetByLocationId(location_id);
     const [selected_id, setSelectedId] = React.useState('');
     const [progress, setProgress] = React.useState(false);
     const ModelId_Name = (models || [])

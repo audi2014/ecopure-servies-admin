@@ -1,105 +1,20 @@
-import React, {Fragment} from "react";
+import React from "react";
 import {
-    inNetworkModel_GetById, inNetworkModel_InsertByData, inNetworkModel_UpdateById, inNetworkPrices_GetByModelId,
+    inNetworkModel_GetById, inNetworkModel_InsertByData, inNetworkModel_UpdateById,
 } from "../../api/Api";
 import {RoomTypePlanTable} from "./RoomTypePlanTable";
-import {AddIcon, CancelIcon, EditIcon, SaveIcon, Spinner} from "../../icons";
-import Typography from "@material-ui/core/Typography/Typography";
+import {Spinner} from "../../icons";
 import {makeUsingLoadingById} from "../tools";
-// import {ImportInnetwork} from "./ImportInnetwork";
-import Fab from "@material-ui/core/Fab/Fab";
-import TextField from "@material-ui/core/TextField/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
 import {RoutingConstants} from "../../constants/RoutingConstants";
-import {ImportInnetwork} from "./ImportInnetwork";
-
+import {EditModelName, EditModelView} from "../../Base/EditModelName";
+import {ButtonGoToPricingModelsTable} from "../../Base/Buttons";
+import {ModelNameOrDefault} from "../../Base/tools";
 
 const use_load_inNetworkModel_GetById = makeUsingLoadingById(inNetworkModel_GetById);
-;
 
 
-const EditModelView = ({isLoading, setName, name, onSave, onCancel}) => <Fragment>
-    <TextField
-        label={"Model Name"}
-        value={name}
-        onChange={e => setName(e.target.value)}
-        margin="normal"
-        variant="outlined"
-        InputProps={{
-            endAdornment: <InputAdornment position="end">
-                {
-                    isLoading
-                        ? <Spinner/>
-                        : <Fab size="small" color="primary" aria-label="Cancel" onClick={onSave}>
-                            <SaveIcon/>
-                        </Fab>
-
-                }
-                {
-                    isLoading
-                        ? null
-                        : <Fab size="small" aria-label="Cancel"
-                               onClick={onCancel}>
-                            <CancelIcon/>
-                        </Fab>
-                }
-
-            </InputAdornment>
-        }}
-    />
-</Fragment>;
-
-const EditModelName = ({custom_pricing_model_id, location_id}) => {
-
-    const [model,] = use_load_inNetworkModel_GetById(custom_pricing_model_id);
-
-    const initialName = model ? model.name : '';
-    const [name, setName] = React.useState(initialName);
-    const [isEdit, setEdit] = React.useState(false);
-    const [isLoading, setLoading] = React.useState(false);
-
-    React.useEffect(() => {
-        setName(initialName);
-    }, [model]);
-
-
-    if (model === false) return 'error.';
-    if (!model) return <Spinner/>;
-
-    const handleUpdateClick = () => {
-        setLoading(true);
-        inNetworkModel_UpdateById(custom_pricing_model_id, {name})
-            .then(r => {
-                if (r) {
-                    setName(r.name);
-                    setEdit(false);
-                }
-                setLoading(false);
-            })
-    };
-    const handleCancelClick = () => {
-        setEdit(false);
-        setName(initialName)
-    };
-    return isEdit ? <EditModelView
-        onSave={handleUpdateClick}
-        onCancel={handleCancelClick}
-        isLoading={isLoading}
-        setName={setName}
-        name={name}
-    /> : <Fab
-        onClick={() => setEdit(true)}
-        variant="extended"
-        style={{margin: 20}}
-        size="small"
-        color="primary"
-        aria-label="Create">
-        {name || 'Untitled Model'}&nbsp;<EditIcon/>
-    </Fab>
-}
-
-const CreateModel = ({location_id, initialName = '', history}) => {
-    const [name, setName] = React.useState(initialName);
+const CreateModel = ({location_id, initialName, history}) => {
+    const [name, setName] = React.useState(ModelNameOrDefault(initialName));
     const [isLoading, setLoading] = React.useState(false);
 
     const handleCancelClick = () => history.push(`/${RoutingConstants.locations}/${location_id}/${RoutingConstants.editPricingOfLocation}`);
@@ -121,6 +36,19 @@ const CreateModel = ({location_id, initialName = '', history}) => {
     />
 };
 
+const EditInNetworkModelName = ({custom_pricing_model_id}) => {
+    const [model] = use_load_inNetworkModel_GetById(custom_pricing_model_id);
+    if (model === false) return 'error.';
+    if (!model) return <Spinner/>;
+    const handleUpdateName = (name) => inNetworkModel_UpdateById(custom_pricing_model_id, {name});
+
+    return <EditModelName
+        id={custom_pricing_model_id}
+        initialName={model.name}
+        updateNamePromise={handleUpdateName}
+    />
+};
+
 export const PricingInNetworkPage = ({match, history}) => {
     const custom_pricing_model_id = match.params.id;
     const location_id = match.params.location_id;
@@ -128,20 +56,18 @@ export const PricingInNetworkPage = ({match, history}) => {
 
 
     return <div>
-        <Typography style={{margin: 20}} variant="h6">
-            {
-                custom_pricing_model_id
-                    ? <EditModelName
-                        custom_pricing_model_id={custom_pricing_model_id}
-                    />
-                    : <CreateModel
-                        location_id={location_id}
-                        history={history}
-                        initialName={''}
-                    />
-            }
 
-        </Typography>
+        <ButtonGoToPricingModelsTable location_id={location_id}/>
+        {
+            custom_pricing_model_id
+                ? <EditInNetworkModelName
+                    custom_pricing_model_id={custom_pricing_model_id}
+                />
+                : <CreateModel
+                    location_id={location_id}
+                    history={history}
+                />
+        }
         {
             custom_pricing_model_id
                 ? <RoomTypePlanTable
@@ -150,7 +76,5 @@ export const PricingInNetworkPage = ({match, history}) => {
                 />
                 : null
         }
-
-
     </div>;
 };

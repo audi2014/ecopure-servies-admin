@@ -23,7 +23,7 @@ const defaultColumns = [{
 const defaultTitle = 'Table Title';
 
 
-const _BaseTablePage = (({
+const MaterialBaseTablePage = (({
                              options = defaultOptions,
                              fetchItems = defaultFetch,
                              staticData = false,
@@ -73,7 +73,7 @@ const _BaseTablePage = (({
 export const BaseTablePage = withTheme(
     props => (
         <StylesProvider generateClassName={generateClassName}>
-            <_BaseTablePage {...props}/>
+            <MaterialBaseTablePage {...props}/>
         </StylesProvider>
     )
 );
