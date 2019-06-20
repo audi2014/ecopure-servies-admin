@@ -1,8 +1,9 @@
-import {ErrorContext, makeWrapperOfApiProvider, WithModalError} from "./core/ReactApi";
+import {makeWrapperOfApiProvider} from "./core/ReactApi";
 import {_get} from "./core/coreApi";
 import {_delete} from "./core/coreApi";
 import {_put} from "./core/coreApi";
 import {_post} from "./core/coreApi";
+import {ErrorContext, WithModalError} from "./core/ModalError";
 
 const Domain_Requests = {
     locations: {

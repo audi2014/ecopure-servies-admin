@@ -37,3 +37,7 @@ export const getManagerPreferences = manager => {
 
 export const centsToDollars = cents => cents ? (cents / 100).toFixed(2) : 0;
 export const dollarsToCents = dollars => Math.round(dollars * 100) || 0;
+
+export function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}

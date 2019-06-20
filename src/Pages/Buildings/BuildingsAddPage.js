@@ -16,7 +16,7 @@ export const BuildingsAddPage = ({match, history}) => {
     const state_locations = locations_GetAll.state || [];
 
     const {inNetworkModel_GetAll} = React.useContext(apiContexts.inNetworkModel);
-    const state_pricingInNetwork = inNetworkModel_GetAll.state || [];
+    const models = inNetworkModel_GetAll.state || [];
 
 
     React.useEffect(() => {
@@ -26,7 +26,7 @@ export const BuildingsAddPage = ({match, history}) => {
 
 
     return <BaseItemCreationPage
-        editableTemplate={makeBuildingsEditableTemplate(state_locations, state_pricingInNetwork)}
+        editableTemplate={makeBuildingsEditableTemplate(state_locations, models)}
         renderTitle={() => 'Create Building'}
         insertByData={(data) => {
             const location_id = data.location_id;
@@ -34,7 +34,7 @@ export const BuildingsAddPage = ({match, history}) => {
             if (!location_id) {
                 pushError('buildings_InsertByData', 'empty Location of Building');
             } else if (
-                !state_locations.find(item => +item.id === +custom_pricing_model_id && +item.location_id === +location_id)
+                !models.find(model => +model.id === +custom_pricing_model_id && +model.location_id === +location_id)
             ) {
                 pushError('buildings_InsertByData', 'please select Pricing Model of Building');
             } else {

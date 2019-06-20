@@ -1,36 +1,6 @@
 import * as React from "react";
-import {ModalError} from "./ModalError";
-
-
-function getDisplayName(WrappedComponent) {
-    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
-}
-
-export const ErrorContext = React.createContext({});
-export const WithModalError = Component => {
-    const ComponentWithError = props => {
-        const [errorState, _errorSetState] = React.useState([]);
-        const pushError = (key, message) => _errorSetState([{key, message: String(message)}, ...errorState,]);
-        const closeCurrentError = () => {
-            if (errorState.length > 0) {
-                const [deleted, ...next] = errorState;
-                _errorSetState(next);
-            }
-        };
-        const getCurrentError = () => errorState.length > 0 ? errorState[0] : null;
-        return <ErrorContext.Provider value={{
-            pushError,
-            closeCurrentError,
-            getCurrentError,
-        }}>
-            <Component {...props}/>
-            <ModalError error={getCurrentError()} closeError={closeCurrentError}/>
-        </ErrorContext.Provider>
-    };
-    ComponentWithError.displayName = `WithModalError(${getDisplayName(Component)})`;
-    return ComponentWithError;
-};
-
+import {getDisplayName} from "../../Base/tools";
+import {ErrorContext} from "./ModalError";
 
 const makeApiContextValue = ({requests, state, setReqState, setReqPending, pushError}) =>
     Object.keys(requests)
@@ -66,16 +36,11 @@ export const makeWrapperOfApiProvider = (requests) => {
         return prev;
     }, {});
     const WithApiProvider = (Component) => {
-
-
         class ComponentWithApiProvider extends React.PureComponent {
-            constructor(props) {
-                super(props);
-                this.state = {
-                    reqState: {...initialState},
-                    reqPending: {...initialState},
-                };
-            }
+            state = {
+                reqState: {...initialState},
+                reqPending: {...initialState},
+            };
 
             setReqState = (reqName, value) => {
                 return this.setState({
