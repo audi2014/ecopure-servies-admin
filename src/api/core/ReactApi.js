@@ -18,7 +18,7 @@ const makeApiContextValue = ({requests, state, setReqState, setReqPending, pushE
                         })
                         .catch(e => {
                             setReqPending(reqName, null);
-                            if (pushError) pushError(reqName, String(e));
+                            if (pushError) pushError(String(e),reqName);
                         });
                     setReqPending(reqName, request);
                     return request;

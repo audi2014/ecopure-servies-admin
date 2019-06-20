@@ -35,7 +35,7 @@ export const ErrorContext = React.createContext({});
 export const WithModalError = Component => {
     const ComponentWithError = props => {
         const [errorState, _errorSetState] = React.useState([]);
-        const pushError = (key, message) => {
+        const pushError = (message,key) => {
             console.error('handleErrorContext', {
                 key, message
             });

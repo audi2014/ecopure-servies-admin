@@ -40,11 +40,11 @@ export const BuildingsEditPage = ({
                 const location_id = data.location_id || buildingsLarge_GetById.state.location_id;
                 const custom_pricing_model_id = data.custom_pricing_model_id || buildingsLarge_GetById.state.custom_pricing_model_id;
                 if (!location_id) {
-                    pushError('buildings_UpdateById', 'empty Location of Building')
+                    pushError('empty Location of Building', 'buildings_UpdateById',)
                 } else if (
                     !models.find(model => +model.id === +custom_pricing_model_id && +model.location_id === +location_id)
                 ) {
-                    pushError('buildings_UpdateById', 'please select Pricing Model of Building')
+                    pushError('please select Pricing Model of Building', 'buildings_UpdateById',)
                 } else {
                     return buildings_UpdateById.request(building_id, data)
                         .then(r => buildingsLarge_GetById.setState(r))

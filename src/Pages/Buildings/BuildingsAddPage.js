@@ -32,11 +32,11 @@ export const BuildingsAddPage = ({match, history}) => {
             const location_id = data.location_id;
             const custom_pricing_model_id = data.custom_pricing_model_id;
             if (!location_id) {
-                pushError('buildings_InsertByData', 'empty Location of Building');
+                pushError('empty Location of Building', 'buildings_InsertByData',);
             } else if (
                 !models.find(model => +model.id === +custom_pricing_model_id && +model.location_id === +location_id)
             ) {
-                pushError('buildings_InsertByData', 'please select Pricing Model of Building');
+                pushError('please select Pricing Model of Building', 'buildings_InsertByData',);
             } else {
                 return buildings_InsertByData.request(data)
                     .then(r => {
