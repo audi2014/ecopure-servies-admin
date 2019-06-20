@@ -61,7 +61,7 @@ export const LocationsEditModels = ({location_id}) => {
             renderTitle={item => `Are you sure you want to delete "${ModelNameOrDefault(item.name, item.id)}"?`}
         >
             {
-                showDeleteDialog => <ModelsTable
+                showDeleteDialog => manager_Get.pending ? <Spinner/> : <ModelsTable
                     location_id={location_id}
                     items={items}
                     classes={classes}
