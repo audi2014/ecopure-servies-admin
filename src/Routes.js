@@ -2,15 +2,15 @@ import React from "react";
 import {Route} from "react-router-dom";
 import {RoutingConstants} from "./constants/RoutingConstants";
 import {LocationsTablePage} from "./Pages/Locations/LocationsTablePage";
-import {LocationsEditPage} from "./Pages/Locations/LocationsEditPage";
-import {LocationsAddPage} from "./Pages/Locations/LocationsAddPage";
 import {BuildingsTablePage} from "./Pages/Buildings/BuildingsTablePage";
-import {BuildingsOfLocationTablePage} from "./Pages/Buildings/BuildingsOfLocationTablePage";
 import {BuildingsEditPage} from "./Pages/Buildings/BuildingsEditPage";
 import {BuildingsAddPage} from "./Pages/Buildings/BuildingsAddPage";
-import {PricingInNetworkPage} from "./Pages/PricingInNetwork/PricingInNetworkPage";
-import {PricingOutOfNetworkPage} from "./Pages/PricingOutOfNetwork/PricingOutOfNetworkPage";
+import {LocationsEditPage} from "./Pages/Locations/LocationsEditPage";
+import {LocationsAddPage} from "./Pages/Locations/LocationsAddPage";
 import {PricingAddOnPage} from "./Pages/PricingAddOn/PricingAddOnPage";
+import {PricingOutOfNetworkPage} from "./Pages/PricingOutOfNetwork/PricingOutOfNetworkPage";
+import {PricingInNetworkAddPage} from "./Pages/PricingInNetwork/PricingInNetworkAddPage";
+import {PricingInNetworkPage} from "./Pages/PricingInNetwork/PricingInNetworkPage";
 
 export const AppRoutes = () => <React.Fragment>
     <Route
@@ -25,6 +25,11 @@ export const AppRoutes = () => <React.Fragment>
     />
     <Route
         exact
+        path={`/${RoutingConstants.locations}/add`}
+        component={LocationsAddPage}
+    />
+    <Route
+        exact
         path={`/${RoutingConstants.locations}/:id/edit`}
         component={LocationsEditPage}
     />
@@ -33,10 +38,11 @@ export const AppRoutes = () => <React.Fragment>
         path={`/${RoutingConstants.locations}/:id/${RoutingConstants.editPricingOfLocation}`}
         component={LocationsEditPage}
     />
+
     <Route
         exact
-        path={`/${RoutingConstants.locations}/add`}
-        component={LocationsAddPage}
+        path={`/${RoutingConstants.buildings}/add`}
+        component={BuildingsAddPage}
     />
     <Route
         exact
@@ -45,28 +51,13 @@ export const AppRoutes = () => <React.Fragment>
     />
     <Route
         exact
-        path={`/${RoutingConstants.buildings}/add`}
-        component={BuildingsAddPage}
-    />
-    <Route
-        exact
-        path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.buildings}`}
-        component={BuildingsOfLocationTablePage}
-    />
-    <Route
-        exact
         path={`/${RoutingConstants.buildings}/:id/edit`}
         component={BuildingsEditPage}
     />
     <Route
         exact
-        path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/:id/edit`}
-        component={PricingInNetworkPage}
-    />
-    <Route
-        exact
-        path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/add`}
-        component={PricingInNetworkPage}
+        path={`/${RoutingConstants.locations}/:id/${RoutingConstants.addonPricing}`}
+        component={PricingAddOnPage}
     />
     <Route
         exact
@@ -75,18 +66,13 @@ export const AppRoutes = () => <React.Fragment>
     />
     <Route
         exact
-        path={`/${RoutingConstants.locations}/:id/${RoutingConstants.addonPricing}`}
-        component={PricingAddOnPage}
+        path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/add`}
+        component={PricingInNetworkAddPage}
     />
-    {/*<Route*/}
-    {/*exact*/}
-    {/*path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.buildings}/:id`}*/}
-    {/*component={BuildingsOfLocationPage}*/}
-    {/*/>*/}
-
-    {/*<Route*/}
-    {/*exact*/}
-    {/*path={`/${RoutingConstants.buildings}/:id`}*/}
-    {/*component={BuildingsTablePage}/>*/}
+    <Route
+        exact
+        path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/:id/edit`}
+        component={PricingInNetworkPage}
+    />
 
 </React.Fragment>;

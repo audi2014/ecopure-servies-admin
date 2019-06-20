@@ -1,102 +1,56 @@
-import {
-    buildings_UpdateById,
-    buildingsLarge_GetById, inNetworkModel_GetAll,
-    locations_GetAll,
-} from "../../api/Api";
 import {BaseItemUpdationPage} from "../../Base/BaseItemUpdationPage";
 import React from "react";
-import {Select} from "../../Base/BaseInput";
 import {getBuildingNameByLocationsArray} from "./../tools";
-import {makeUsingLoadingById} from "../tools";
-import {ModelNameOrDefault} from "../../Base/tools";
+import {apiContexts} from "../../api/ContextApi";
+import {makeBuildingsEditableTemplate} from "./makeBuildingsEditableTemplate";
 
-
-export const makeBuildingsEditableTemplate = (locations, pricingInNetwork) => [
-    {
-        //todo: hide it if access !== global
-        field: 'location_id',
-        title: "Location of Building",
-        Input: ({value, setValue, className, fieldData}) => <Select
-            label={fieldData.title}
-            className={className}
-            setValue={v => setValue(+v)}
-            value={value}
-            keyValue={(locations || []).reduce((prev, curr) => {
-                prev[+curr.id] = curr.name || 'Location #' + curr.id
-                return prev;
-            }, {})}
-        />
-    },
-    {
-        field: 'custom_pricing_model_id',
-        title: "Pricing Model of Building",
-        Input: ({value, setValue, className, fieldData, data}) => <Select
-            label={fieldData.title}
-            className={className}
-            setValue={v => setValue(+v)}
-            value={value}
-            keyValue={(pricingInNetwork || [])
-                .filter(item => item.deleted_at === null)
-                .filter(item => +item.location_id === +data.location_id)
-                .reduce((prev, curr) => {
-                    prev[+curr.id] = ModelNameOrDefault(curr.name, curr.id);
-                    return prev;
-                }, {})}
-        />
-    },
-    {
-        field: 'name',
-        title: "Building Name",
-    },
-    {
-        field: 'address',
-        title: "Building Address",
-    },
-    {
-        field: 'zipcode',
-        title: "Building Zip",
-    },
-];
-const use_load_locations_GetAll = makeUsingLoadingById(locations_GetAll);
-const use_load_inNetworkPrices_GetAll = makeUsingLoadingById(inNetworkModel_GetAll);
 
 export const BuildingsEditPage = ({
                                       match,
                                       history,
-                                      onChange = null,
-                                      fetchById = buildingsLarge_GetById,
-                                      selectedId = null,
-                                      title = 'Building'
                                   }) => {
-    const [locations] = use_load_locations_GetAll();
-    const [pricingInNetwork] = use_load_inNetworkPrices_GetAll();
-    if (!selectedId) selectedId = match.params.id;
+    const title = 'Building';
+    const building_id = +match.params.id;
 
+    const {pushError} = React.useContext(apiContexts.error);
+    const {buildingsLarge_GetById, buildings_UpdateById} = React.useContext(apiContexts.buildings);
+    const {locations_GetAll} = React.useContext(apiContexts.locations);
+    const {inNetworkModel_GetAll} = React.useContext(apiContexts.inNetworkModel);
+
+    const locations = locations_GetAll.state || [];
+    const models = inNetworkModel_GetAll.state || [];
+
+    console.log(buildingsLarge_GetById.state);
+
+    React.useEffect(() => {
+        buildingsLarge_GetById.request(building_id);
+        locations_GetAll.request();
+        inNetworkModel_GetAll.request();
+    }, [building_id]);
     return <BaseItemUpdationPage
-        editableTemplate={makeBuildingsEditableTemplate(locations, pricingInNetwork)}
+        reload={() => buildingsLarge_GetById.request(building_id)}
+        editableTemplate={makeBuildingsEditableTemplate(locations, models)}
         renderTitle={b => <span style={{textDecoration: b.deleted_at ? 'line-through' : undefined}}>
-            {getBuildingNameByLocationsArray(b, locations, title)}
+            {getBuildingNameByLocationsArray(b, models, title)}
             </span>
         }
-        fetchById={fetchById}
-        updateById={
-            (id, data, item) => {
-                const location_id = data.location_id || item.location_id;
-                const custom_pricing_model_id = data.custom_pricing_model_id || item.custom_pricing_model_id;
+        data={buildingsLarge_GetById.state}
+        onSave={
+            (data) => {
+                const location_id = data.location_id || buildingsLarge_GetById.state.location_id;
+                const custom_pricing_model_id = data.custom_pricing_model_id || buildingsLarge_GetById.state.custom_pricing_model_id;
                 if (!location_id) {
-                    return new Promise((ok, reject) => reject('empty Location of Building'))
+                    pushError('empty Location of Building')
                 } else if (
-                    !pricingInNetwork.find(item => +item.id === +custom_pricing_model_id && +item.location_id === +location_id)
+                    !models.find(model => +model.id === +custom_pricing_model_id && +model.location_id === +location_id)
                 ) {
-                    return new Promise((ok, reject) => reject('please select Pricing Model of Building'))
+                    pushError('please select Pricing Model of Building')
                 } else {
-                    return buildings_UpdateById(id, data).then(r => {
-                        if (onChange) onChange(selectedId)
-                    });
+                    return buildings_UpdateById.request(building_id, data)
+                        .then(r => buildingsLarge_GetById.setState(r))
                 }
             }
         }
-        selectedId={match.params.id}
     >
     </BaseItemUpdationPage>
 };

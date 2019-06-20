@@ -1,49 +1,51 @@
-import {
-    locations_GetById, buildings_InsertByData, locations_GetAll, inNetworkModel_GetAll,
-} from "../../api/Api";
-
 import React from "react";
 
 import {BaseItemCreationPage} from "../../Base/BaseItemCreationPage";
 import {RoutingConstants} from "../../constants/RoutingConstants";
-import {makeBuildingsEditableTemplate} from "./BuildingsEditPage";
-import {makeUsingLoadingById} from "../tools";
+import {apiContexts} from "../../api/ContextApi";
+import {makeBuildingsEditableTemplate} from "./makeBuildingsEditableTemplate";
 
 
-const use_load_locations_GetAll = makeUsingLoadingById(locations_GetAll);
-const use_load_inNetworkPrices_GetAll = makeUsingLoadingById(inNetworkModel_GetAll);
+export const BuildingsAddPage = ({match, history}) => {
 
-export const BuildingsAddPage = ({match, history, onChange = null, fetchById = locations_GetById}) => {
-    const [locations] = use_load_locations_GetAll();
-    const [pricingInNetwork] = use_load_inNetworkPrices_GetAll();
+    const {pushError} = React.useContext(apiContexts.error);
+
+    const {buildings_InsertByData} = React.useContext(apiContexts.buildings);
+
+    const {locations_GetAll} = React.useContext(apiContexts.locations);
+    const state_locations = locations_GetAll.state || [];
+
+    const {inNetworkModel_GetAll} = React.useContext(apiContexts.inNetworkModel);
+    const state_pricingInNetwork = inNetworkModel_GetAll.state || [];
+
+
+    React.useEffect(() => {
+        locations_GetAll.request();
+        inNetworkModel_GetAll.request();
+    }, []);
+
+
     return <BaseItemCreationPage
-        editableTemplate={makeBuildingsEditableTemplate(locations, pricingInNetwork)}
+        editableTemplate={makeBuildingsEditableTemplate(state_locations, state_pricingInNetwork)}
         renderTitle={() => 'Create Building'}
-        fetchById={fetchById}
         insertByData={(data) => {
-
             const location_id = data.location_id;
             const custom_pricing_model_id = data.custom_pricing_model_id;
             if (!location_id) {
-                return new Promise((ok, reject) => reject('empty Location of Building'))
+                pushError('buildings_InsertByData', 'empty Location of Building');
             } else if (
-                !pricingInNetwork.find(item => +item.id === +custom_pricing_model_id && +item.location_id === +location_id)
+                !state_locations.find(item => +item.id === +custom_pricing_model_id && +item.location_id === +location_id)
             ) {
-                return new Promise((ok, reject) => reject('please select Pricing Model of Building'))
+                pushError('buildings_InsertByData', 'please select Pricing Model of Building');
             } else {
-                return buildings_InsertByData(data)
+                return buildings_InsertByData.request(data)
                     .then(r => {
-
-
-                        if (onChange) onChange();
                         if (r && r.id) {
                             history.push(`/${RoutingConstants.buildings}/${r.id}/edit`)
                         }
                     });
             }
-
-
         }}
-            >
-            </BaseItemCreationPage>
-        };
+    >
+    </BaseItemCreationPage>
+};

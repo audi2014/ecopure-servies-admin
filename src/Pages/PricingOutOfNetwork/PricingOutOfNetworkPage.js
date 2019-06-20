@@ -1,50 +1,73 @@
 import React from "react";
 
-import {
-    locations_GetById,
-    outOfNetworkFootage_GetByLocationId, outOfNetworkStairs_GetByLocationId
-} from "../../api/Api";
 import {Spinner} from "../../icons";
-import {makeUsingLoadingById} from "../tools";
 import {FootageTable} from "./Footage";
 import {StairsTable} from "./Stairs";
-import {EditModelName} from "../../Base/EditModelName";
-import {ManagerPreferencesContext} from "../../ManagerPreferencesContext";
 import {ButtonGoToPricingModelsTable} from "../../Base/Buttons";
+import {makeEditPreferencesProp} from "../../Base/EditModelName";
+import {apiContexts} from "../../api/ContextApi";
 
-const use_load_outOfNetworkFootage_GetByLocationId = makeUsingLoadingById(outOfNetworkFootage_GetByLocationId);
-const use_load_outOfNetworkStairs_GetByLocationId = makeUsingLoadingById(outOfNetworkStairs_GetByLocationId);
-const use_load_locations_GetById = makeUsingLoadingById(locations_GetById);
 
-const EditRegularModelName = () => {
-    const {
-        preferences,
-        updatePreferences
-    } = React.useContext(ManagerPreferencesContext);
-    const handleUpdateName = (regularPricingModelName) => updatePreferences({...preferences, regularPricingModelName})
+const EditRegularModelName = makeEditPreferencesProp('regularPricingModelName');
 
-    return <EditModelName
-        initialName={preferences.regularPricingModelName}
-        updateNamePromise={handleUpdateName}
-    />
+const handleSave = (location_id, setEdition, insert, reload,) => data => {
+    setEdition({...data, loading: true});
+    return insert(data)
+        .then(r => reload(location_id))
+        .then(r => {
+            setEdition({});
+            return r;
+        })
 };
 
 
-export const PricingOutOfNetworkPage = ({match, history, onChange = null, location_id = null}) => {
-    if (!location_id) location_id = match.params.id;
+export const PricingOutOfNetworkPage = ({match, history}) => {
+    const location_id = +match.params.id;
 
-    const [footage, reloadFootage] = use_load_outOfNetworkFootage_GetByLocationId(location_id);
-    const [stairs, reloadStairs] = use_load_outOfNetworkStairs_GetByLocationId(location_id);
-    const [location] = use_load_locations_GetById(location_id);
+    const {outOfNetworkFootage_GetByLocationId, outOfNetworkFootage_InsertByData} = React.useContext(apiContexts.outOfNetworkFootage);
+    const {outOfNetworkStairs_GetByLocationId, outOfNetworkStairs_InsertByData} = React.useContext(apiContexts.outOfNetworkStairs);
 
-    if (footage === false || stairs === false || location === false) return 'error.';
-    if (!footage || !stairs || !location) return <Spinner/>;
+    React.useEffect(() => {
+        outOfNetworkFootage_GetByLocationId.request(location_id);
+        outOfNetworkStairs_GetByLocationId.request(location_id);
+    }, [location_id]);
+
+    const footage = outOfNetworkFootage_GetByLocationId.state || [];
+    const stairs = outOfNetworkStairs_GetByLocationId.state || [];
+
+
+    const [editionFootage, setEditionFootage] = React.useState({});
+    const [editionStairs, setEditionStairs] = React.useState({});
+
+
 
     return <div>
         <ButtonGoToPricingModelsTable location_id={location_id}/>
         <EditRegularModelName/>
-        <FootageTable reload={reloadFootage} location_id={location_id} footage={footage}/>
-        <StairsTable reload={reloadStairs} location_id={location_id} stairs={stairs}/>
+        <FootageTable
+            edition={editionFootage}
+            setEdition={setEditionFootage}
+            onSave={handleSave(
+                location_id,
+                setEditionFootage,
+                outOfNetworkFootage_InsertByData.request,
+                outOfNetworkFootage_GetByLocationId.request,
+            )}
+            location_id={location_id}
+            footage={footage}
+        />
+        <StairsTable
+            edition={editionStairs}
+            setEdition={setEditionStairs}
+            onSave={handleSave(
+                location_id,
+                setEditionStairs,
+                outOfNetworkStairs_InsertByData.request,
+                outOfNetworkStairs_GetByLocationId.request,
+            )}
+            location_id={location_id}
+            stairs={stairs}
+        />
 
     </div>;
 };

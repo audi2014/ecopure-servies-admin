@@ -8,7 +8,7 @@ export const BaseItemCreationPage = ({insertByData, renderTitle, editableTemplat
         editableData={editableData}
         editableTemplate={editableTemplate}
         title={renderTitle ? renderTitle(editableData) : 'Add Item'}
-        onSave={(editableData) => insertByData({...editableData}).catch(e => alert(e))}
+        onSave={(editableData) => insertByData({...editableData})}
         isAdd={true}
     />;
 };

@@ -34,7 +34,7 @@ export const Plan_Title = {
     [PLAN_WEEKLY]: "Weekly/Initial",
     [PLAN_BI_WEEKLY]: "Bi-Weekly/Initial",
     [PLAN_MONTHLY]: "Monthly/Initial",
-    [PLAN_OCCASIONAL]: "Occasiional/Initial/Over 60 days",
+    [PLAN_OCCASIONAL]: "Occasional/Initial/Over 60 days",
     [PLAN_MOVE_OUT]: "Move-Out",
     [PLAN_VALUE_PLAN]: "Value plan",
     [PLAN_LUXURY_PLAN]: "Luxury Plan",

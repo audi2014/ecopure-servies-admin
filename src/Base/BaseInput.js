@@ -64,9 +64,9 @@ export const Select = ({
     {...rest}
     variant={variant}
     select
-    label={label}
+    label={label || ''}
     className={className}
-    value={value}
+    value={value || ''}
     onChange={e => setValue(e.target.value)}
     SelectProps={{
         MenuProps: {

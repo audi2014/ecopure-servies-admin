@@ -11,7 +11,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 
 import LocationIcon from '@material-ui/icons/LocationCity';
 import BuildingIcon from '@material-ui/icons/AccountBalance';
-import {primary, withTheme} from "./Theme";
+import {withTheme} from "./Theme";
 
 
 import {StylesProvider, createGenerateClassName} from '@material-ui/styles';
@@ -74,7 +74,7 @@ const Bar = () => {
             </nav>
         </Toolbar>
     </AppBar>
-}
+};
 
 export const withTemplate = Component => withTheme(props => {
     return <HashRouter>

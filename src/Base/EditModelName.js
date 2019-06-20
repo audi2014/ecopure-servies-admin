@@ -3,7 +3,8 @@ import TextField from "@material-ui/core/TextField/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
 import {CancelIcon, EditIcon, SaveIcon, Spinner} from "../icons";
 import Fab from "@material-ui/core/Fab/Fab";
-import {ModelNameOrDefault} from "./tools";
+import {getManagerPreferences, ModelNameOrDefault} from "./tools";
+import {apiContexts} from "../api/ContextApi";
 
 export const EditModelView = ({isLoading, setName, name, onSave, onCancel, id}) => <React.Fragment>
     <TextField
@@ -43,7 +44,7 @@ export const EditModelName = ({initialName = '', updateNamePromise, id}) => {
 
     React.useEffect(() => {
         setName(ModelNameOrDefault(initialName, id));
-    }, [initialName,id]);
+    }, [initialName, id]);
 
     const handleUpdateClick = () => {
         setLoading(true);
@@ -78,4 +79,35 @@ export const EditModelName = ({initialName = '', updateNamePromise, id}) => {
         aria-label="Edit">
         {name}&nbsp;<EditIcon/>
     </Fab>
-}
+};
+
+
+export const makeEditPreferencesProp = propName => () => {
+
+    const {manager_Get, manager_Update} = React.useContext(apiContexts.manager);
+
+    React.useEffect(() => {
+        if (!manager_Get.state) {
+            manager_Get.request();
+        }
+    }, []);
+
+    if (!!manager_Get.pending) return <Spinner/>;
+
+
+    const handleUpdateName = (value) => manager_Update.request({
+        preferences: JSON.stringify({
+            ...getManagerPreferences(manager_Get.state)[propName],
+            [propName]: value
+        })
+    }).then(r => {
+        manager_Get.setState(r);
+        return r;
+    });
+
+
+    return <EditModelName
+        initialName={getManagerPreferences(manager_Get.state)[propName]}
+        updateNamePromise={handleUpdateName}
+    />
+};

@@ -1,10 +1,4 @@
 import React, {useState} from "react";
-import {
-    locations_GetAll,
-    locationsZipcode_DeleteById,
-    locationsZipcode_GetByLocationId,
-    locationsZipcode_InsertByData
-} from "../../api/Api";
 import Chip from "@material-ui/core/Chip/Chip";
 import Typography from "@material-ui/core/Typography/Typography";
 import TextField from "@material-ui/core/TextField/TextField";
@@ -12,7 +6,8 @@ import FormControl from "@material-ui/core/FormControl/FormControl";
 import {SubmitButton} from "../../Base/BaseInput";
 import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
 import {makeStyles} from "@material-ui/core";
-import {makeUsingLoadingById} from "../tools";
+import {apiContexts} from "../../api/ContextApi";
+import {Spinner} from "../../icons";
 
 const useStyles = makeStyles(theme => ({
     spacingLR: {
@@ -21,7 +16,43 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const View = ({items, insertByZipCode, deleteById, ...props}) => {
+
+export const LocationsEditZipCodes = ({location_id}) => {
+
+    const {
+        locationsZipcode_GetByLocationId,
+        locationsZipcode_InsertByData,
+        locationsZipcode_DeleteById
+    } = React.useContext(apiContexts.locationsZipcode);
+    const items = locationsZipcode_GetByLocationId.state || [];
+
+    React.useEffect(() => {
+        locationsZipcode_GetByLocationId.request(location_id);
+    }, []);
+
+
+    const insertByZipCode = (zipcode) => locationsZipcode_InsertByData.request({location_id, zipcode})
+        .then(r => {
+            locationsZipcode_GetByLocationId.request(location_id);
+        });
+    const deleteById = (id) => locationsZipcode_DeleteById.request(id)
+        .then(r => {
+            locationsZipcode_GetByLocationId.request(location_id);
+        });
+
+    if (
+        !!locationsZipcode_GetByLocationId.pending
+        || !!locationsZipcode_InsertByData.pending
+        || !!locationsZipcode_DeleteById.pending
+    ) return <Spinner/>;
+    return <View
+        items={items}
+        location_id={location_id}
+        deleteById={deleteById}
+        insertByZipCode={insertByZipCode}
+    />
+};
+const View = ({items, insertByZipCode, deleteById}) => {
     const [newZipCode, setNewZipCode] = useState('');
     const classes = useStyles();
 
@@ -59,30 +90,4 @@ const View = ({items, insertByZipCode, deleteById, ...props}) => {
             </FormControl>
         </div>
     </div>
-};
-
-
-const use_load_locationsZipcode_GetByLocationId = makeUsingLoadingById(locationsZipcode_GetByLocationId);
-
-
-export const LocationsZipCodes = ({location_id}) => {
-    const [items, reload] = use_load_locationsZipcode_GetByLocationId(location_id);
-    if (items === null) return 'loading...';
-    if (items === false) return 'error.';
-
-    const insertByZipCode = (zipcode) => locationsZipcode_InsertByData({location_id, zipcode})
-        .then(r => {
-            reload();
-        });
-    const deleteById = (id) => locationsZipcode_DeleteById(id)
-        .then(r => {
-            reload();
-        });
-
-    return <View
-        items={items}
-        location_id={location_id}
-        deleteById={deleteById}
-        insertByZipCode={insertByZipCode}
-    />
 };

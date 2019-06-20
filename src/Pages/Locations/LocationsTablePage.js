@@ -1,13 +1,11 @@
 import React from "react";
-import {
-    locations_GetAll,
-} from "../../api/Api";
 import {RoutingConstants} from "../../constants/RoutingConstants";
 import {BaseTablePage} from "../../Base/BaseTablePage";
 import Link from "@material-ui/core/Link/Link";
 import {Config} from "../../constants/Config";
 import {buildColumnsFrom, mapColumnsKeyValueDeletedThrough, mapColumnsKeyValueProp} from "./../tools";
-import {BuildingsOfPreloadedLocationTablePage} from "./../Buildings/BuildingsOfLocationTablePage";
+import {apiContexts} from "../../api/ContextApi";
+import {BuildingsOfLocationTablePage} from "../Buildings/BuildingsOfLocationTablePage";
 
 
 const columns = buildColumnsFrom([
@@ -29,18 +27,27 @@ const columns = buildColumnsFrom([
 ]);
 
 
-export const LocationsTablePage = ({match, history, fetchItems = locations_GetAll, title = "Locations"}) => {
+export const LocationsTablePage = ({match, history}) => {
+    const title = "Locations";
+
+    const {locations_GetAll} = React.useContext(apiContexts.locations);
+    const locations = locations_GetAll.state || [];
+    React.useEffect(() => {
+        locations_GetAll.request();
+    }, []);
+
     return <BaseTablePage
-        onAddClick={()=>history.push(`/${RoutingConstants.locations}/add`)}
+        isLoading={!!locations_GetAll.pending}
+        onAddClick={() => history.push(`/${RoutingConstants.locations}/add`)}
         renderTitle={() => title}
-        fetchItems={fetchItems}
+        staticData={locations}
         onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.locations}/${rowData.id}/edit`)}
         detailPanel={rowData => {
             return <div style={{margin: 10}}>
-                <BuildingsOfPreloadedLocationTablePage
-                    match={match}
-                    history={history}
-                    location={rowData}
+                <BuildingsOfLocationTablePage
+                match={match}
+                history={history}
+                location={rowData}
                 />
             </div>
         }}

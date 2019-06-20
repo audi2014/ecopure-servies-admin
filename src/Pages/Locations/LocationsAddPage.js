@@ -1,63 +1,24 @@
 import React from "react";
 
 import {BaseItemCreationPage} from "../../Base/BaseItemCreationPage";
-import {locations_GetById, locations_InsertByData} from "../../api/Api";
-import Link from "@material-ui/core/Link/Link";
 import {RoutingConstants} from "../../constants/RoutingConstants";
-import TextField from "@material-ui/core/TextField/TextField";
+import {apiContexts} from "../../api/ContextApi";
+import {makeLocationEditableTemplate} from "./makeLocationEditableTemplate";
 
-export const locationsEditableTemplate = [
-    {
-        field: 'page',
-        title: "Location Wordpress Page",
-    },
-    {
-        field: 'name',
-        title: "Location Name",
-    },
-    {
-        field: 'address',
-        title: "Location Address",
-    },
-    {
-        field: 'tel',
-        title: "Location Phone Number",
-    },
-    {
-        field: 'email',
-        title: "Location Email",
-    },
-    {
-        field: 'google_place_id',
-        title: "Google Place Id",
-        Input: ({value, setValue, className, fieldData}) => <React.Fragment><TextField
-            label={fieldData.title}
-            className={className}
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            margin="normal"
-            variant="outlined"
-        />
-            <Link
-                target="_blank"
-                rel="noreferrer"
-                href='https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder'>How
-                to get Google place id?</Link>
-        </React.Fragment>
-    },
-];
+const handleInsert = (request, history) => data => request(data)
+    .then(r => {
+        if (r && r.id) {
+            history.push(`/${RoutingConstants.locations}/${r.id}/edit`)
+        }
+    });
 
-export const LocationsAddPage = ({match, history, onChange = null, fetchById = locations_GetById}) => {
+export const LocationsAddPage = ({match, history}) => {
+    const {locations_InsertByData} = React.useContext(apiContexts.locations);
+
     return <BaseItemCreationPage
-        editableTemplate={locationsEditableTemplate}
+        editableTemplate={makeLocationEditableTemplate()}
         renderTitle={() => 'Create Location'}
-        fetchById={fetchById}
-        insertByData={(data) => locations_InsertByData(data).then(r => {
-            if (onChange) onChange()
-            if (r && r.id) {
-                history.push(`/${RoutingConstants.locations}/${r.id}/edit`)
-            }
-        })}
+        insertByData={handleInsert(locations_InsertByData.request, history)}
     >
     </BaseItemCreationPage>
 };

@@ -1,14 +1,13 @@
 import React from "react";
 import {BaseTablePage} from "../../Base/BaseTablePage";
-import {buildingsLarge_GetAll, locations_GetAll} from "../../api/Api";
 import {RoutingConstants} from "../../constants/RoutingConstants";
 import {
     buildColumnsFrom,
-    makeUsingLoadingById,
     mapColumnsKeyValueDeletedThrough,
     mapColumnsKeyValueProp
 } from "./../tools";
 import {Select} from "../../Base/BaseInput";
+import {apiContexts} from "../../api/ContextApi";
 
 
 const columns = buildColumnsFrom([
@@ -28,21 +27,30 @@ const columns = buildColumnsFrom([
 ]);
 
 
-const use_load_buildingsLarge_GetAll = makeUsingLoadingById(buildingsLarge_GetAll);
-const use_load_locations_GetAll = makeUsingLoadingById(locations_GetAll);
+export const BuildingsTablePage = ({match, history}) => {
+    const title = 'Buildings';
 
-export const BuildingsTablePage = ({match, history, fetchItems = buildingsLarge_GetAll, title = "Buildings"}) => {
-    const [locations] = use_load_locations_GetAll();
-    const [buildings] = use_load_buildingsLarge_GetAll();
+    const {buildingsLarge_GetAll} = React.useContext(apiContexts.buildings);
+    const state_buildings = buildingsLarge_GetAll.state || [];
+
+    const {locations_GetAll} = React.useContext(apiContexts.locations);
+    const state_locations = locations_GetAll.state || [];
+
+
     const [filtered_location_id, setLocationId] = React.useState('all');
-    const LocationsId_Name = (locations || []).reduce((prev, curr) => {
+    const LocationsId_Name = state_locations.reduce((prev, curr) => {
         prev[curr.id] = curr.name || 'Location #' + curr.id;
         return prev;
     }, {'all': 'All Locations'});
-
     const staticData = filtered_location_id === 'all'
-        ? (buildings || [])
-        : (buildings || []).filter(b => +b.location_id === +filtered_location_id);
+        ? state_buildings
+        : state_buildings.filter(b => +b.location_id === +filtered_location_id);
+
+    React.useEffect(() => {
+        buildingsLarge_GetAll.request();
+        locations_GetAll.request();
+    }, []);
+
     return <BaseTablePage
         onAddClick={() => history.push(`/${RoutingConstants.buildings}/add`)}
         renderTitle={() => <React.Fragment>
@@ -56,7 +64,7 @@ export const BuildingsTablePage = ({match, history, fetchItems = buildingsLarge_
                 style={{width: 200, marginLeft: 10}}/>
         </React.Fragment>}
         staticData={staticData}
-        isLoading={buildings === null}
+        isLoading={!!buildingsLarge_GetAll.pending}
         onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}/edit`)}
         columns={columns}
 

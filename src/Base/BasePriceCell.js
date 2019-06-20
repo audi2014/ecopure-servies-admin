@@ -14,8 +14,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const centsToDollars = cents => cents ? (cents / 100).toFixed(2) : 0;
-export const dollarsToCents = dollars => Math.round(dollars * 100) || 0;
+
 export const PriceCellEditable = ({
                                       tooltipClassName,
                                       edition,
@@ -29,7 +28,6 @@ export const PriceCellEditable = ({
     const mergeState = nextState => setState({...state, ...nextState});
 
     const onCancelClick = () => setEdition({});
-
     return <TableCell {...props}>
         <form className={formClassName} onSubmit={e => {
             e.preventDefault();

@@ -6,13 +6,13 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import {AddOn_Title, AddOnValueType_Title} from "../../constants/Enum";
-import {addOn_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {MoneyInput, Select} from "../../Base/BaseInput";
 import Paper from "@material-ui/core/Paper/Paper";
 import Typography from "@material-ui/core/Typography/Typography";
-import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
+import {PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
 import {Spinner} from "../../icons";
+import {centsToDollars, dollarsToCents} from "../../Base/tools";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -56,7 +56,7 @@ const EditableCell = ({edition, setEdition, update, addon_type, location_id, cla
                     cents: dollarsToCents(state.dollars)
                 }
             )}
-        formClassName
+        formClassName={classes.container}
     >
         {({state, setState}) => (
             <div className={classes.container}>
@@ -102,18 +102,14 @@ const Cell = ({items, addon_type, classes, setEdition, location_id}) => {
     </PriceCell>
 };
 
-export const AddOnTable = ({reload, location_id, addons=[]}) => {
+export const AddOnTable = ({
+                               edition,
+                               setEdition,
+                               onSave,
+                               location_id,
+                               addons = []
+                           }) => {
     const classes = useStyles();
-    const [edition, setEdition] = React.useState({});
-
-    const update = (data) => {
-        setEdition({...data, loading: true})
-        addOn_InsertByData(data)
-            .then(r => reload())
-            .then(r => {
-                setEdition({});
-            })
-    };
 
     return <Paper className={classes.root}>
         <Typography style={{margin: 20}} variant="h6">Add-On Pricing</Typography>
@@ -140,7 +136,7 @@ export const AddOnTable = ({reload, location_id, addons=[]}) => {
                                 setEdition={setEdition}
                                 edition={edition}
                                 location_id={location_id}
-                                update={update}
+                                update={onSave}
                             />)
                             : <Cell
                                 classes={classes}

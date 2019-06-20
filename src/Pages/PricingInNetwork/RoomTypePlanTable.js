@@ -9,13 +9,114 @@ import {
     Plan_Title,
     RoomType_Title
 } from "../../constants/Enum";
-import {inNetworkPrices_GetByModelId, inNetworkPrices_InsertByData} from "../../api/Api";
+// import {inNetworkPrices_GetByModelId, inNetworkPrices_InsertByData} from "../../api/Api";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {MoneyInput,} from "../../Base/BaseInput";
-import {centsToDollars, dollarsToCents, PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
+import {PriceCell, PriceCellEditable} from "../../Base/BasePriceCell";
 import {Spinner} from "../../icons";
-import {makeUsingLoadingById} from "../tools";
-import {ImportInnetwork} from "./ImportInnetwork";
+// import {makeUsingLoadingById} from "../tools";
+// import {ImportInnetwork} from "./ImportInnetwork";
+import {centsToDollars, dollarsToCents} from "../../Base/tools";
+
+
+export const RoomTypePlanTable = ({
+                                      pricingInNetwork,
+                                      edition,
+                                      setEdition,
+                                      onSave,
+
+                                      location_id,
+                                      custom_pricing_model_id,
+
+                                  }) => {
+
+    // const [pricingInNetwork, reload] = use_load_inNetworkPrices_GetByModelId(custom_pricing_model_id);
+    const classes = useStyles();
+    // const [edition, setEdition] = React.useState({});
+    // if (pricingInNetwork === false) return 'error.';
+    // if (!pricingInNetwork) return <Spinner/>;
+
+
+    const items = pricingInNetwork || [];
+    const plan_cents = Object.keys(Plan_Title)
+        .reduce((prev, plan) => {
+            prev[plan] = items
+                .filter(i => i.plan === plan)
+                .reduce(
+                    (sum, item) => sum += ((+item.cents || 0) + (+item.centsInitial || 0)),
+                    0
+                );
+            return prev;
+        }, {});
+
+
+    // const update = (data) => {
+    //     setEdition({...data, loading: true})
+    //     inNetworkPrices_InsertByData(data)
+    //         .then(r => reload())
+    //         .then(r => {
+    //             setEdition({});
+    //         })
+    // };
+
+    return <div className={classes.root}>
+        <Table className={classes.table}>
+            <TableHead>
+                <TableRow>
+                    <TableCell>Plan</TableCell>
+                    {Object.keys(RoomType_Title).map(roomType_key => <TableCell
+                        key={roomType_key}>{RoomType_Title[roomType_key]}</TableCell>)}
+                </TableRow>
+            </TableHead>
+            <TableBody>
+
+                {Object.keys(Plan_Title).map(plan_key => {
+
+                    return <TableRow key={plan_key}>
+                        <TableCell
+                            component="th"
+                            scope="row"
+                            style={{textDecoration: !plan_cents[plan_key] ? 'line-through' : undefined}}
+                        >
+                            {Plan_Title[plan_key]}
+                        </TableCell>
+                        {Object.keys(RoomType_Title).map(roomType_key => (
+                            edition.room_type === roomType_key && edition.plan === plan_key
+                        )
+                            ? (edition.loading ? <TableCell key={roomType_key}><Spinner/></TableCell> : <EditableCell
+                                classes={classes}
+                                room_type={roomType_key}
+                                plan={plan_key}
+                                key={roomType_key}
+                                setEdition={setEdition}
+                                edition={edition}
+                                location_id={location_id}
+                                custom_pricing_model_id={custom_pricing_model_id}
+                                update={onSave}
+                                hasInitial={Plan_HasInitial[plan_key]}
+                            />)
+                            : <Cell
+                                classes={classes}
+                                items={items}
+                                room_type={roomType_key}
+                                plan={plan_key}
+                                key={roomType_key}
+                                setEdition={setEdition}
+                                location_id={location_id}
+                                custom_pricing_model_id={custom_pricing_model_id}
+                                hasInitial={Plan_HasInitial[plan_key]}
+                            />)}
+
+                    </TableRow>
+                })}
+
+
+            </TableBody>
+        </Table>
+    </div>;
+
+};
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -94,7 +195,6 @@ const Cell = ({items, room_type, plan, classes, setEdition, custom_pricing_model
         cents = items[0].cents;
         centsInitial = items[0].centsInitial;
         if (items.length > 1) {
-            debugger;
             console.error('room_type pricing error: room_type & plan of model duplicate');
         }
     }
@@ -110,98 +210,4 @@ const Cell = ({items, room_type, plan, classes, setEdition, custom_pricing_model
 };
 
 
-const use_load_inNetworkPrices_GetByModelId = makeUsingLoadingById(inNetworkPrices_GetByModelId)
-export const RoomTypePlanTable = ({location_id, custom_pricing_model_id}) => {
-
-    const [pricingInNetwork, reload] = use_load_inNetworkPrices_GetByModelId(custom_pricing_model_id);
-    const classes = useStyles();
-    const [edition, setEdition] = React.useState({});
-    if (pricingInNetwork === false) return 'error.';
-    if (!pricingInNetwork) return <Spinner/>;
-
-
-    const items = pricingInNetwork || [];
-    const plan_cents = Object.keys(Plan_Title)
-        .reduce((prev, plan) => {
-            prev[plan] = items
-                .filter(i => i.plan === plan)
-                .reduce(
-                    (sum, item) => sum += ((+item.cents || 0) + (+item.centsInitial || 0)),
-                    0
-                );
-            return prev;
-        }, {});
-
-
-    const update = (data) => {
-        setEdition({...data, loading: true})
-        inNetworkPrices_InsertByData(data)
-            .then(r => reload())
-            .then(r => {
-                setEdition({});
-            })
-    };
-
-    return <div className={classes.root}>
-        <Table className={classes.table}>
-            <TableHead>
-                <TableRow>
-                    <TableCell>Plan</TableCell>
-                    {Object.keys(RoomType_Title).map(roomType_key => <TableCell
-                        key={roomType_key}>{RoomType_Title[roomType_key]}</TableCell>)}
-                </TableRow>
-            </TableHead>
-            <TableBody>
-
-                {Object.keys(Plan_Title).map(plan_key => {
-
-                    return <TableRow key={plan_key}>
-                        <TableCell
-                            component="th"
-                            scope="row"
-                            style={{textDecoration: !plan_cents[plan_key] ? 'line-through' : undefined}}
-                        >
-                            {Plan_Title[plan_key]}
-                        </TableCell>
-                        {Object.keys(RoomType_Title).map(roomType_key => (
-                            edition.room_type === roomType_key && edition.plan === plan_key
-                        )
-                            ? (edition.loading ? <TableCell key={roomType_key}><Spinner/></TableCell> : <EditableCell
-                                classes={classes}
-                                room_type={roomType_key}
-                                plan={plan_key}
-                                key={roomType_key}
-                                setEdition={setEdition}
-                                edition={edition}
-                                location_id={location_id}
-                                custom_pricing_model_id={custom_pricing_model_id}
-                                update={update}
-                                hasInitial={Plan_HasInitial[plan_key]}
-                            />)
-                            : <Cell
-                                classes={classes}
-                                items={items}
-                                room_type={roomType_key}
-                                plan={plan_key}
-                                key={roomType_key}
-                                setEdition={setEdition}
-                                location_id={location_id}
-                                custom_pricing_model_id={custom_pricing_model_id}
-                                hasInitial={Plan_HasInitial[plan_key]}
-                            />)}
-
-                    </TableRow>
-                })}
-
-
-            </TableBody>
-        </Table>
-        <ImportInnetwork
-            pricingInNetwork={pricingInNetwork || []}
-            custom_pricing_model_id={custom_pricing_model_id}
-            reload={reload}
-            location_id={location_id}
-        />
-    </div>;
-
-};
+// const use_load_inNetworkPrices_GetByModelId = makeUsingLoadingById(inNetworkPrices_GetByModelId)

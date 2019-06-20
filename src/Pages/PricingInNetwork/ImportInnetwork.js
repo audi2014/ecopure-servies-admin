@@ -1,12 +1,12 @@
 import React from 'react';
 import {Select} from "../../Base/BaseInput";
 import Button from "@material-ui/core/Button/Button";
-import {
-    inNetworkModel_GetByLocationId,
-    inNetworkPrices_DeleteById, inNetworkPrices_GetByModelId,
-    inNetworkPrices_InsertByData
-} from "../../api/Api";
-import {makeUsingLoadingById} from "../tools";
+// import {
+//     inNetworkModel_GetByLocationId,
+//     inNetworkPrices_DeleteById, inNetworkPrices_GetByModelId,
+//     inNetworkPrices_InsertByData
+// } from "../../api/Api";
+// import {makeUsingLoadingById} from "../tools";
 import FormControl from "@material-ui/core/FormControl/FormControl";
 import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
 import {Spinner} from "../../icons";
@@ -14,11 +14,21 @@ import {PromiseAllWithProgress} from "../../Base/tools";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 
-const use_load_inNetworkModel_GetByLocationId = makeUsingLoadingById(inNetworkModel_GetByLocationId);
+// const use_load_inNetworkModel_GetByLocationId = makeUsingLoadingById(inNetworkModel_GetByLocationId);
 
 
-export const ImportInnetwork = ({location_id, custom_pricing_model_id, reload, pricingInNetwork = []}) => {
-    const [models] = use_load_inNetworkModel_GetByLocationId(location_id);
+export const ImportInnetwork = ({
+                                    reload,
+                                    models,
+                                    inNetworkPrices_GetByModelId,
+                                    inNetworkPrices_DeleteById,
+                                    inNetworkPrices_InsertByData,
+
+                                    location_id,
+                                    custom_pricing_model_id,
+                                    pricingInNetwork = []
+                                }) => {
+    // const [models] = use_load_inNetworkModel_GetByLocationId(location_id);
     const [selected_id, setSelectedId] = React.useState('');
     const [progress, setProgress] = React.useState(false);
     const ModelId_Name = (models || [])

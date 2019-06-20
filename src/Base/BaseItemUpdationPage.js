@@ -1,58 +1,32 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import Typography from "@material-ui/core/Typography/Typography";
 import {Spinner} from "../icons";
 import {BaseItem} from "./BaseItem";
 import {makeEditableData} from "./tools";
 
 
-export const BaseItemUpdationPage = ({renderTitle, fetchById, updateById, selectedId, children, editableTemplate = null, ...rest}) => {
-    const [item, setItem] = useState(null);
+export const BaseItemUpdationPage = ({renderTitle, data, reload, onSave, children, editableTemplate = null, ...rest}) => {
 
-    async function fetchItemToState() {
-        const result = await fetchById(selectedId);
-        if (result) {
-            setItem(result);
-        } else {
-            setItem(false);
-        }
-    }
+    if (data === null) return <Spinner/>;
+    if (data === false) return <Typography style={{margin: 20}} variant="h6">Item not found</Typography>;
 
-    useEffect(() => {
-        fetchItemToState(selectedId);
-    }, [selectedId]);
+    const editableData = makeEditableData(data, editableTemplate);
 
-    if (item === null) return <Spinner/>;
-    if (item === false) return <Typography style={{margin: 20}} variant="h6">Item not found</Typography>;
-
-    const editableData = makeEditableData(item, editableTemplate);
-
-    const {id, deleted_at,} = item;
+    const {id, deleted_at, updated_at} = data;
 
     const isDisabled = !!deleted_at;
-    const onToggleDisabled = updateById
-        ? () => updateById(
-            id,
-            {
-                deleted_at: isDisabled ? null : Math.round((new Date()).getTime() / 1000)
-            },
-            item
-        )
-            .then(r => fetchItemToState())
-            .catch(e => alert(e))
-        : null;
-
-    const onSave = updateById
-        ? (diff) => updateById(id, diff, item)
-            .then(r => fetchItemToState())
-            .catch(e => alert(e))
-        : null;
+    const onToggleDisabled = () => onSave(
+        {
+            deleted_at: isDisabled ? null : Math.round((new Date()).getTime() / 1000)
+        }
+    );
 
 
     return <BaseItem
-        key={id}
+        key={`${id}`}
         editableData={editableData}
         editableTemplate={editableTemplate}
-        title={renderTitle ? renderTitle(item) : 'Edit Item'}
+        title={renderTitle ? renderTitle(data || {}) : 'Edit Item'}
         isDisabled={isDisabled}
         children={children}
         onToggleDisabled={onToggleDisabled}
@@ -61,11 +35,10 @@ export const BaseItemUpdationPage = ({renderTitle, fetchById, updateById, select
 
     >{
         children ? children(
-            item,
+            data,
             {
-                selectedId,
-                reload: fetchItemToState,
-                item,
+                ...rest,
+                reload,
                 editableData,
             }
         ) : null
