@@ -77,7 +77,7 @@ export const PricingInNetworkPage = ({match, history}) => {
             models={models}
             pricingInNetwork={inNetworkPrices}
             custom_pricing_model_id={custom_pricing_model_id}
-            reload={() => inNetworkPrices_InsertByData.request(custom_pricing_model_id)}
+            reload={() => inNetworkPrices_GetByModelId.request(custom_pricing_model_id)}
             location_id={location_id}
         />
     </div>;

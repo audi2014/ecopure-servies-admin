@@ -48,7 +48,7 @@ export const ImportInnetwork = ({
             ).then(
                 r => PromiseAllWithProgress(
                     copyItems.map(item => {
-                        const {id, created_at, updated_at, deleted_at, ...body} = item
+                        const {id, created_at, updated_at, deleted_at, ...body} = item;
                         return inNetworkPrices_InsertByData({...body, custom_pricing_model_id})
                     }),
                     v => setProgress(v ? v : 1)

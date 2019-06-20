@@ -97,7 +97,7 @@ export const makeEditPreferencesProp = propName => () => {
 
     const handleUpdateName = (value) => manager_Update.request({
         preferences: JSON.stringify({
-            ...getManagerPreferences(manager_Get.state)[propName],
+            ...getManagerPreferences(manager_Get.state),
             [propName]: value
         })
     }).then(r => {
