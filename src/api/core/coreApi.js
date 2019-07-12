@@ -7,11 +7,11 @@ const mapResponse = r => r.json()
         return r.data;
     });
 
-export const _get = path => fetch(Config.apiBaseUrl + path)
+export const _get = path => fetch(Config.LOCATIONS_API_URL + path)
     .then(mapResponse);
 
 export const _delete = path => fetch(
-    Config.apiBaseUrl + path,
+    Config.LOCATIONS_API_URL + path,
     {
         method: 'DELETE',
         headers: {
@@ -22,7 +22,7 @@ export const _delete = path => fetch(
 
 
 export const _post = (path, data) => fetch(
-    Config.apiBaseUrl + path,
+    Config.LOCATIONS_API_URL + path,
     {
         method: 'POST',
         headers: {
@@ -34,7 +34,7 @@ export const _post = (path, data) => fetch(
     .then(mapResponse);
 
 export const _put = (path, data) => fetch(
-    Config.apiBaseUrl + path,
+    Config.LOCATIONS_API_URL + path,
     {
         method: 'put',
         headers: {

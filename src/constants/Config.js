@@ -1,10 +1,7 @@
-const ConfigDevRemote = {
-    apiBaseUrl: "http://52.62.149.101/api",
-    wordpressBaseUrl:"http://52.62.149.101"
+export const Config = {
+    LOCATIONS_API_URL: process.env.REACT_APP_LOCATIONS_API_URL,
+    WORDPRESS_BASE_URL: process.env.REACT_APP_WORDPRESS_BASE_URL,
+    WORDPRESS_ENV_PARAM: process.env.REACT_APP_WORDPRESS_ENV_PARAM,
+    MAIN_API_URL: process.env.REACT_APP_MAIN_API_URL,
+    ENVIRONMENT: process.env.REACT_APP_ENVIRONMENT,
 };
-const ConfigLocal = {
-    ...ConfigDevRemote,
-    apiBaseUrl: 'http://localhost:8080',
-};
-
-export const Config = ConfigDevRemote;

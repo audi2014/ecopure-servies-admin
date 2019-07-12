@@ -18,7 +18,7 @@ const columns = buildColumnsFrom([
         page: rowData => (
             <Link
                 target='_blank'
-                href={`${Config.wordpressBaseUrl}/${rowData.page}`}>
+                href={`${Config.WORDPRESS_BASE_URL}/${rowData.page}`}>
                 {rowData.page}
             </Link>
         ),
