@@ -23,10 +23,9 @@
     "start:production": "env-cmd -e production react-scripts start",
     "start:local": "env-cmd -e local react-scripts start",
 
-    "build:development": "env-cmd -e development react-scripts build && env-cmd -e development  ./remote-copy.sh",
-    "build:sandbox": "env-cmd -e sandbox react-scripts build && env-cmd -e sandbox  ./remote-copy.sh",
-    "build:production": "env-cmd -e production react-scripts build && env-cmd -e production ./remote-copy.sh",
-    "build": "react-scripts build",
+    "build:development": "env-cmd -e development  ./build-remote-copy.sh",
+    "build:sandbox": "env-cmd -e sandbox  ./build-remote-copy.sh",
+    "build:production": "env-cmd -e production ./build-remote-copy.sh",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
