@@ -15,6 +15,7 @@ import {withTheme} from "./Theme";
 
 
 import {StylesProvider, createGenerateClassName} from '@material-ui/styles';
+import {Config} from "./constants/Config";
 
 const generateClassName = createGenerateClassName({
     productionPrefix: 'bar',
@@ -51,14 +52,29 @@ const useStyles = makeStyles(theme => {
     });
 });
 
+const Logo = ({className}) => {
+    const handleClick = () => alert(Object.keys(Config).map(k => `${k} : ${Config[k]}`).join(" \n"));
+
+    return <React.Fragment>
+        <Typography variant="h6" color="inherit" noWrap className={className}>
+            Ecopure Dashboard
+        </Typography>
+        {
+            Config.ENVIRONMENT !== 'production'
+                ? <span
+                    style={{'cursor':'pointer'}}
+                    onClick={handleClick}> {Config.ENVIRONMENT} </span>
+                : null
+        }
+
+    </React.Fragment>
+};
 
 const Bar = () => {
     const classes = useStyles();
     return <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
-            <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                Ecopure Dashboard
-            </Typography>
+            <Logo className={classes.toolbarTitle}/>
             <nav>
 
                 <Link component={RouterLink} to="/locations" variant="button" color="primary"

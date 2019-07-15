@@ -8,7 +8,6 @@
   "dependencies": {
     "@material-ui/core": "^4.0.2",
     "@material-ui/icons": "^4.1.1",
-    "env-cmd": "^9.0.3",
     "material-table": "^1.39.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
@@ -19,13 +18,14 @@
     "typescript": "3.3.3"
   },
   "scripts": {
-    "start:local": "env-cmd -e local react-scripts start",
-    "start:dev": "env-cmd -e development react-scripts start",
+    "start:development": "env-cmd -e development react-scripts start",
     "start:sandbox": "env-cmd -e sandbox react-scripts start",
-    "start:prod": "env-cmd -e production react-scripts start",
-    "build:dev": "env-cmd -e development react-scripts build",
-    "build:sandbox": "env-cmd -e sandbox react-scripts build",
-    "build:prod": "env-cmd -e production react-scripts build",
+    "start:production": "env-cmd -e production react-scripts start",
+    "start:local": "env-cmd -e local react-scripts start",
+
+    "build:development": "env-cmd -e development react-scripts build && env-cmd -e development  ./remote-copy.sh",
+    "build:sandbox": "env-cmd -e sandbox react-scripts build && env-cmd -e sandbox  ./remote-copy.sh",
+    "build:production": "env-cmd -e production react-scripts build && env-cmd -e production ./remote-copy.sh",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
