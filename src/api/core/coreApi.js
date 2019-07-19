@@ -2,28 +2,45 @@ import {Config} from "../../constants/Config";
 import {AuthController} from "../../Auth/AuthController";
 
 const buffer = {
-    pendingRefresh: null,
+    pendingRequestWithRefreshRefresh: null,
     pendingRequestsData: [],
 };
-const refreshSession = (cfg) => {
-    return fetch( Config.LOCATIONS_API_URL + '/auth/refresh', {
+
+export const _auth = (path, data) => fetch(
+    Config.LOCATIONS_API_URL + path,
+    {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            ...cfg,
-            token:AuthController.getRefreshToken()
-        })
+        body: JSON.stringify(data)
     })
-        .then(mapAuthorizationResponse)
-        .catch(e=>{
-            // AuthController.clearSession();
-            alert('Failed to reload session. Try relogin');
-            window.location.reload();
-        })
-};
+    .then(saveAuthorizationResponse);
+
+const fetchWithRefreshSession = (url, cfg) => _auth(
+    '/auth/refresh',
+    {
+        ...AuthController.getSessionConfig(),
+        token: AuthController.getRefreshToken()
+    })
+    .then(() => Promise.all(buffer.pendingRequestsData.map(args => {
+        return fetch(args[0], mapAuthorizedFetchCfg(args[1])).then(r => {
+            console.log('after refresh', args[0]);
+            return args[2](r);
+        });
+    })))
+    .then(() => {
+        buffer.pendingRequestsData = [];
+        buffer.pendingRequestWithRefreshRefresh = null;
+        return fetch(url, mapAuthorizedFetchCfg(cfg))
+    }).catch(e => {
+        // AuthController.clearSession();
+        // alert('Failed to reload session. Try relogin');
+        // window.location.reload();
+        throw new Error("Failed to reload session. Try relogin")
+    });
+
 
 const mapAuthorizedResponse = res => {
     if (res.ok) {
@@ -45,7 +62,7 @@ const mapAuthorizedResponse = res => {
     }
 };
 
-const mapAuthorizationResponse = res => {
+const saveAuthorizationResponse = res => {
     if (res.status < 500) {
         return res.json().then(
             json => {
@@ -68,7 +85,7 @@ const mapAuthorizedFetchCfg = cfg => {
     if (!cfg) cfg = {};
     if (!cfg.headers) cfg.headers = {};
     cfg.headers['Authorization'] = `Bearer ${AuthController.getToken()}`;
-    console.log('mapAuthorizedFetchCfg', AuthController.getToken());
+    // console.log('AuthorizationToken: Bearer ', AuthController.getToken());
     return cfg;
 };
 
@@ -80,17 +97,9 @@ const fetchAuthRequest = (url, cfg) => {
         authError.code = 401;
         throw authError;
     } else if (AuthController.isRequireRefresh()) {
-        if (!buffer.pendingRefresh) {
-            buffer.pendingRefresh = refreshSession()
-                .then(() => Promise.all(buffer.pendingRequestsData.map(args => {
-                    return fetch(args[0], mapAuthorizedFetchCfg(args[1]))
-                        .then(r => args[2](r));
-                })))
-                .then(() => {
-                    buffer.pendingRequestsData = [];
-                    return fetch(url, mapAuthorizedFetchCfg(cfg))
-                })
-            return buffer.pendingRefresh;
+        if (!buffer.pendingRequestWithRefreshRefresh) {
+            buffer.pendingRequestWithRefreshRefresh = fetchWithRefreshSession(url, cfg);
+            return buffer.pendingRequestWithRefreshRefresh;
         } else {
             return new Promise(resolve => {
                 buffer.pendingRequestsData.push([url, cfg, resolve])
@@ -101,17 +110,6 @@ const fetchAuthRequest = (url, cfg) => {
     }
 };
 
-export const _auth = (path, data) => fetch(
-    Config.LOCATIONS_API_URL + path,
-    {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(mapAuthorizationResponse);
 
 export const _get = path => fetch(Config.LOCATIONS_API_URL + path)
     .then(mapAuthorizedResponse);

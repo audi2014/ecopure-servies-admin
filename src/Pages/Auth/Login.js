@@ -82,7 +82,6 @@ export function Login({history}) {
         e.preventDefault();
         const nextErrors = {...errors, ...validateForm(values)};
         if (!haveError(nextErrors)) {
-
             return login.request({
                 ...values,
             }).then(r => {
@@ -153,7 +152,7 @@ export function Login({history}) {
                         autoComplete="current-password"
                     />
                     <FormControlLabel
-                        control={<Checkbox value={values.remember} color="primary"
+                        control={<Checkbox checked={!!values.remember} color="primary"
                                            onChange={onInputChange('remember')}/>}
                         label="Remember me"
                     />

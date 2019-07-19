@@ -1,11 +1,14 @@
 import Cookies from 'js-cookie'
 import {Config} from "../constants/Config";
 
-const TIME_MARGIN_SEC = 60;
-// const EXPIRES_IN_LONG  = 60 * 30; //refresh session every 30 min
-// const EXPIRES_IN_SHORT = 60 * 5; //refresh session every 5 min
-const EXPIRES_IN_LONG = 160;
-const EXPIRES_IN_SHORT = 60;
+const EXPIRES_IN_LONG = 60 * 30; //refresh session every 30 min
+const EXPIRES_IN_SHORT = 60 * 5; //refresh session every 5 min
+
+const DELETE_IN_LONG = 60 * 60 * 24 * 30; // need relogin if no request after 30 days
+const DELETE_IN_SHORT = 60 * 35; // need relogin if no request after 35 min
+
+// const TIME_MARGIN_SEC = 60;
+const TIME_MARGIN_SEC = EXPIRES_IN_LONG;
 const state = {
     jwt_token: null,
     refresh_token: null,
@@ -18,13 +21,13 @@ const makeSessionConfig = (remember) => ({
     version: Config.VERSION,
     platform: 'web',
     push_token: null,
-    expires_in: remember
+    expires_in: remember  // refresh session every
         ? EXPIRES_IN_LONG
         : EXPIRES_IN_SHORT
     ,
-    delete_in: remember
-        ? (60 * 60 * 24 * 30) // need relogin if no request after 30 days
-        : (60 * 35) // need relogin if no request after 35 min
+    delete_in: remember // need relogin if no request after
+        ? DELETE_IN_LONG
+        : DELETE_IN_SHORT
 });
 
 const isSessionValid = (data) => Object.keys(data).reduce((prev, k) => {
@@ -54,10 +57,22 @@ const clearSession = () => {
     });
 };
 
-const isRequireRefresh = () => !isSessionValid(state) || makeExpAt(state) <= (new Date()).getTime();
-const isRequireRelogin = () => !isSessionValid(state) || makeDeleteAt(state) <= (new Date()).getTime();
+const isRequireRefresh = () => {
+    console.log('refresh after sec:', (makeExpAt(state) / 1000 - (new Date()).getTime() / 1000));
+    return !isSessionValid(state) || makeExpAt(state) <= (new Date()).getTime();
+};
+const isRequireRelogin = () => {
+    return !isSessionValid(state) || makeDeleteAt(state) <= (new Date()).getTime();
+};
 
 export const AuthController = {
+    getSessionConfig: () => ({
+        expires_in: state.expires_in,
+        delete_in: state.delete_in,
+        version: Config.VERSION,
+        platform: 'web',
+        push_token: null
+    }),
     getToken: () => state.jwt_token,
     getRefreshToken: () => state.refresh_token,
     isRequireRefresh,

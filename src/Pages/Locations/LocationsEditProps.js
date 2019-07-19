@@ -7,7 +7,7 @@ import Link from "@material-ui/core/Link/Link";
 
 const handleSave = (location_id, request, setState) => data => {
     return request(location_id, data)
-        .then(r => setState(r))
+        .then(r => r ? setState(r) : null)
 };
 
 export const LocationsEditProps = ({location_id, children}) => {
