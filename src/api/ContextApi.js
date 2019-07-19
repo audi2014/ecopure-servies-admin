@@ -1,9 +1,10 @@
 import {makeWrapperOfApiProvider} from "./core/ReactApi";
-import {_get} from "./core/coreApi";
+import {_auth, _get} from "./core/coreApi";
 import {_delete} from "./core/coreApi";
 import {_put} from "./core/coreApi";
 import {_post} from "./core/coreApi";
 import {ErrorContext, WithModalError} from "./core/ModalError";
+import {AuthController} from "../Auth/AuthController";
 
 const Domain_Requests = {
     locations: {
@@ -58,6 +59,14 @@ const Domain_Requests = {
     manager: {
         manager_Get: () => _get(`/manager/${1}`),
         manager_Update: (data = {}) => _put(`/manager/${1}`, data),
+    },
+
+    auth: {
+        login: ({email, password, remember}) => _auth(`/auth/login`, {
+            email,
+            password,
+            ...AuthController.makeSessionConfig(!!remember),
+        }),
     },
 };
 

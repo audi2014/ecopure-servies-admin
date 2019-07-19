@@ -1,16 +1,122 @@
 import {Config} from "../../constants/Config";
-const mapResponse = r => r.json()
-    .then(r => {
-        if (r.error) {
-            throw new Error(r.errorMsg)
+import {AuthController} from "../../Auth/AuthController";
+
+const buffer = {
+    pendingRefresh: null,
+    pendingRequestsData: [],
+};
+const refreshSession = (cfg) => {
+    return fetch( Config.LOCATIONS_API_URL + '/auth/refresh', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ...cfg,
+            token:AuthController.getRefreshToken()
+        })
+    })
+        .then(mapAuthorizationResponse)
+        .catch(e=>{
+            // AuthController.clearSession();
+            alert('Failed to reload session. Try relogin');
+            window.location.reload();
+        })
+};
+
+const mapAuthorizedResponse = res => {
+    if (res.ok) {
+        return res.json().then(json => {
+            if (json.error && json.errorCode === 401) {
+                AuthController.clearSession();
+                const authError = new Error(json.errorMsg);
+                authError.code = json.errorCode;
+                throw authError;
+            }
+            if (json.error) {
+                throw new Error(json.errorMsg)
+            }
+            return json.data;
+        });
+
+    } else {
+        throw new Error(res.statusText)
+    }
+};
+
+const mapAuthorizationResponse = res => {
+    if (res.status < 500) {
+        return res.json().then(
+            json => {
+                if (res.ok) {
+                    AuthController.saveSession(json);
+                    return json;
+                } else {
+                    const authError = new Error(json.message);
+                    authError.code = json.code;
+                    throw authError;
+                }
+
+            })
+    } else {
+        throw new Error(res.statusText)
+    }
+};
+
+const mapAuthorizedFetchCfg = cfg => {
+    if (!cfg) cfg = {};
+    if (!cfg.headers) cfg.headers = {};
+    cfg.headers['Authorization'] = `Bearer ${AuthController.getToken()}`;
+    console.log('mapAuthorizedFetchCfg', AuthController.getToken());
+    return cfg;
+};
+
+
+const fetchAuthRequest = (url, cfg) => {
+    if (AuthController.isRequireRelogin()) {
+        AuthController.clearSession();
+        const authError = new Error("Please relogin");
+        authError.code = 401;
+        throw authError;
+    } else if (AuthController.isRequireRefresh()) {
+        if (!buffer.pendingRefresh) {
+            buffer.pendingRefresh = refreshSession()
+                .then(() => Promise.all(buffer.pendingRequestsData.map(args => {
+                    return fetch(args[0], mapAuthorizedFetchCfg(args[1]))
+                        .then(r => args[2](r));
+                })))
+                .then(() => {
+                    buffer.pendingRequestsData = [];
+                    return fetch(url, mapAuthorizedFetchCfg(cfg))
+                })
+            return buffer.pendingRefresh;
+        } else {
+            return new Promise(resolve => {
+                buffer.pendingRequestsData.push([url, cfg, resolve])
+            });
         }
-        return r.data;
-    });
+    } else {
+        return fetch(url, mapAuthorizedFetchCfg(cfg));
+    }
+};
+
+export const _auth = (path, data) => fetch(
+    Config.LOCATIONS_API_URL + path,
+    {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(mapAuthorizationResponse);
 
 export const _get = path => fetch(Config.LOCATIONS_API_URL + path)
-    .then(mapResponse);
+    .then(mapAuthorizedResponse);
 
-export const _delete = path => fetch(
+export const _delete = path => fetchAuthRequest(
     Config.LOCATIONS_API_URL + path,
     {
         method: 'DELETE',
@@ -18,32 +124,32 @@ export const _delete = path => fetch(
             'Accept': 'application/json',
         },
     })
-    .then(mapResponse);
+    .then(mapAuthorizedResponse);
 
 
-export const _post = (path, data) => fetch(
+export const _post = (path, data) => fetchAuthRequest(
     Config.LOCATIONS_API_URL + path,
     {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(data)
     })
-    .then(mapResponse);
+    .then(mapAuthorizedResponse);
 
-export const _put = (path, data) => fetch(
+export const _put = (path, data) => fetchAuthRequest(
     Config.LOCATIONS_API_URL + path,
     {
         method: 'put',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         },
         body: Object.keys(data)
             .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&')
     })
-    .then(mapResponse);
+    .then(mapAuthorizedResponse);
 
 
 

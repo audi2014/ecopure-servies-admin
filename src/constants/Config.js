@@ -6,3 +6,4 @@ export const Config = {
     MAIN_API_URL: process.env.REACT_APP_MAIN_API_URL,
     ENVIRONMENT: process.env.REACT_APP_ENVIRONMENT,
 };
+

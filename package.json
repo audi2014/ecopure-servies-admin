@@ -8,6 +8,7 @@
   "dependencies": {
     "@material-ui/core": "^4.0.2",
     "@material-ui/icons": "^4.1.1",
+    "js-cookie": "^2.2.0",
     "material-table": "^1.39.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
@@ -22,7 +23,6 @@
     "start:sandbox": "env-cmd -e sandbox react-scripts start",
     "start:production": "env-cmd -e production react-scripts start",
     "start:local": "env-cmd -e local react-scripts start",
-
     "build": "./build-remote-copy.sh",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

@@ -11,66 +11,73 @@ import {PricingAddOnPage} from "./Pages/PricingAddOn/PricingAddOnPage";
 import {PricingOutOfNetworkPage} from "./Pages/PricingOutOfNetwork/PricingOutOfNetworkPage";
 import {PricingInNetworkAddPage} from "./Pages/PricingInNetwork/PricingInNetworkAddPage";
 import {PricingInNetworkPage} from "./Pages/PricingInNetwork/PricingInNetworkPage";
+import {Login} from "./Pages/Auth/Login";
+import {PrivateRoute} from "./Auth/PrivateRoute";
 
 
 export const AppRoutes = () => <React.Fragment>
     <Route
         exact
+        path="/login"
+        component={Login}
+    />
+    <PrivateRoute
+        exact
         path="/"
         component={LocationsTablePage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.locations}`}
         component={LocationsTablePage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.locations}/add`}
         component={LocationsAddPage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.locations}/:id/edit`}
         component={LocationsEditPage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.locations}/:id/${RoutingConstants.editPricingOfLocation}`}
         component={LocationsEditPage}
     />
 
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.buildings}/add`}
         component={BuildingsAddPage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.buildings}`}
         component={BuildingsTablePage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.buildings}/:id/edit`}
         component={BuildingsEditPage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.locations}/:id/${RoutingConstants.addonPricing}`}
         component={PricingAddOnPage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.locations}/:id/${RoutingConstants.outOfNetworkPricing}`}
         component={PricingOutOfNetworkPage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/add`}
         component={PricingInNetworkAddPage}
     />
-    <Route
+    <PrivateRoute
         exact
         path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/:id/edit`}
         component={PricingInNetworkPage}
