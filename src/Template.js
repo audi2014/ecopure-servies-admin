@@ -16,6 +16,7 @@ import {withTheme} from "./Theme";
 
 import {StylesProvider, createGenerateClassName} from '@material-ui/styles';
 import {Config} from "./constants/Config";
+import {ProfileNavButton} from "./Auth/ProfileNavButton";
 
 const generateClassName = createGenerateClassName({
     productionPrefix: 'bar',
@@ -62,7 +63,7 @@ const Logo = ({className}) => {
         {
             Config.ENVIRONMENT !== 'production'
                 ? <span
-                    style={{'cursor':'pointer'}}
+                    style={{'cursor': 'pointer'}}
                     onClick={handleClick}> {Config.ENVIRONMENT} </span>
                 : null
         }
@@ -76,7 +77,6 @@ const Bar = () => {
         <Toolbar className={classes.toolbar}>
             <Logo className={classes.toolbarTitle}/>
             <nav>
-
                 <Link component={RouterLink} to="/locations" variant="button" color="primary"
                       href="#"
                       className={classes.link}>
@@ -88,6 +88,7 @@ const Bar = () => {
                     <IconButton color="inherit"><BuildingIcon/></IconButton> Buildings
                 </Link>
             </nav>
+            <ProfileNavButton/>
         </Toolbar>
     </AppBar>
 };

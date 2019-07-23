@@ -112,7 +112,13 @@ const fetchAuthRequest = (url, cfg) => {
 
 
 export const _get = path => fetch(Config.LOCATIONS_API_URL + path)
-    .then(mapAuthorizedResponse);
+    .then(mapAuthorizedResponse)
+    .then(data => {
+        if (data === null) {
+            throw new Error(`Resource "${path}" not found`);
+        }
+        return data;
+    });
 
 export const _delete = path => fetchAuthRequest(
     Config.LOCATIONS_API_URL + path,

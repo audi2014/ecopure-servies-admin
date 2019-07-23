@@ -3,6 +3,9 @@ import React from "react";
 import {getBuildingNameByLocationsArray} from "./../tools";
 import {apiContexts} from "../../api/ContextApi";
 import {makeBuildingsEditableTemplate} from "./makeBuildingsEditableTemplate";
+import {AuthController} from "../../Auth/AuthController";
+import {useLocations_GetByAccess} from "../tools_effect";
+import {AccessDenied} from "../Auth/AccessDenied";
 
 
 export const BuildingsEditPage = ({
@@ -11,25 +14,28 @@ export const BuildingsEditPage = ({
                                   }) => {
     const title = 'Building';
     const building_id = +match.params.id;
-
+    const [locations_state, locations_request] = useLocations_GetByAccess();
     const {pushError} = React.useContext(apiContexts.error);
     const {buildingsLarge_GetById, buildings_UpdateById} = React.useContext(apiContexts.buildings);
-    const {locations_GetAll} = React.useContext(apiContexts.locations);
     const {inNetworkModel_GetAll} = React.useContext(apiContexts.inNetworkModel);
-
-    const locations = locations_GetAll.state || [];
     const models = inNetworkModel_GetAll.state || [];
 
-    console.log(buildingsLarge_GetById.state);
 
     React.useEffect(() => {
         buildingsLarge_GetById.request(building_id);
-        locations_GetAll.request();
+        locations_request();
         inNetworkModel_GetAll.request();
     }, [building_id]);
+
+
+    //ACCESS
+    if (buildingsLarge_GetById.state && !AuthController.haveLocationAccess(buildingsLarge_GetById.state.location_id)) {
+        return <AccessDenied history={history}/>
+    }
+
     return <BaseItemUpdationPage
         reload={() => buildingsLarge_GetById.request(building_id)}
-        editableTemplate={makeBuildingsEditableTemplate(locations, models)}
+        editableTemplate={makeBuildingsEditableTemplate(locations_state, models)}
         renderTitle={b => <span style={{textDecoration: b.deleted_at ? 'line-through' : undefined}}>
             {getBuildingNameByLocationsArray(b, models, title)}
             </span>
@@ -50,7 +56,7 @@ export const BuildingsEditPage = ({
                     buildings_UpdateById.request(building_id, data);
                     return buildings_UpdateById.request(building_id, data)
                         .then(r => {
-                            if(r) {
+                            if (r) {
                                 buildingsLarge_GetById.setState(r)
                             }
                         })

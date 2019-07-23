@@ -1,9 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {withTemplate} from "./Template";
-import {AppRoutes} from "./Routes_Dev";
-//todo
-// import {AppRoutes} from "./Routes";
+
+import {AppRoutes} from "./Routes";
 import {wrapApiApplication} from "./api/ContextApi";
 
 const AppWithApi = wrapApiApplication(AppRoutes);

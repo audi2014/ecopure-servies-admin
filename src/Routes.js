@@ -12,11 +12,11 @@ import {PricingOutOfNetworkPage} from "./Pages/PricingOutOfNetwork/PricingOutOfN
 import {PricingInNetworkAddPage} from "./Pages/PricingInNetwork/PricingInNetworkAddPage";
 import {PricingInNetworkPage} from "./Pages/PricingInNetwork/PricingInNetworkPage";
 import {Login} from "./Pages/Auth/Login";
-import {PrivateRoute} from "./Auth/PrivateRoute";
+import {AuthRoute, PrivateRoute} from "./Auth/PrivateRoute";
 
 
 export const AppRoutes = () => <React.Fragment>
-    <Route
+    <AuthRoute
         exact
         path="/login"
         component={Login}
@@ -33,20 +33,22 @@ export const AppRoutes = () => <React.Fragment>
     />
     <PrivateRoute
         exact
+        requireAdminAccess={true}
         path={`/${RoutingConstants.locations}/add`}
         component={LocationsAddPage}
     />
     <PrivateRoute
         exact
+        locationIdAccessKey={'id'}
         path={`/${RoutingConstants.locations}/:id/edit`}
         component={LocationsEditPage}
     />
     <PrivateRoute
         exact
+        locationIdAccessKey={'id'}
         path={`/${RoutingConstants.locations}/:id/${RoutingConstants.editPricingOfLocation}`}
         component={LocationsEditPage}
     />
-
     <PrivateRoute
         exact
         path={`/${RoutingConstants.buildings}/add`}
@@ -64,21 +66,25 @@ export const AppRoutes = () => <React.Fragment>
     />
     <PrivateRoute
         exact
+        locationIdAccessKey={'id'}
         path={`/${RoutingConstants.locations}/:id/${RoutingConstants.addonPricing}`}
         component={PricingAddOnPage}
     />
     <PrivateRoute
         exact
+        locationIdAccessKey={'id'}
         path={`/${RoutingConstants.locations}/:id/${RoutingConstants.outOfNetworkPricing}`}
         component={PricingOutOfNetworkPage}
     />
     <PrivateRoute
         exact
+        locationIdAccessKey={'location_id'}
         path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/add`}
         component={PricingInNetworkAddPage}
     />
     <PrivateRoute
         exact
+        locationIdAccessKey={'location_id'}
         path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/:id/edit`}
         component={PricingInNetworkPage}
     />

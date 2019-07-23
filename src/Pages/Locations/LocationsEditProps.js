@@ -16,7 +16,7 @@ export const LocationsEditProps = ({location_id, children}) => {
 
     React.useEffect(() => {
         locations_GetById.request(location_id);
-    }, []);
+    }, [location_id]);
 
     return <BaseItemUpdationPage
         data={locations_GetById.state}

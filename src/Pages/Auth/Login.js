@@ -5,14 +5,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {apiContexts} from "../../api/ContextApi";
-import {RoutingConstants} from "../../constants/RoutingConstants";
+import {AuthController} from "../../Auth/AuthController";
 
 
 const useStyles = makeStyles(theme => ({
@@ -70,7 +68,7 @@ export function Login({history}) {
     const {login} = React.useContext(apiContexts.auth);
     const classes = useStyles();
     const [values, setValues] = useState({
-        email: 'email@gmail.comg',
+        email: 'email@gmail.com',
         password: 'password',
         remember: true,
     });
@@ -86,7 +84,7 @@ export function Login({history}) {
                 ...values,
             }).then(r => {
                 if (r) {
-                    history.push(`/`)
+                    history.push(AuthController.popLoginRedirectUrl())
                 }
             })
 

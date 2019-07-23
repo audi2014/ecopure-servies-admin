@@ -28,7 +28,7 @@ export const LocationsEditZipCodes = ({location_id}) => {
 
     React.useEffect(() => {
         locationsZipcode_GetByLocationId.request(location_id);
-    }, []);
+    }, [location_id]);
 
 
     const insertByZipCode = (zipcode) => locationsZipcode_InsertByData.request({location_id, zipcode})

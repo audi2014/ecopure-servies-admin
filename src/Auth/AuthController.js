@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie'
 import {Config} from "../constants/Config";
+import React from "react";
 
 const EXPIRES_IN_LONG = 60 * 30; //refresh session every 30 min
 const EXPIRES_IN_SHORT = 60 * 5; //refresh session every 5 min
@@ -7,8 +8,16 @@ const EXPIRES_IN_SHORT = 60 * 5; //refresh session every 5 min
 const DELETE_IN_LONG = 60 * 60 * 24 * 30; // need relogin if no request after 30 days
 const DELETE_IN_SHORT = 60 * 35; // need relogin if no request after 35 min
 
-// const TIME_MARGIN_SEC = 60;
-const TIME_MARGIN_SEC = EXPIRES_IN_LONG;
+const TIME_MARGIN_SEC = 60;
+// const TIME_MARGIN_SEC = EXPIRES_IN_LONG;
+
+const subscribers = {
+    array: []
+};
+
+//
+
+
 const state = {
     jwt_token: null,
     refresh_token: null,
@@ -16,7 +25,19 @@ const state = {
     expires_in: null,
     delete_in: null,
     location_ids: null,
+    access_type: null,
+    email_invite: null,
 };
+const reqiredKeys = [
+    'jwt_token',
+    'refresh_token',
+    'created_at',
+    'expires_in',
+    'delete_in',
+];
+const jsonKeys = [
+    'location_ids',
+];
 const makeSessionConfig = (remember) => ({
     version: Config.VERSION,
     platform: 'web',
@@ -30,7 +51,7 @@ const makeSessionConfig = (remember) => ({
         : DELETE_IN_SHORT
 });
 
-const isSessionValid = (data) => Object.keys(data).reduce((prev, k) => {
+const isSessionValid = (data) => reqiredKeys.reduce((prev, k) => {
     return !!prev && !!data[k]
 }, true);
 
@@ -38,7 +59,11 @@ const makeExpAt = ({created_at, expires_in}) => ((+created_at) + (+expires_in) -
 const makeDeleteAt = ({created_at, delete_in}) => ((+created_at) + (+delete_in) - TIME_MARGIN_SEC) * 1000;
 
 Object.keys(state).map(k => {
-    state[k] = Cookies.get(k) || null;
+    if (jsonKeys.includes(k)) {
+        state[k] = Cookies.getJSON(k) || null;
+    } else {
+        state[k] = Cookies.get(k) || null;
+    }
 });
 
 const saveSession = (data) => {
@@ -48,14 +73,24 @@ const saveSession = (data) => {
             state[k] = data[k];
             Cookies.set(k, data[k], {expires})
         });
+
+        subscribers.array.forEach(cb => {
+            cb(state);
+        })
     }
 };
 
 const clearSession = () => {
     Object.keys(state).forEach(function (k) {
         Cookies.remove(k);
+        state[k] = null;
     });
+    subscribers.array.forEach(cb => {
+        cb(state);
+    })
 };
+
+// const useAuthController =
 
 const isRequireRefresh = () => {
     console.log('refresh after sec:', (makeExpAt(state) / 1000 - (new Date()).getTime() / 1000));
@@ -66,6 +101,14 @@ const isRequireRelogin = () => {
 };
 
 export const AuthController = {
+    popLoginRedirectUrl: () => {
+        const url = Cookies.get('LOGIN_REDIRECT_URL');
+        Cookies.remove('LOGIN_REDIRECT_URL');
+        return url ? url : '/'
+    },
+    setLoginRedirectUrl: (url) => {
+        Cookies.set('LOGIN_REDIRECT_URL', url);
+    },
     getSessionConfig: () => ({
         expires_in: state.expires_in,
         delete_in: state.delete_in,
@@ -73,11 +116,39 @@ export const AuthController = {
         platform: 'web',
         push_token: null
     }),
+    getLocationAccessIds: () => {
+        return Array.isArray(state.location_ids) ? state.location_ids : [];
+    },
+    haveLocationAccess: (id) =>
+        state.access_type === 'admin'
+        || (
+            Array.isArray(state.location_ids)
+            && state.location_ids.includes(+id)
+        ),
+    haveAdminAccess: () => state.access_type === 'admin',
     getToken: () => state.jwt_token,
     getRefreshToken: () => state.refresh_token,
+    getEmail: () => state.email_invite,
     isRequireRefresh,
     isRequireRelogin,
     saveSession,
     clearSession,
     makeSessionConfig,
 };
+
+export const useAuthEffect = () => {
+    const [auth, setAuth] = React.useState(AuthController);
+    React.useEffect(() => {
+        function handleChange(data) {
+            setAuth(AuthController);
+        }
+
+        subscribers.array.push(handleChange);
+        return function cleanup() {
+            subscribers.array = subscribers.array.filter(cb => cb !== handleChange);
+            console.log('cleanup', [...subscribers.array]);
+        };
+    }, []);
+    return auth;
+};
+

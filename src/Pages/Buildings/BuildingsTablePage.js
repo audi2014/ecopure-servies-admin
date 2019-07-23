@@ -8,6 +8,7 @@ import {
 } from "./../tools";
 import {Select} from "../../Base/BaseInput";
 import {apiContexts} from "../../api/ContextApi";
+import {useBuildings_GetByAccess, useLocations_GetByAccess} from "../tools_effect";
 
 
 const columns = buildColumnsFrom([
@@ -29,26 +30,20 @@ const columns = buildColumnsFrom([
 
 export const BuildingsTablePage = ({match, history}) => {
     const title = 'Buildings';
-
-    const {buildingsLarge_GetAll} = React.useContext(apiContexts.buildings);
-    const state_buildings = buildingsLarge_GetAll.state || [];
-
-    const {locations_GetAll} = React.useContext(apiContexts.locations);
-    const state_locations = locations_GetAll.state || [];
-
-
+    const [buildings_state, buildings_request, buildings_pending] = useBuildings_GetByAccess();
+    const [locations_state, locations_request] = useLocations_GetByAccess();
     const [filtered_location_id, setLocationId] = React.useState('all');
-    const LocationsId_Name = state_locations.reduce((prev, curr) => {
+    const LocationsId_Name = locations_state.reduce((prev, curr) => {
         prev[curr.id] = curr.name || 'Location #' + curr.id;
         return prev;
     }, {'all': 'All Locations'});
     const staticData = filtered_location_id === 'all'
-        ? state_buildings
-        : state_buildings.filter(b => +b.location_id === +filtered_location_id);
+        ? buildings_state
+        : buildings_state.filter(b => +b.location_id === +filtered_location_id);
 
     React.useEffect(() => {
-        buildingsLarge_GetAll.request();
-        locations_GetAll.request();
+        buildings_request();
+        locations_request();
     }, []);
 
     return <BaseTablePage
@@ -64,7 +59,7 @@ export const BuildingsTablePage = ({match, history}) => {
                 style={{width: 200, marginLeft: 10}}/>
         </React.Fragment>}
         staticData={staticData}
-        isLoading={!!buildingsLarge_GetAll.pending}
+        isLoading={!!buildings_pending}
         onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}/edit`)}
         columns={columns}
 

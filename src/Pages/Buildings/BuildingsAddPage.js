@@ -4,29 +4,26 @@ import {BaseItemCreationPage} from "../../Base/BaseItemCreationPage";
 import {RoutingConstants} from "../../constants/RoutingConstants";
 import {apiContexts} from "../../api/ContextApi";
 import {makeBuildingsEditableTemplate} from "./makeBuildingsEditableTemplate";
+import {AuthController} from "../../Auth/AuthController";
+import {useLocations_GetByAccess} from "../tools_effect";
 
 
 export const BuildingsAddPage = ({match, history}) => {
 
     const {pushError} = React.useContext(apiContexts.error);
-
     const {buildings_InsertByData} = React.useContext(apiContexts.buildings);
-
-    const {locations_GetAll} = React.useContext(apiContexts.locations);
-    const state_locations = locations_GetAll.state || [];
-
+    const [locations_state, locations_request] = useLocations_GetByAccess();
     const {inNetworkModel_GetAll} = React.useContext(apiContexts.inNetworkModel);
     const models = inNetworkModel_GetAll.state || [];
 
-
     React.useEffect(() => {
-        locations_GetAll.request();
+        locations_request();
         inNetworkModel_GetAll.request();
     }, []);
 
 
     return <BaseItemCreationPage
-        editableTemplate={makeBuildingsEditableTemplate(state_locations, models)}
+        editableTemplate={makeBuildingsEditableTemplate(locations_state, models)}
         renderTitle={() => 'Create Building'}
         insertByData={(data) => {
             const location_id = data.location_id;

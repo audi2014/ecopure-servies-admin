@@ -9,6 +9,7 @@ import {AuthController} from "../Auth/AuthController";
 const Domain_Requests = {
     locations: {
         locations_GetAll: () => _get(`/locations?is_deleted=null`),
+        locations_GetByIds: (ids = []) => _get(`/locations?is_deleted=null&ids=${ids.join(',')}`),
         locations_GetById: (id) => _get(`/locations/${id}`),
         locations_UpdateById: (id, data) => _put(`/locations/${id}`, data),
         locations_InsertByData: (data) => _post(`/locations`, data),
@@ -20,6 +21,7 @@ const Domain_Requests = {
     },
     buildings: {
         buildingsLarge_GetAll: () => _get(`/buildings-large?is_null_custom_pricing_model_id=null`),
+        buildingsLarge_GetByLocationIds: (ids = []) => _get(`/buildings-large?is_null_custom_pricing_model_id=null&location_ids=${ids.join(',')}`),
         buildingsLarge_GetById: (id) => _get(`/buildings-large/${id}`),
         buildingsLarge_GetByLocationId: (location_id) => _get(`/buildings-large?location_id=${location_id}&is_deleted=null&is_null_custom_pricing_model_id=null`),
         buildings_UpdateById: (id, data) => _put(`/buildings/${id}`, data),
@@ -50,6 +52,8 @@ const Domain_Requests = {
     },
     inNetworkModel: {
         inNetworkModel_GetByLocationId: (location_id) => _get(`/pricing/in-network-model?location_id=${location_id}&is_deleted=null`),
+
+        //todo access
         inNetworkModel_GetAll: (id) => _get(`/pricing/in-network-model?is_deleted=null`),
         inNetworkModel_GetById: (id) => _get(`/pricing/in-network-model/${id}`),
         inNetworkModel_DeleteById: (id) => _delete(`/pricing/in-network-model/${id}`),

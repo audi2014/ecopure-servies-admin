@@ -6,6 +6,8 @@ import {Config} from "../../constants/Config";
 import {buildColumnsFrom, mapColumnsKeyValueDeletedThrough, mapColumnsKeyValueProp} from "./../tools";
 import {apiContexts} from "../../api/ContextApi";
 import {BuildingsOfLocationTablePage} from "../Buildings/BuildingsOfLocationTablePage";
+import {AuthController} from "../../Auth/AuthController";
+import {useLocations_GetByAccess} from "../tools_effect";
 
 
 const columns = buildColumnsFrom([
@@ -30,24 +32,24 @@ const columns = buildColumnsFrom([
 export const LocationsTablePage = ({match, history}) => {
     const title = "Locations";
 
-    const {locations_GetAll} = React.useContext(apiContexts.locations);
-    const locations = locations_GetAll.state || [];
-    React.useEffect(() => {
-        locations_GetAll.request();
-    }, []);
 
+    const [locations_state, locations_request, locations_pending] = useLocations_GetByAccess();
+
+    React.useEffect(() => {
+        locations_request();
+    }, []);
     return <BaseTablePage
-        isLoading={!!locations_GetAll.pending}
-        onAddClick={() => history.push(`/${RoutingConstants.locations}/add`)}
+        isLoading={!!locations_pending}
+        onAddClick={AuthController.haveAdminAccess() ? () => history.push(`/${RoutingConstants.locations}/add`) : null}
         renderTitle={() => title}
-        staticData={locations}
+        staticData={locations_state}
         onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.locations}/${rowData.id}/edit`)}
         detailPanel={rowData => {
             return <div style={{margin: 10}}>
                 <BuildingsOfLocationTablePage
-                match={match}
-                history={history}
-                location={rowData}
+                    match={match}
+                    history={history}
+                    location={rowData}
                 />
             </div>
         }}
