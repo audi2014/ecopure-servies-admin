@@ -9,7 +9,9 @@ import Edit from '@material-ui/icons/Edit';
 import Close from '@material-ui/icons/Close';
 import Save from '@material-ui/icons/Check';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import LocationCity from '@material-ui/icons/LocationCity';
 
+export const LocationIcon = LocationCity;
 
 export const AddOnIcon = Extension;
 export const RegularIcon = DomainDisabled;
@@ -22,5 +24,4 @@ export const SaveIcon = Save;
 export const GoBack = KeyboardArrowLeft;
 
 
-
-export const Spinner = () => <CircularProgress size={20}  />;
+export const Spinner = () => <CircularProgress size={20}/>;

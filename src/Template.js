@@ -9,7 +9,6 @@ import Link from '@material-ui/core/Link';
 import Container from "@material-ui/core/Container/Container";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
-import LocationIcon from '@material-ui/icons/LocationCity';
 import BuildingIcon from '@material-ui/icons/AccountBalance';
 import {withTheme} from "./Theme";
 
@@ -17,6 +16,7 @@ import {withTheme} from "./Theme";
 import {StylesProvider, createGenerateClassName} from '@material-ui/styles';
 import {Config} from "./constants/Config";
 import {ProfileNavButton} from "./Auth/ProfileNavButton";
+import {LocationIcon} from "./icons";
 
 const generateClassName = createGenerateClassName({
     productionPrefix: 'bar',

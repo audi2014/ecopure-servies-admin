@@ -38,9 +38,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const passwordHint = 'Invalid password. Password should contain more then 8 characters [a-Z,!,@,#,$,%] and should contain numbers.';
-const emailHint = 'Invalid email address';
+export const emailHint = 'Invalid email address';
 
-function validateEmail(email) {
+export function validateEmail(email) {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
 }

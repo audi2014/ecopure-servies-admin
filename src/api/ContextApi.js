@@ -64,9 +64,15 @@ const Domain_Requests = {
         manager_Get: () => _get(`/manager/${1}`),
         manager_Update: (data = {}) => _put(`/manager/${1}`, data),
     },
+    managerAccess: {
+        managerAccess_GetAll: () => _get(`/manager-access`),
+        managerAccess_UpdateById: (id, data) => _put(`/manager-access/${id}`, data),
+        managerAccess_InsertAndGrantAccessAndSendInvite: ({access_type = 'manager', location_ids = [], email_invite}) =>
+            _post('/manager-access', {access_type, location_ids, email_invite})
+    },
 
     auth: {
-        login: ({email, password, remember}) => _auth(`/auth/login`, {
+        login: ({email, password, remember}) => _auth(`/auth/login-or-register`, {
             email,
             password,
             ...AuthController.makeSessionConfig(!!remember),

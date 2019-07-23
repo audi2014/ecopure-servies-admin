@@ -13,6 +13,7 @@ import {PricingInNetworkAddPage} from "./Pages/PricingInNetwork/PricingInNetwork
 import {PricingInNetworkPage} from "./Pages/PricingInNetwork/PricingInNetworkPage";
 import {Login} from "./Pages/Auth/Login";
 import {AuthRoute, PrivateRoute} from "./Auth/PrivateRoute";
+import {ManagerAccessPage} from "./Pages/Managers/ManagerAccessPage";
 
 
 export const AppRoutes = () => <React.Fragment>
@@ -88,5 +89,12 @@ export const AppRoutes = () => <React.Fragment>
         path={`/${RoutingConstants.locations}/:location_id/${RoutingConstants.inNetworkPricing}/:id/edit`}
         component={PricingInNetworkPage}
     />
+    <PrivateRoute
+        exact
+        requireAdminAccess={true}
+        path={`/manager-access`}
+        component={ManagerAccessPage}
+    />
+
 
 </React.Fragment>;
