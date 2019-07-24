@@ -8,15 +8,15 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Link from '@material-ui/core/Link';
 import Container from "@material-ui/core/Container/Container";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-
-import BuildingIcon from '@material-ui/icons/AccountBalance';
 import {withTheme} from "./Theme";
 
 
 import {StylesProvider, createGenerateClassName} from '@material-ui/styles';
 import {Config} from "./constants/Config";
 import {ProfileNavButton} from "./Auth/ProfileNavButton";
-import {LocationIcon} from "./icons";
+import {AccessIcon, BuildingIcon, LocationIcon} from "./icons";
+import {ManageAccessLink} from "./Auth/AdminNavLink";
+import {RoutingConstants} from "./constants/RoutingConstants";
 
 const generateClassName = createGenerateClassName({
     productionPrefix: 'bar',
@@ -77,16 +77,25 @@ const Bar = () => {
         <Toolbar className={classes.toolbar}>
             <Logo className={classes.toolbarTitle}/>
             <nav>
-                <Link component={RouterLink} to="/locations" variant="button" color="primary"
+                <Link component={RouterLink} to={RoutingConstants.locations} variant="button" color="primary"
                       href="#"
                       className={classes.link}>
                     <IconButton color="inherit"><LocationIcon/></IconButton> Locations
                 </Link>
-                <Link component={RouterLink} to="/buildings" variant="button" color="primary"
+                <Link component={RouterLink} to={RoutingConstants.buildings} variant="button" color="primary"
                       href="#"
                       className={classes.link}>
                     <IconButton color="inherit"><BuildingIcon/></IconButton> Buildings
                 </Link>
+                <ManageAccessLink
+                    component={RouterLink} to={RoutingConstants.manageAccess}
+                    variant="button"
+                    color="primary"
+                    href="#"
+                    className={classes.link}
+                >
+                    <IconButton color="inherit"><AccessIcon/></IconButton> Access
+                </ManageAccessLink>
             </nav>
             <ProfileNavButton/>
         </Toolbar>

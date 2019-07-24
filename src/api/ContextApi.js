@@ -67,6 +67,7 @@ const Domain_Requests = {
     managerAccess: {
         managerAccess_GetAll: () => _get(`/manager-access`),
         managerAccess_UpdateById: (id, data) => _put(`/manager-access/${id}`, data),
+        managerAccess_DeleteById: (id) => _delete(`/manager-access/${id}`),
         managerAccess_InsertAndGrantAccessAndSendInvite: ({access_type = 'manager', location_ids = [], email_invite}) =>
             _post('/manager-access', {access_type, location_ids, email_invite})
     },

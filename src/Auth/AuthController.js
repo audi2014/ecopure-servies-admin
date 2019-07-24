@@ -27,6 +27,7 @@ const state = {
     location_ids: null,
     access_type: null,
     email_invite: null,
+    manager_id:null,
 };
 const reqiredKeys = [
     'jwt_token',
@@ -34,6 +35,7 @@ const reqiredKeys = [
     'created_at',
     'expires_in',
     'delete_in',
+    'manager_id',
 ];
 const jsonKeys = [
     'location_ids',
@@ -129,6 +131,7 @@ export const AuthController = {
     getToken: () => state.jwt_token,
     getRefreshToken: () => state.refresh_token,
     getEmail: () => state.email_invite,
+    getManagerId: () => state.manager_id,
     isRequireRefresh,
     isRequireRelogin,
     saveSession,
@@ -140,7 +143,7 @@ export const useAuthEffect = () => {
     const [auth, setAuth] = React.useState(AuthController);
     React.useEffect(() => {
         function handleChange(data) {
-            setAuth(AuthController);
+            setAuth({...AuthController});
         }
 
         subscribers.array.push(handleChange);
