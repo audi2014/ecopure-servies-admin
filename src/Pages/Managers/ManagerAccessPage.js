@@ -40,7 +40,12 @@ export const ManagerAccessPage = () => {
 
     const handleSubmitInvite = data => {
         return managerAccess_ctx.managerAccess_InsertAndGrantAccessAndSendInvite.request(data)
+            .then(r=>{
+                handleSelectManagerId(r.id)
+                return r;
+            })
             .then(r => managerAccess_controller.request())
+
     };
 
     React.useEffect(() => {
