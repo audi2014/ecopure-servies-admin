@@ -14,6 +14,7 @@ import {PricingInNetworkPage} from "./Pages/PricingInNetwork/PricingInNetworkPag
 import {Login} from "./Pages/Auth/Login";
 import {AuthRoute, PrivateRoute} from "./Auth/PrivateRoute";
 import {ManagerAccessPage} from "./Pages/Managers/ManagerAccessPage";
+import {SignUp} from "./Pages/Auth/SignUp";
 
 
 export const AppRoutes = () => <React.Fragment>
@@ -21,6 +22,11 @@ export const AppRoutes = () => <React.Fragment>
         exact
         path="/login"
         component={Login}
+    />
+    <AuthRoute
+        exact
+        path="/signup"
+        component={SignUp}
     />
     <PrivateRoute
         exact

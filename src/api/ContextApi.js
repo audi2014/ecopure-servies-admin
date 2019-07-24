@@ -9,7 +9,10 @@ import {AuthController} from "../Auth/AuthController";
 const Domain_Requests = {
     locations: {
         locations_GetAll: () => _get(`/locations?is_deleted=null`),
-        locations_GetByIds: (ids = []) => _get(`/locations?is_deleted=null&ids=${ids.join(',')}`),
+        locations_GetByIds: (ids = []) => {
+            if (!ids.length) return new Promise(resolve => resolve([]));
+            return _get(`/locations?is_deleted=null&ids=${ids.join(',')}`);
+        },
         locations_GetById: (id) => _get(`/locations/${id}`),
         locations_UpdateById: (id, data) => _put(`/locations/${id}`, data),
         locations_InsertByData: (data) => _post(`/locations`, data),
@@ -21,7 +24,10 @@ const Domain_Requests = {
     },
     buildings: {
         buildingsLarge_GetAll: () => _get(`/buildings-large?is_null_custom_pricing_model_id=null`),
-        buildingsLarge_GetByLocationIds: (ids = []) => _get(`/buildings-large?is_null_custom_pricing_model_id=null&location_ids=${ids.join(',')}`),
+        buildingsLarge_GetByLocationIds: (ids = []) => {
+            if (!ids.length) return new Promise(resolve => resolve([]));
+            return _get(`/buildings-large?is_null_custom_pricing_model_id=null&location_ids=${ids.join(',')}`)
+        },
         buildingsLarge_GetById: (id) => _get(`/buildings-large/${id}`),
         buildingsLarge_GetByLocationId: (location_id) => _get(`/buildings-large?location_id=${location_id}&is_deleted=null&is_null_custom_pricing_model_id=null`),
         buildings_UpdateById: (id, data) => _put(`/buildings/${id}`, data),
@@ -74,6 +80,11 @@ const Domain_Requests = {
 
     auth: {
         login: ({email, password, remember}) => _auth(`/auth/login-or-register`, {
+            email,
+            password,
+            ...AuthController.makeSessionConfig(!!remember),
+        }),
+        register: ({email, password, remember}) => _auth(`/auth/register`, {
             email,
             password,
             ...AuthController.makeSessionConfig(!!remember),
