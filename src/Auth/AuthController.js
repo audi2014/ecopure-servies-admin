@@ -109,6 +109,9 @@ export const AuthController = {
         return url ? url : '/'
     },
     setLoginRedirectUrl: (url) => {
+        if(url==='/manager-access') {
+            url = '/'
+        }
         Cookies.set('LOGIN_REDIRECT_URL', url);
     },
     getSessionConfig: () => ({
