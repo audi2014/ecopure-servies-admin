@@ -79,6 +79,15 @@ const Domain_Requests = {
     },
 
     auth: {
+        sendResetPassword: ({email}) => _auth(`/auth/send-reset-password`, {
+            email,
+        }),
+        loginWithNewPassword: ({email, password, remember, token}) => _auth(`/auth/login-with-new-password`, {
+            email,
+            password,
+            token,
+            ...AuthController.makeSessionConfig(!!remember),
+        }),
         login: ({email, password, remember}) => _auth(`/auth/login-or-register`, {
             email,
             password,

@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {emailHint, validateEmail} from "../Auth/Login";
+import {emailHint, validateEmail} from "../Auth/AuthPage";
 import React from "react";
 import Fab from "@material-ui/core/Fab/Fab";
 import {AddIcon, Spinner} from "../../icons";

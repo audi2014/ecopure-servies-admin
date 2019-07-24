@@ -1,5 +1,4 @@
 import React from "react";
-import {Route} from "react-router-dom";
 import {RoutingConstants} from "./constants/RoutingConstants";
 import {LocationsTablePage} from "./Pages/Locations/LocationsTablePage";
 import {BuildingsTablePage} from "./Pages/Buildings/BuildingsTablePage";
@@ -15,6 +14,8 @@ import {Login} from "./Pages/Auth/Login";
 import {AuthRoute, PrivateRoute} from "./Auth/PrivateRoute";
 import {ManagerAccessPage} from "./Pages/Managers/ManagerAccessPage";
 import {SignUp} from "./Pages/Auth/SignUp";
+import {SendResetPasswordEmail} from "./Pages/Auth/SendResetPasswordEmail";
+import {LoginWithNewPassword} from "./Pages/Auth/LoginWithNewPassword";
 
 
 export const AppRoutes = () => <React.Fragment>
@@ -28,6 +29,18 @@ export const AppRoutes = () => <React.Fragment>
         path="/signup"
         component={SignUp}
     />
+    <AuthRoute
+        exact
+        path="/send-password-reset"
+        component={SendResetPasswordEmail}
+    />
+    <AuthRoute
+        exact
+        path="/reset-password"
+        component={LoginWithNewPassword}
+    />
+
+
     <PrivateRoute
         exact
         path="/"
