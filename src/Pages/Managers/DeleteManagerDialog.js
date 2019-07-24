@@ -23,7 +23,7 @@ export const DeleteManagerDialog = ({className, onSubmit, email, confirmationWor
         setError('');
     };
     const handleSubmit = () => {
-        if (confirmationWord === word) {
+        if (confirmationWord.toLowerCase() === word.toLowerCase()) {
             setPending(true);
             onSubmit(deleteId).then(r => {
                 handleClose();
@@ -37,7 +37,7 @@ export const DeleteManagerDialog = ({className, onSubmit, email, confirmationWor
     const handleWordChange = e => {
         e.preventDefault();
         setError(null);
-        setWord(e.currentTarget.value.trim().toLowerCase());
+        setWord(e.currentTarget.value.trim());
     };
     return <React.Fragment>
 

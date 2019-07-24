@@ -53,7 +53,8 @@ export const ManagerAccessPage = () => {
         managerAccess_controller.request();
     }, []);
 
-    const managerItems = (managerAccess_controller.state || []).filter(m => +m.manager_id !== +AuthController.getManagerId());
+    const managerItems = (managerAccess_controller.state || [])
+    // .filter(m => +m.manager_id !== +AuthController.getManagerId());
 
     const selectedManager = (manager_selectedId && managerItems)
         ? (managerItems.find(m => +m.id === +manager_selectedId))
