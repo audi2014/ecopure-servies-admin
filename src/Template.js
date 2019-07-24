@@ -77,18 +77,18 @@ const Bar = () => {
         <Toolbar className={classes.toolbar}>
             <Logo className={classes.toolbarTitle}/>
             <nav>
-                <Link component={RouterLink} to={RoutingConstants.locations} variant="button" color="primary"
+                <Link component={RouterLink} to={`/${RoutingConstants.locations}`} variant="button" color="primary"
                       href="#"
                       className={classes.link}>
                     <IconButton color="inherit"><LocationIcon/></IconButton> Locations
                 </Link>
-                <Link component={RouterLink} to={RoutingConstants.buildings} variant="button" color="primary"
+                <Link component={RouterLink} to={`/${RoutingConstants.buildings}`} variant="button" color="primary"
                       href="#"
                       className={classes.link}>
                     <IconButton color="inherit"><BuildingIcon/></IconButton> Buildings
                 </Link>
                 <ManageAccessLink
-                    component={RouterLink} to={RoutingConstants.manageAccess}
+                    component={RouterLink} to={`/${RoutingConstants.manageAccess}`}
                     variant="button"
                     color="primary"
                     href="#"
