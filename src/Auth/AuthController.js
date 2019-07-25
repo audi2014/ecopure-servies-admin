@@ -27,7 +27,7 @@ const state = {
     location_ids: null,
     access_type: null,
     email_invite: null,
-    manager_id:null,
+    manager_id: null,
 };
 const reqiredKeys = [
     'jwt_token',
@@ -73,7 +73,7 @@ const saveSession = (data) => {
         const expires = makeExpAt(data);
         Object.keys(state).map(k => {
             state[k] = data[k];
-            Cookies.set(k, data[k], {expires})
+            Cookies.set(k, data[k], {expires, path: Config.COOKIE_PATH})
         });
 
         subscribers.array.forEach(cb => {
@@ -109,10 +109,10 @@ export const AuthController = {
         return url ? url : '/'
     },
     setLoginRedirectUrl: (url) => {
-        if(url==='/manager-access') {
+        if (url === '/manager-access') {
             url = '/'
         }
-        Cookies.set('LOGIN_REDIRECT_URL', url);
+        Cookies.set('LOGIN_REDIRECT_URL', url, {path: Config.COOKIE_PATH});
     },
     getSessionConfig: () => ({
         expires_in: state.expires_in,

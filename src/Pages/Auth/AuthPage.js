@@ -55,6 +55,8 @@ const useAuthStyles = makeStyles(theme => ({
     },
 }));
 
+const makeQueryWithEmail = email => validateEmail(email) ? '?email=' + email : '';
+
 export const AuthPage = ({
                              actionTitle = 'auth',
                              isPending,
@@ -79,7 +81,7 @@ export const AuthPage = ({
                 {
                     fields.email ? <TextField
                         disabled={disableEmail}
-                        value={values.email}
+                        value={values.email || ''}
                         onChange={onInputChange('email')}
                         error={!!errors.email}
                         helperText={errors.email ? errors.email : null}
@@ -153,7 +155,7 @@ export const AuthPage = ({
                         fields.goToForgotPassword ?
                             <Grid item xs>
                                 <Link component={RouterLink}
-                                      to={`/send-password-reset${values.email ? '?email=' + values.email : ''}`}
+                                      to={`/send-password-reset${makeQueryWithEmail(values.email)}`}
                                       href='#'
                                       variant="body2">
                                     Forgot password?
@@ -165,7 +167,7 @@ export const AuthPage = ({
                         fields.goToLogin ?
                             <Grid item xs>
                                 <Link component={RouterLink}
-                                      to={`/login${values.email ? '?email=' + values.email : ''}`}
+                                      to={`/login${makeQueryWithEmail(values.email)}`}
                                       href='#'
                                       variant="body2">
                                     Back to Login
