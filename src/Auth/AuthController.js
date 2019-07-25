@@ -84,7 +84,7 @@ const saveSession = (data) => {
 
 const clearSession = () => {
     Object.keys(state).forEach(function (k) {
-        Cookies.remove(k);
+        Cookies.remove(k, {path: Config.COOKIE_PATH});
         state[k] = null;
     });
     subscribers.array.forEach(cb => {
