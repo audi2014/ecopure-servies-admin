@@ -43,6 +43,5 @@ export const BuildingsAddPage = ({match, history}) => {
                     });
             }
         }}
-    >
-    </BaseItemCreationPage>
+    />
 };

@@ -19,6 +19,5 @@ export const LocationsAddPage = ({match, history}) => {
         editableTemplate={makeLocationEditableTemplate()}
         renderTitle={() => 'Create Location'}
         insertByData={handleInsert(locations_InsertByData.request, history)}
-    >
-    </BaseItemCreationPage>
+    />
 };

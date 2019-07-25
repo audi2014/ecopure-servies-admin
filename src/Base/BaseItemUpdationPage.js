@@ -20,29 +20,16 @@ export const BaseItemUpdationPage = ({renderTitle, data, reload, onSave, childre
             deleted_at: isDisabled ? null : Math.round((new Date()).getTime() / 1000)
         }
     );
-
-
     return <BaseItem
         key={`${id}`}
         editableData={editableData}
         editableTemplate={editableTemplate}
         title={renderTitle ? renderTitle(data || {}) : 'Edit Item'}
         isDisabled={isDisabled}
-        children={children}
         onToggleDisabled={onToggleDisabled}
         onSave={onSave}
         isAdd={false}
-
-    >{
-        children ? children(
-            data,
-            {
-                ...rest,
-                reload,
-                editableData,
-            }
-        ) : null
-    }</BaseItem>;
+    />;
 
 
 };

@@ -79,12 +79,14 @@ const View = ({items, insertByZipCode, deleteById}) => {
                     margin="normal"
                     variant="outlined"
                     InputProps={{
-                        endAdornment: (<InputAdornment position="end">
-                            <SubmitButton
-                                type={'button'}
-                                onClick={() => insertByZipCode(newZipCode).then(r => setNewZipCode(''))}
-                            />
-                        </InputAdornment>),
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <SubmitButton
+                                    type={'button'}
+                                    onClick={() => insertByZipCode(newZipCode).then(r => setNewZipCode(''))}
+                                />
+                            </InputAdornment>
+                        ),
                     }}
                 />
             </FormControl>

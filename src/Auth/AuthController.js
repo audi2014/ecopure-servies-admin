@@ -141,7 +141,10 @@ export const AuthController = {
     clearSession,
     makeSessionConfig,
 };
-
+/**
+ *
+ * @return AuthController
+ */
 export const useAuthEffect = () => {
     const [auth, setAuth] = React.useState(AuthController);
     React.useEffect(() => {
