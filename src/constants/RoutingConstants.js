@@ -5,6 +5,7 @@ export const RoutingConstants = {
     inNetworkPricing: 'pricing/in-network',
     buildings: 'buildings',
     manageAccess: 'manager-access',
+    manageUsers: 'manager-users',
     editPricingOfLocation: 'edit-pricing'
 };
 

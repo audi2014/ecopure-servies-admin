@@ -10,7 +10,7 @@ import Close from '@material-ui/icons/Close';
 import Save from '@material-ui/icons/Check';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import LocationCity from '@material-ui/icons/LocationCity';
-import AccountBalance from '@material-ui/icons/AccountBalance';
+import AccountBalance from '@material-ui/icons/People';
 import VpnKey from '@material-ui/icons/VpnKey';
 
 export const LocationIcon = LocationCity;
@@ -25,6 +25,7 @@ export const CancelIcon = Close;
 export const SaveIcon = Save;
 export const GoBack = KeyboardArrowLeft;
 export const BuildingIcon = AccountBalance;
+export const UserIcon = AccountBalance;
 export const AccessIcon = VpnKey;
 
 

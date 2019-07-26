@@ -1,5 +1,5 @@
 import {makeWrapperOfApiProvider} from "./core/ReactApi";
-import {_auth, _get} from "./core/coreApi";
+import {_auth, _get, _manageUsersApiRequest} from "./core/coreApi";
 import {_delete} from "./core/coreApi";
 import {_put} from "./core/coreApi";
 import {_post} from "./core/coreApi";
@@ -18,6 +18,7 @@ const Domain_Requests = {
         locations_InsertByData: (data) => _post(`/locations`, data),
     },
     locationsZipcode: {
+        locationsZipCode_GetByLocationIds: (ids) => _get(`/locations-zipcode?location_ids=${ids.join(',')}`),
         locationsZipcode_GetByLocationId: (location_id) => _get(`/locations-zipcode?location_id=${location_id}`),
         locationsZipcode_DeleteById: (id) => _delete(`/locations-zipcode/${id}`),
         locationsZipcode_InsertByData: (data) => _post(`/locations-zipcode`, data),
@@ -99,6 +100,11 @@ const Domain_Requests = {
             ...AuthController.makeSessionConfig(!!remember),
         }),
     },
+    users: {
+        users_GetPage: (data) => _manageUsersApiRequest('query', {
+            ...data
+        }),
+    }
 };
 
 const Domain_ContextWrapper = {};

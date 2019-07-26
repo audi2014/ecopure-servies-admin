@@ -16,6 +16,7 @@ import {ManagerAccessPage} from "./Pages/Managers/ManagerAccessPage";
 import {SignUp} from "./Pages/Auth/SignUp";
 import {SendResetPasswordEmail} from "./Pages/Auth/SendResetPasswordEmail";
 import {LoginWithNewPassword} from "./Pages/Auth/LoginWithNewPassword";
+import {ManageUsersPage} from "./Pages/ManageUsers/ManageUsersPage";
 
 
 export const AppRoutes = () => <React.Fragment>
@@ -111,9 +112,16 @@ export const AppRoutes = () => <React.Fragment>
     <PrivateRoute
         exact
         requireAdminAccess={true}
-        path={`/manager-access`}
+        path={`/${RoutingConstants.manageAccess}`}
         component={ManagerAccessPage}
     />
+    <PrivateRoute
+        exact
+        path={`/${RoutingConstants.manageUsers}`}
+        component={ManageUsersPage}
+    />
+
+
 
 
 </React.Fragment>;

@@ -120,6 +120,19 @@ export const _get = path => fetch(Config.LOCATIONS_API_URL + path)
         return data;
     });
 
+export const _manageUsersApiRequest = (action, data) => fetchAuthRequest(
+    Config.MANAGE_USERS_API_URL,
+    {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({...data, action})
+    })
+    .then(mapAuthorizedResponse);
+
+
 export const _delete = path => fetchAuthRequest(
     Config.LOCATIONS_API_URL + path,
     {

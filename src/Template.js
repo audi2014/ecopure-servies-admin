@@ -14,7 +14,7 @@ import {withTheme} from "./Theme";
 import {StylesProvider, createGenerateClassName} from '@material-ui/styles';
 import {Config} from "./constants/Config";
 import {ProfileNavButton} from "./Auth/ProfileNavButton";
-import {AccessIcon, BuildingIcon, LocationIcon} from "./icons";
+import {AccessIcon, BuildingIcon, LocationIcon, UserIcon} from "./icons";
 import {ManageAccessLink} from "./Auth/AdminNavLink";
 import {RoutingConstants} from "./constants/RoutingConstants";
 
@@ -96,6 +96,11 @@ const Bar = () => {
                 >
                     <IconButton color="inherit"><AccessIcon/></IconButton> Access
                 </ManageAccessLink>
+                <Link component={RouterLink} to={`/${RoutingConstants.manageUsers}`} variant="button" color="primary"
+                      href="#"
+                      className={classes.link}>
+                    <IconButton color="inherit"><UserIcon/></IconButton> Users
+                </Link>
             </nav>
             <ProfileNavButton/>
         </Toolbar>
