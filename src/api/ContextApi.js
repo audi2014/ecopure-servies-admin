@@ -1,5 +1,5 @@
 import {makeWrapperOfApiProvider} from "./core/ReactApi";
-import {_auth, _get, _manageUsersApiRequest} from "./core/coreApi";
+import {_auth, _get, _legacyApiRequest, _manageUsersApiRequest} from "./core/coreApi";
 import {_delete} from "./core/coreApi";
 import {_put} from "./core/coreApi";
 import {_post} from "./core/coreApi";
@@ -104,7 +104,11 @@ const Domain_Requests = {
         users_GetPage: (data) => _manageUsersApiRequest('query', {
             ...data
         }),
+        users_Register:(data) => _legacyApiRequest('create_user',data),
+        users_checkEemailExist:(data) => _legacyApiRequest('check_email_exist',data),
     }
+
+
 };
 
 const Domain_ContextWrapper = {};

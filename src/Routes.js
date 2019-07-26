@@ -17,6 +17,7 @@ import {SignUp} from "./Pages/Auth/SignUp";
 import {SendResetPasswordEmail} from "./Pages/Auth/SendResetPasswordEmail";
 import {LoginWithNewPassword} from "./Pages/Auth/LoginWithNewPassword";
 import {ManageUsersPage} from "./Pages/ManageUsers/ManageUsersPage";
+import {ManageUsersAddUserPage} from "./Pages/ManageUsers/ManageUsersAddUserPage";
 
 
 export const AppRoutes = () => <React.Fragment>
@@ -119,6 +120,11 @@ export const AppRoutes = () => <React.Fragment>
         exact
         path={`/${RoutingConstants.manageUsers}`}
         component={ManageUsersPage}
+    />
+    <PrivateRoute
+        exact
+        path={`/${RoutingConstants.manageUsers}/add`}
+        component={ManageUsersAddUserPage}
     />
 
 

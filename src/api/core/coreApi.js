@@ -132,6 +132,28 @@ export const _manageUsersApiRequest = (action, data) => fetchAuthRequest(
     })
     .then(mapAuthorizedResponse);
 
+export const _legacyApiRequest = (action, data) => {
+    const form = new FormData();
+    form.append('action', action);
+    Object.keys(data).forEach(key=>{
+        form.append(key, data[key]);
+    });
+
+    return fetchAuthRequest(
+        Config.LEGACY_API_URL,
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+            },
+            body: form
+        })
+        .then(mapAuthorizedResponse);
+};
+
+
+
+
 
 export const _delete = path => fetchAuthRequest(
     Config.LOCATIONS_API_URL + path,

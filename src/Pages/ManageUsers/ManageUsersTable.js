@@ -1,6 +1,7 @@
 import React from "react";
 import {apiContexts} from "../../api/ContextApi";
 import MaterialTable from "material-table";
+import {RoutingConstants} from "../../constants/RoutingConstants";
 
 const columns = [
     {title: 'Email', field: 'email',},
@@ -12,7 +13,7 @@ const columns = [
     {title: 'Zip Code', field: 'zip_code',},
 ];
 
-export const ManageUsersTable = ({}) => {
+export const ManageUsersTable = ({onAddClick}) => {
     const {users_GetPage} = React.useContext(apiContexts.users);
     const request = (query) => {
         return users_GetPage.request({
@@ -53,6 +54,14 @@ export const ManageUsersTable = ({}) => {
             exportButton: true,
             pageSizeOptions: [20, 30, 50]
         }}
+        actions={[
+            {
+                icon: 'add',
+                tooltip: 'Add User',
+                isFreeAction: true,
+                onClick: onAddClick
+            }
+        ]}
         title="Manage Users"
         columns={columns}
         data={query =>
