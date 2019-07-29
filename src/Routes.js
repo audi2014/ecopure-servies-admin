@@ -17,7 +17,8 @@ import {SignUp} from "./Pages/Auth/SignUp";
 import {SendResetPasswordEmail} from "./Pages/Auth/SendResetPasswordEmail";
 import {LoginWithNewPassword} from "./Pages/Auth/LoginWithNewPassword";
 import {ManageUsersPage} from "./Pages/ManageUsers/ManageUsersPage";
-import {ManageUsersAddUserPage} from "./Pages/ManageUsers/ManageUsersAddUserPage";
+import {ManageUsersAddUserPage} from "./Pages/ManageUsersAddUser/ManageUsersAddUserPage";
+import {ManageUsersBookUser} from "./Pages/ManageUsersBookUser/ManageUsersBookUser";
 
 
 export const AppRoutes = () => <React.Fragment>
@@ -47,11 +48,13 @@ export const AppRoutes = () => <React.Fragment>
         exact
         path="/"
         component={LocationsTablePage}
+        requireLocationAccess={false}
     />
     <PrivateRoute
         exact
         path={`/${RoutingConstants.locations}`}
         component={LocationsTablePage}
+        requireLocationAccess={false}
     />
     <PrivateRoute
         exact
@@ -80,6 +83,7 @@ export const AppRoutes = () => <React.Fragment>
         exact
         path={`/${RoutingConstants.buildings}`}
         component={BuildingsTablePage}
+        requireLocationAccess={false}
     />
     <PrivateRoute
         exact
@@ -126,6 +130,13 @@ export const AppRoutes = () => <React.Fragment>
         path={`/${RoutingConstants.manageUsers}/add`}
         component={ManageUsersAddUserPage}
     />
+    <PrivateRoute
+        exact
+        path={`/${RoutingConstants.manageUsers}/:user_id/book`}
+        component={ManageUsersBookUser}
+    />
+
+
 
 
 

@@ -18,6 +18,7 @@ const Domain_Requests = {
         locations_InsertByData: (data) => _post(`/locations`, data),
     },
     locationsZipcode: {
+        locationsZipCode_GetAll: () => _get(`/locations-zipcode`),
         locationsZipCode_GetByLocationIds: (ids) => _get(`/locations-zipcode?location_ids=${ids.join(',')}`),
         locationsZipcode_GetByLocationId: (location_id) => _get(`/locations-zipcode?location_id=${location_id}`),
         locationsZipcode_DeleteById: (id) => _delete(`/locations-zipcode/${id}`),
@@ -51,6 +52,14 @@ const Domain_Requests = {
     addOn: {
         addOn_GetByLocationId: (location_id) => _get('/pricing/add-on?location_id=' + location_id),
         addOn_InsertByData: (data) => _post('/pricing/add-on', data),
+
+
+        addOn_GetByZipCode: (zipcode) => _get(`/locations-zipcode?zipcode=${zipcode}`)
+            .then(items => {
+                return (items && items.length)
+                    ? _get('/pricing/add-on?location_id=' + items[0].location_id)
+                    : [];
+            }),
     },
     inNetworkPrices: {
         inNetworkPrices_GetByModelId: (id) => _get(`/pricing/in-network-prices?custom_pricing_model_id=${id}&is_deleted=null`),
@@ -104,8 +113,8 @@ const Domain_Requests = {
         users_GetPage: (data) => _manageUsersApiRequest('query', {
             ...data
         }),
-        users_Register:(data) => _legacyApiRequest('create_user',data),
-        users_checkEemailExist:(data) => _legacyApiRequest('check_email_exist',data),
+        users_Register: (data) => _legacyApiRequest('create_user', data),
+        users_checkEmailExist: (data) => _legacyApiRequest('check_email_exist', data),
     }
 
 

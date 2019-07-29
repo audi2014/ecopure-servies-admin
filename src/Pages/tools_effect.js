@@ -25,3 +25,15 @@ export const useBuildings_GetByAccess = () => {
         : () => controller.request(AuthController.getLocationAccessIds());
     return [state, request, controller.pending];
 };
+
+export const useZipCodes_GetByAccess = () => {
+    const ctx = React.useContext(apiContexts.locationsZipcode);
+    const controller = AuthController.haveAdminAccess()
+        ? ctx.locationsZipCode_GetAll
+        : ctx.locationsZipCode_GetByLocationIds;
+    const state = controller.state || [];
+    const request = AuthController.haveAdminAccess()
+        ? () => controller.request()
+        : () => controller.request(AuthController.getLocationAccessIds());
+    return [state, request, controller.pending];
+};

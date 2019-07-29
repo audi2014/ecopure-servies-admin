@@ -95,7 +95,6 @@ const clearSession = () => {
 // const useAuthController =
 
 const isRequireRefresh = () => {
-    console.log('refresh after sec:', (makeExpAt(state) / 1000 - (new Date()).getTime() / 1000));
     return !isSessionValid(state) || makeExpAt(state) <= (new Date()).getTime();
 };
 const isRequireRelogin = () => {

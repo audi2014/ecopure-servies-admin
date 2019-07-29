@@ -7,18 +7,26 @@ export const PrivateRoute = ({
                                  component: Component,
                                  redirectTo = '/login',
                                  requireAdminAccess = false,
+                                 requireLocationAccess = true,
                                  locationIdAccessKey = null,
                                  ...rest
                              }) => {
+
     return (
         <Route {...rest} render={(props) => {
             if (AuthController.isRequireRelogin()) {
                 AuthController.setLoginRedirectUrl(props.location.pathname)
                 return <Redirect to={redirectTo}/>;
             } else if (
-                (requireAdminAccess && !AuthController.haveAdminAccess())
-                ||
-                (locationIdAccessKey && !AuthController.haveLocationAccess(+props.match.params[locationIdAccessKey]))
+                !AuthController.haveAdminAccess()
+                &&
+                (
+                    (requireAdminAccess)
+                    ||
+                    (locationIdAccessKey && !AuthController.haveLocationAccess(+props.match.params[locationIdAccessKey]))
+                    ||
+                    (requireLocationAccess && !AuthController.getLocationAccessIds().length)
+                )
             ) {
                 return <AccessDenied {...props}/>
 
