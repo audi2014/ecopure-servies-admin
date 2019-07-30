@@ -8,7 +8,16 @@ import FormLabel from "@material-ui/core/FormLabel/FormLabel";
 import FormControl from "@material-ui/core/FormControl/FormControl";
 
 export const ProfileText = ({title, field, value, onChange, keyValue, ...rest}) => <TextField
-    onChange={e => onChange(field, e.currentTarget.value)}
+    onChange={e => {
+        let v = e.currentTarget.value;
+        if(rest.maxLength) {
+            v = v.substring(0,rest.maxLength)
+        }
+        if(rest.pattern) {
+            v = v.replace(rest.pattern, '')
+        }
+        onChange(field, v);
+    }}
     id={field}
     label={title}
     value={value || ''}
@@ -26,7 +35,6 @@ export const ProfileSelect = ({title, field, value, onChange, keyValue = {}, ...
 />;
 
 export const SplitStringCheckbox = ({title, field, value=[], items=[], onChange}) => {
-    // debugger;
     value = value.filter((v, i, a) => a.indexOf(v) === i && items.includes(v));
     const handleChange = e => {
         if (e.currentTarget.checked) {

@@ -1,6 +1,7 @@
 import {emailHint, haveError, passwordHint, validateEmail, validatePassword} from "../Auth/AuthPage";
 import {emailAlreadyExist, zipCodeNotSupported} from "./constants";
 import {generatePassword} from "./tools";
+import {RoutingConstants} from "../../constants/RoutingConstants";
 
 export const makeHandleEmailChange = ({state, errors, setState, setErrors}) => (key, value) => {
     value = (value || '').toLowerCase().trim();
@@ -77,7 +78,7 @@ const validateForm = ({password, email}) => {
     }
     return nextErrors;
 };
-export const makeHandleSubmitRegister = ({state, errors, users_Register, setErrors, setState}) => (e) => {
+export const makeHandleSubmitRegister = ({state, errors, users_Register, setErrors, setState, history}) => (e) => {
     e.preventDefault();
     const values = {
         ...state,
@@ -92,7 +93,8 @@ export const makeHandleSubmitRegister = ({state, errors, users_Register, setErro
             ...values,
         }).then(r => {
             if (r) {
-                // history.push(AuthController.popLoginRedirectUrl())
+                debugger;
+                history.push(`/${RoutingConstants.manageUsers}/${r.id}/book`)
                 console.log(r);
             }
         })

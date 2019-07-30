@@ -1,65 +1,91 @@
 import {ProfileSelect, ProfileText, SplitStringCheckbox} from "../ManageUsersAddUser/components";
-import {Footage_Title, Plan_Title, Stairs_Title} from "../../constants/Enum";
-import {HomeCondition_Title, NumBr_Title, NumBth_Title, NumKids_Title, NumPets_Title} from "./constants";
+import {
+    FootageTitle_Title,
+    HomeCondition_Title,
+    NumBr_Title,
+    NumBth_Title,
+    NumKids_Title,
+    PlanTitle_Title
+} from "./tools";
+
+export const Field_Title = {
+    num_br: "Bedrooms",
+    num_bth: 'Bathrooms',
+    footage: 'Square Footage',
+    home_condition: 'Home Condition',
+    num_kids: 'Kids count',
+    pet_type: 'Pet type',
+    start_clean_date: 'Start Cleaning Date',
+    is830: 'is ok at 8:30',
+    frequency: 'Frequency',
+    home_access: 'Home access',
+    time_initial_cleaning: 'Time initial cleaning',
+    time_ongoing_cleaning: 'Time ongoing cleaning',
+    'add-on-services': 'Add-On Services',
+    special: 'Comments',
+    'promo-code': 'Promo Code',
+    meeting_point_date: 'Meeting point date',
+    meeting_point_time: 'Meeting point time',
+    meeting_point_start: 'Meeting point start',
+    meeting_point_end: 'Meeting point end',
+
+
+    cc_number: "card number",
+    exp_date: "exp. date",
+    cvv: "cvv",
+    cc_zip: "zip",
+
+};
 
 
 export const columnsHome = [
     {
         Component: ProfileSelect,
-        title: 'Bedrooms',
         field: 'num_br',
         required: true,
         keyValue: NumBr_Title
     },
     {
         Component: ProfileSelect,
-        title: 'Bathrooms',
         field: 'num_bth',
         required: true,
         keyValue: NumBth_Title
     },
     {
         Component: ProfileSelect,
-        title: 'Square Footage',
         field: 'footage',
         required: true,
-        keyValue: Footage_Title
+        keyValue: FootageTitle_Title
     },
     {
         Component: ProfileSelect,
-        title: 'Home Condition',
         field: 'home_condition',
         required: true,
         keyValue: HomeCondition_Title
     },
     {
         Component: ProfileSelect,
-        title: 'Kids count',
         field: 'num_kids',
         required: true,
         keyValue: NumKids_Title
     },
     {
         Component: ProfileText,
-        title: 'Pet type',
         field: 'pet_type',
         required: false,
     },
 ];
-
 export const columnsService = [
     {
         Component: ProfileText,
         InputLabelProps: {shrink: true,},
         type: 'date',
-        title: 'Start Cleaning Date',
         field: 'start_clean_date',
         required: true,
     },
     {
         Component: ProfileSelect,
         errorValue: '0',
-        title: 'is ok at 8:30',
         field: 'is830',
         required: true,
         keyValue: {
@@ -70,15 +96,13 @@ export const columnsService = [
     },
     {
         Component: ProfileSelect,
-        title: 'Frequency',
         field: 'frequency',
         required: true,
-        keyValue: Plan_Title
+        keyValue: PlanTitle_Title
     },
     {
         Component: ProfileSelect,
         field: 'home_access',
-        title: 'Home access',
         required: true,
         keyValue: {
             'Key with concierge': 'Key with concierge',
@@ -90,7 +114,6 @@ export const columnsService = [
         Component: ProfileText,
         type: 'datetime-local',
         InputLabelProps: {shrink: true,},
-        title: 'time_initial_cleaning',
         field: 'time_initial_cleaning',
         required: true,
     },
@@ -98,7 +121,6 @@ export const columnsService = [
         Component: ProfileText,
         type: 'datetime-local',
         InputLabelProps: {shrink: true,},
-        title: 'time_ongoing_cleaning',
         field: 'time_ongoing_cleaning',
         required: true,
     },
@@ -106,18 +128,15 @@ export const columnsService = [
 export const columnsSpecial = [
     {
         Component: SplitStringCheckbox,
-        title: 'Add-On Services',
         field: 'add-on-services',
     },
     {
         Component: ProfileText,
-        title: 'Comments',
         field: 'special',
         required: false,
     },
     {
         Component: ProfileText,
-        title: 'promo-code',
         field: 'promo-code',
         required: false,
     },
@@ -127,28 +146,66 @@ export const columnsCall = [
     {
         Component: ProfileText,
         type: 'date',
-        title: 'meeting_point_date',
         field: 'meeting_point_date',
+        InputLabelProps: {shrink: true,},
         required: true,
     },
     {
         Component: ProfileSelect,
-        title: 'meeting_point_time',
         field: 'meeting_point_time',
         required: true,
         keyValue: {
-            '8:00/9:00  ': '8:00 am - 9:00 am',
-            '9:00/10:00 ': '9:00 am - 10:00 am',
-            '10:00/11:00': '10:00 am - 11:00 am',
-            '11:00/12:00': '11:00 am - 12:00 pm',
-            '12:00/13:00': '12:00 pm - 1:00 pm',
-            '13:00/14:00': '1:00 pm - 2:00 pm',
-            '14:00/15:00': '2:00 pm - 3:00 pm',
-            '15:00/16:00': '3:00 pm - 4:00 pm',
-            '16:00/17:00': '4:00 pm - 5:00 pm',
+            '08:00-09:00': '8:00 am - 9:00 am',
+            '09:00-10:00': '9:00 am - 10:00 am',
+            '10:00-11:00': '10:00 am - 11:00 am',
+            '11:00-12:00': '11:00 am - 12:00 pm',
+            '12:00-13:00': '12:00 pm - 1:00 pm',
+            '13:00-14:00': '1:00 pm - 2:00 pm',
+            '14:00-15:00': '2:00 pm - 3:00 pm',
+            '15:00-16:00': '3:00 pm - 4:00 pm',
+            '16:00-17:00': '4:00 pm - 5:00 pm',
         }
     }
 ];
+
+export const columnsCard = [
+    {
+        Component: ProfileText,
+        name: "credit-number", type: "tel", pattern: /\D/g, maxLength: "19",
+        field: 'cc_number',
+        required: true,
+    },
+    {
+        Component: ProfileText,
+        name: "credit-expires", type: "tel", maxLength: "7", placeholder: "MM / YY",
+
+        field: 'exp_date',
+        required: true,
+    },
+    {
+        Component: ProfileText,
+        name: "credit-cvc", type: "tel", pattern: /\D/g, maxLength: "4",
+        field: 'cvv',
+        required: true,
+    },
+    {
+        Component: ProfileText,
+        field: 'cc_zip',
+        required: true,
+    },
+];
+
+export const StepTitle_columns = {
+    'Home': columnsHome,
+    'Service': columnsService,
+    'Special': columnsSpecial,
+    'Welcome Call': columnsCall,
+    'Billing': columnsCard,
+    'Confirm': [],
+    'Success':[],
+};
+
+export const STEP_TITLES = Object.keys(StepTitle_columns);
 
 
 // //calculable

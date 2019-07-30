@@ -114,7 +114,14 @@ const Domain_Requests = {
             ...data
         }),
         users_Register: (data) => _legacyApiRequest('create_user', data),
+        users_HomeCleaning: (data) => _legacyApiRequest('home_cleaning', data),
+
         users_checkEmailExist: (data) => _legacyApiRequest('check_email_exist', data),
+        users_addBillingInfo: ({email, cc_number, exp_date, cvv, cc_zip,}) =>
+            _post(`/crypto-helper/encrypt/card`, {email, cc_number, exp_date, cvv, cc_zip,})
+                .then(encryptedCardData => _legacyApiRequest('add_billing_info', {email, ...encryptedCardData}),)
+
+
     }
 
 

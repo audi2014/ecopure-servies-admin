@@ -14,7 +14,7 @@ const columns = [
 ];
 
 export const ManageUsersPage = ({history}) => {
-    const onAddClick=() => history.push(`/${RoutingConstants.manageUsers}/add`);
+    const onAddClick = () => history.push(`/${RoutingConstants.manageUsers}/add`);
     const {users_GetPage} = React.useContext(apiContexts.users);
     const request = (query) => {
         return users_GetPage.request({
@@ -61,7 +61,22 @@ export const ManageUsersPage = ({history}) => {
                 tooltip: 'Add User',
                 isFreeAction: true,
                 onClick: onAddClick
+            },
+            {
+                icon: 'edit',
+                tooltip: 'Edit User',
+                onClick: (event, rowData) => {
+                    history.push(`/${RoutingConstants.manageUsers}/${rowData.id}/edit`)
+                }
+            },
+            {
+                icon: 'book',
+                tooltip: 'Book',
+                onClick: (event, rowData) => {
+                    history.push(`/${RoutingConstants.manageUsers}/${rowData.id}/book`)
+                }
             }
+
         ]}
         title="Manage Users"
         columns={columns}

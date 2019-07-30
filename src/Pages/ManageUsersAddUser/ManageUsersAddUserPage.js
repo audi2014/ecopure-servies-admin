@@ -14,6 +14,7 @@ import {
     makeHandleZipCodeChange
 } from "./handlers";
 import {columnsAddress, columnsProfile} from "./columns";
+import Grid from "@material-ui/core/Grid/Grid";
 
 
 const initialState = {
@@ -29,7 +30,7 @@ const initialState = {
     zip_code: '07302',
     flight_stairs: '11_30',
 };
-export const ManageUsersAddUserPage = () => {
+export const ManageUsersAddUserPage = ({history}) => {
     const {users_Register, users_checkEmailExist} = React.useContext(apiContexts.users);
     const [zip_state, zip_request, zip_pending] = useZipCodes_GetByAccess();
     const [buildings_state, buildings_request, buildings_pending] = useBuildings_GetByAccess();
@@ -71,7 +72,7 @@ export const ManageUsersAddUserPage = () => {
         pending: !!zip_pending,
         items: availableZipCodes
     });
-    const handleSubmit = makeHandleSubmitRegister({state, errors, users_Register, setErrors, setState});
+    const handleSubmit = makeHandleSubmitRegister({state, errors, users_Register, setErrors, setState, history});
 
     const key_onBlur = {
         email: handleEmailBlur,
@@ -105,25 +106,29 @@ export const ManageUsersAddUserPage = () => {
     />;
 
 
-    return <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <Typography style={{margin: 20}} variant="h6">Profile</Typography>
-        <FormControl fullWidth>
-            {columnsProfile.map((props) => renderItem(props))}
-        </FormControl>
+    return <Grid container justify="center" spacing={8}>
+        <Grid item xs={12} md={6} lg={4}>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+                <Typography style={{margin: 20}} variant="h6">Profile</Typography>
+                <FormControl fullWidth>
+                    {columnsProfile.map((props) => renderItem(props))}
+                </FormControl>
 
 
-        <Typography style={{margin: 20}} variant="h6">Address</Typography>
-        <FormControl fullWidth>
-            {columnsAddress.map((props) => renderItem(props))}
-        </FormControl>
-        <Button
-            disabled={!!haveError(errors) || isAnyRequestPending}
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-        >
-            Create User
-        </Button>
-    </form>;
+                <Typography style={{margin: 20}} variant="h6">Address</Typography>
+                <FormControl fullWidth>
+                    {columnsAddress.map((props) => renderItem(props))}
+                </FormControl>
+                <Button
+                    disabled={!!haveError(errors) || isAnyRequestPending}
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                >
+                    Create User
+                </Button>
+            </form>
+        </Grid>
+    </Grid>;
 };

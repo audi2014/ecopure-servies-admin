@@ -18,7 +18,8 @@ import {SendResetPasswordEmail} from "./Pages/Auth/SendResetPasswordEmail";
 import {LoginWithNewPassword} from "./Pages/Auth/LoginWithNewPassword";
 import {ManageUsersPage} from "./Pages/ManageUsers/ManageUsersPage";
 import {ManageUsersAddUserPage} from "./Pages/ManageUsersAddUser/ManageUsersAddUserPage";
-import {ManageUsersBookUser} from "./Pages/ManageUsersBookUser/ManageUsersBookUser";
+import {ManageUsersBookUserPage} from "./Pages/ManageUsersBookUser/ManageUsersBookUserPage";
+import {ManageUsersEditUserPage} from "./Pages/ManageUsersEditUser/ManageUsersEditUserPage";
 
 
 export const AppRoutes = () => <React.Fragment>
@@ -133,8 +134,15 @@ export const AppRoutes = () => <React.Fragment>
     <PrivateRoute
         exact
         path={`/${RoutingConstants.manageUsers}/:user_id/book`}
-        component={ManageUsersBookUser}
+        component={ManageUsersBookUserPage}
     />
+    <PrivateRoute
+        exact
+        path={`/${RoutingConstants.manageUsers}/:user_id/edit`}
+        component={ManageUsersEditUserPage}
+    />
+
+
 
 
 
