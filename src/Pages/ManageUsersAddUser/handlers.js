@@ -78,7 +78,7 @@ const validateForm = ({password, email}) => {
     }
     return nextErrors;
 };
-export const makeHandleSubmitRegister = ({state, errors, users_Register, setErrors, setState, history}) => (e) => {
+export const makeHandleSubmitRegister = ({state, errors, users_Register, users_checkEmailExist, setErrors, setState, history}) => (e) => {
     e.preventDefault();
     const values = {
         ...state,
@@ -89,15 +89,23 @@ export const makeHandleSubmitRegister = ({state, errors, users_Register, setErro
     const nextErrors = {...errors, ...validateForm({email: values.email, password: values.password,})};
     if (!haveError(nextErrors)) {
         console.log(values);
-        return users_Register.request({
-            ...values,
-        }).then(r => {
-            if (r) {
-                debugger;
-                history.push(`/${RoutingConstants.manageUsers}/${r.id}/book`)
-                console.log(r);
-            }
-        })
+
+        return users_checkEmailExist.request({email: values.email})
+            .then(r => {
+                if (r === 'exist') {
+                    setErrors({...errors, email: emailAlreadyExist});
+                    throw new Error(emailAlreadyExist);
+                }
+            }).then(() => users_Register.request({
+                ...values,
+            }).then(r => {
+                if (r) {
+                    history.push(`/${RoutingConstants.manageUsers}/${r.id}/book`)
+                    console.log(r);
+                }
+            })).catch(e => {
+
+            })
 
 
     } else {

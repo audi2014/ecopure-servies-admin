@@ -9,7 +9,7 @@ const validateForm = ({password, email}) => {
     if (!validateEmail(email)) {
         nextErrors.email = emailHint;
     }
-    if (!validatePassword(password)) {
+    if (!password.trim()) {
         nextErrors.password = passwordHint;
     }
     return nextErrors;

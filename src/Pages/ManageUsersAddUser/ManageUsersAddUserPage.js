@@ -18,18 +18,31 @@ import Grid from "@material-ui/core/Grid/Grid";
 
 
 const initialState = {
-    email: 'audi2014@test1.gmail.com',
-    first_name: 'first_name',
-    last_name: 'last_name',
-    phone: 'phone',
-    resource: 'Other',
-    building_id: 'other',
-    building_name: 'building_name',
-    address: 'address',
-    apt_num: 'apt_num',
-    zip_code: '07302',
-    flight_stairs: '11_30',
+    email: '',
+    first_name: '',
+    last_name: '',
+    phone: '',
+    resource: '',
+    building_id: '',
+    building_name: '',
+    address: '',
+    apt_num: '',
+    zip_code: '',
+    flight_stairs: '',
 };
+// const initialState = {
+//     email: 'audi2014@test1.gmail.com',
+//     first_name: 'first_name',
+//     last_name: 'last_name',
+//     phone: 'phone',
+//     resource: 'Other',
+//     building_id: 'other',
+//     building_name: 'building_name',
+//     address: 'address',
+//     apt_num: 'apt_num',
+//     zip_code: '07302',
+//     flight_stairs: '11_30',
+// };
 export const ManageUsersAddUserPage = ({history}) => {
     const {users_Register, users_checkEmailExist} = React.useContext(apiContexts.users);
     const [zip_state, zip_request, zip_pending] = useZipCodes_GetByAccess();
@@ -72,7 +85,15 @@ export const ManageUsersAddUserPage = ({history}) => {
         pending: !!zip_pending,
         items: availableZipCodes
     });
-    const handleSubmit = makeHandleSubmitRegister({state, errors, users_Register, setErrors, setState, history});
+    const handleSubmit = makeHandleSubmitRegister({
+        state,
+        errors,
+        users_Register,
+        users_checkEmailExist,
+        setErrors,
+        setState,
+        history
+    });
 
     const key_onBlur = {
         email: handleEmailBlur,
