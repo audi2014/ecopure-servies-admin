@@ -1,21 +1,21 @@
-import {ProfileSelect, ProfileText} from "./components";
+import {MUInputSelect, MUInputText} from "./components";
 import {RESOURCES} from "./constants";
 import {Stairs_Title} from "../../constants/Enum";
 
 export const columnsProfile = [
-    {Component: ProfileText, title: 'Email', field: 'email', type: 'email', required: true,},
-    {Component: ProfileText, title: 'First Name', field: 'first_name', required: true,},
-    {Component: ProfileText, title: 'Last Name', field: 'last_name', required: true,},
-    {Component: ProfileText, title: 'Phone', field: 'phone', required: true,},
-    {Component: ProfileSelect, title: 'How did you find EcoPure?', field: 'resource', keyValue: RESOURCES},
+    {Component: MUInputText, title: 'Email', field: 'email', type: 'email', required: true,},
+    {Component: MUInputText, title: 'First Name', field: 'first_name', required: true,},
+    {Component: MUInputText, title: 'Last Name', field: 'last_name', required: true,},
+    {Component: MUInputText, title: 'Phone', field: 'phone', required: true,},
+    {Component: MUInputSelect, title: 'How did you find EcoPure?', field: 'resource', keyValue: RESOURCES},
 
 ];
 
 export const columnsAddress = [
-    {Component: ProfileSelect, title: 'Building', field: 'building_id',},
-    {Component: ProfileText, title: 'Building Name', field: 'building_name',},
-    {Component: ProfileText, title: 'Street Address', field: 'address',},
-    {Component: ProfileText, title: 'Apartment Number', field: 'apt_num',},
-    {Component: ProfileSelect, title: 'Zip Code', field: 'zip_code',},
-    {Component: ProfileSelect, title: 'How many stairs in climb?', field: 'flight_stairs', keyValue: Stairs_Title},
+    {Component: MUInputSelect, title: 'Building', field: 'building_id',},
+    {Component: MUInputText, title: 'Building Name', field: 'building_name',},
+    {Component: MUInputText, title: 'Street Address', field: 'address',},
+    {Component: MUInputText, title: 'Apartment Number', field: 'apt_num',},
+    {Component: MUInputSelect, title: 'Zip Code', field: 'zip_code',},
+    {Component: MUInputSelect, title: 'How many stairs in climb?', field: 'flight_stairs', keyValue: Stairs_Title},
 ];

@@ -1,4 +1,4 @@
-import {ProfileSelect, ProfileText, SplitStringCheckbox} from "../ManageUsersAddUser/components";
+import {MUInputSelect, MUInputText, MUInputCheckboxes} from "../ManageUsersAddUser/components";
 import {
     FootageTitle_Title,
     HomeCondition_Title,
@@ -40,51 +40,51 @@ export const Field_Title = {
 
 export const columnsHome = [
     {
-        Component: ProfileSelect,
+        Component: MUInputSelect,
         field: 'num_br',
         required: true,
         keyValue: NumBr_Title
     },
     {
-        Component: ProfileSelect,
+        Component: MUInputSelect,
         field: 'num_bth',
         required: true,
         keyValue: NumBth_Title
     },
     {
-        Component: ProfileSelect,
+        Component: MUInputSelect,
         field: 'footage',
         required: true,
         keyValue: FootageTitle_Title
     },
     {
-        Component: ProfileSelect,
+        Component: MUInputSelect,
         field: 'home_condition',
         required: true,
         keyValue: HomeCondition_Title
     },
     {
-        Component: ProfileSelect,
+        Component: MUInputSelect,
         field: 'num_kids',
         required: true,
         keyValue: NumKids_Title
     },
     {
-        Component: ProfileText,
+        Component: MUInputText,
         field: 'pet_type',
         required: false,
     },
 ];
 export const columnsService = [
     {
-        Component: ProfileText,
+        Component: MUInputText,
         InputLabelProps: {shrink: true,},
         type: 'date',
         field: 'start_clean_date',
         required: true,
     },
     {
-        Component: ProfileSelect,
+        Component: MUInputSelect,
         errorValue: '0',
         field: 'is830',
         required: true,
@@ -95,13 +95,13 @@ export const columnsService = [
         }
     },
     {
-        Component: ProfileSelect,
+        Component: MUInputSelect,
         field: 'frequency',
         required: true,
         keyValue: PlanTitle_Title
     },
     {
-        Component: ProfileSelect,
+        Component: MUInputSelect,
         field: 'home_access',
         required: true,
         keyValue: {
@@ -111,14 +111,14 @@ export const columnsService = [
         }
     },
     {
-        Component: ProfileText,
+        Component: MUInputText,
         type: 'datetime-local',
         InputLabelProps: {shrink: true,},
         field: 'time_initial_cleaning',
         required: true,
     },
     {
-        Component: ProfileText,
+        Component: MUInputText,
         type: 'datetime-local',
         InputLabelProps: {shrink: true,},
         field: 'time_ongoing_cleaning',
@@ -127,16 +127,16 @@ export const columnsService = [
 ];
 export const columnsSpecial = [
     {
-        Component: SplitStringCheckbox,
+        Component: MUInputCheckboxes,
         field: 'add-on-services',
     },
     {
-        Component: ProfileText,
+        Component: MUInputText,
         field: 'special',
         required: false,
     },
     {
-        Component: ProfileText,
+        Component: MUInputText,
         field: 'promo-code',
         required: false,
     },
@@ -144,14 +144,14 @@ export const columnsSpecial = [
 ];
 export const columnsCall = [
     {
-        Component: ProfileText,
+        Component: MUInputText,
         type: 'date',
         field: 'meeting_point_date',
         InputLabelProps: {shrink: true,},
         required: true,
     },
     {
-        Component: ProfileSelect,
+        Component: MUInputSelect,
         field: 'meeting_point_time',
         required: true,
         keyValue: {
@@ -170,26 +170,26 @@ export const columnsCall = [
 
 export const columnsCard = [
     {
-        Component: ProfileText,
+        Component: MUInputText,
         name: "credit-number", type: "tel", pattern: /\D/g, maxLength: "19",
         field: 'cc_number',
         required: true,
     },
     {
-        Component: ProfileText,
+        Component: MUInputText,
         name: "credit-expires", type: "tel", maxLength: "7", placeholder: "MM / YY",
 
         field: 'exp_date',
         required: true,
     },
     {
-        Component: ProfileText,
+        Component: MUInputText,
         name: "credit-cvc", type: "tel", pattern: /\D/g, maxLength: "4",
         field: 'cvv',
         required: true,
     },
     {
-        Component: ProfileText,
+        Component: MUInputText,
         field: 'cc_zip',
         required: true,
     },
