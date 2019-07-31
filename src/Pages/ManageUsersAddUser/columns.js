@@ -12,10 +12,11 @@ export const columnsProfile = [
 ];
 
 export const columnsAddress = [
+    {Component: MUInputSelect, title: 'Location', field: 'location_id',},
+    {Component: MUInputSelect, title: 'Zip Code', field: 'zip_code',},
     {Component: MUInputSelect, title: 'Building', field: 'building_id',},
     {Component: MUInputText, title: 'Building Name', field: 'building_name',},
     {Component: MUInputText, title: 'Street Address', field: 'address',},
     {Component: MUInputText, title: 'Apartment Number', field: 'apt_num',},
-    {Component: MUInputSelect, title: 'Zip Code', field: 'zip_code',},
     {Component: MUInputSelect, title: 'How many stairs in climb?', field: 'flight_stairs', keyValue: Stairs_Title},
 ];

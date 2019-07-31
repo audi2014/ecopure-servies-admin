@@ -3,6 +3,19 @@ import {emailAlreadyExist, zipCodeNotSupported} from "./constants";
 import {generatePassword} from "./tools";
 import {RoutingConstants} from "../../constants/RoutingConstants";
 
+const emptyLocationChangeState = {
+    'zip_code':'',
+    'building_id':'',
+    'building_name':'',
+    'address':'',
+    'apt_num':'',
+};
+export const makeHandleLocationChange = ({state, errors, setState, setErrors}) => (key, value) => {
+
+    setErrors({...errors, ...emptyLocationChangeState, [key]: ''});
+    setState({...state, ...emptyLocationChangeState, [key]: value});
+};
+
 export const makeHandleEmailChange = ({state, errors, setState, setErrors}) => (key, value) => {
     value = (value || '').toLowerCase().trim();
     setErrors({...errors, [key]: ''});
@@ -14,7 +27,7 @@ export const makeHandleZipCodeChange = ({state, errors, setState, setErrors}) =>
     setState({...state, [key]: value});
 };
 
-const emptyAddressState = {
+const emptyBuildingChangeState = {
     'building_name': '',
     'address': '',
     'apt_num': '',
@@ -23,8 +36,8 @@ export const makeHandleBuildingIdChange = ({state, errors, setState, setErrors, 
     const building = items.find(b => +b.id === +value);
 
     if (!building) {
-        setState({...state, ...emptyAddressState, [key]: value});
-        setErrors({...errors, ...emptyAddressState, [key]: ''});
+        setState({...state, ...emptyBuildingChangeState, [key]: value});
+        setErrors({...errors, ...emptyBuildingChangeState, [key]: ''});
     } else {
         setState({
             ...state,
@@ -34,7 +47,7 @@ export const makeHandleBuildingIdChange = ({state, errors, setState, setErrors, 
             [key]: value
         });
         setErrors({
-            ...errors, ...emptyAddressState,
+            ...errors, ...emptyBuildingChangeState,
             [key]: ''
         });
     }

@@ -4,12 +4,12 @@ import React from "react";
 import {apiContexts} from "../../api/ContextApi";
 import Button from "@material-ui/core/Button/Button";
 import {haveError,} from "../Auth/AuthPage";
-import {useBuildings_GetByAccess, useZipCodes_GetByAccess} from "../tools_effect";
+import {useBuildings_GetByAccess, useLocations_GetByAccess, useZipCodes_GetByAccess} from "../tools_effect";
 import {
     makeHandleBuildingIdChange,
     makeHandleDefaultChange,
     makeHandleEmailBlur,
-    makeHandleEmailChange, makeHandleSubmitRegister,
+    makeHandleEmailChange, makeHandleLocationChange, makeHandleSubmitRegister,
     makeHandleZipCodeBlur,
     makeHandleZipCodeChange
 } from "./handlers";
@@ -24,6 +24,7 @@ const initialState = {
     phone: '',
     resource: '',
     building_id: '',
+    location_id: '',
     building_name: '',
     address: '',
     apt_num: '',
@@ -47,36 +48,61 @@ export const ManageUsersAddUserPage = ({history}) => {
     const {users_Register, users_checkEmailExist} = React.useContext(apiContexts.users);
     const [zip_state, zip_request, zip_pending] = useZipCodes_GetByAccess();
     const [buildings_state, buildings_request, buildings_pending] = useBuildings_GetByAccess();
+    const [locations_state, locations_request, locations_pending] = useLocations_GetByAccess();
+
     const [state, setState] = React.useState(initialState);
     const [errors, setErrors] = React.useState({});
     React.useEffect(() => {
         zip_request();
         buildings_request();
+        locations_request();
     }, []);
 
 
-    const isAnyRequestPending = !!buildings_pending || !!zip_pending || !!users_Register.pending || !!users_checkEmailExist.pending;
-    const availableZipCodes = (zip_state || []).map(item => item.zipcode).sort((a, b) => a.localeCompare(b));
+    const isAnyRequestPending = !!buildings_pending
+        || !!locations_pending
+        || !!zip_pending
+        || !!users_Register.pending
+        || !!users_checkEmailExist.pending
+    ;
+
+    const availableZipCodes = (zip_state || [])
+        .filter(item => +item.location_id === +state.location_id )
+        .map(item => item.zipcode)
+        .sort((a, b) => a.localeCompare(b));
+
+    const availableBuildings = (buildings_state || [])
+        .filter(item => +item.location_id === +state.location_id
+            && item.address
+            && item.name
+        );
+
+    const locations_keyValue = (locations_state || []).reduce((prev, l) => {
+        prev[l.id] = l.name;
+        return prev;
+    }, {});
     const zipCodes_keyValue = availableZipCodes.reduce((prev, zipcode) => {
         prev[zipcode] = zipcode;
         return prev;
     }, {});
-    const buildings_keyValue = (buildings_state || []).reduce((prev, item) => {
+    const buildings_keyValue = availableBuildings.reduce((prev, item) => {
         prev[item.id] = item.name;
         return prev;
     }, {'other': 'Other'});
+
     const isOtherBuilding = !state.building_id || state.building_id === 'other';
     const handleBuildingIdChange = makeHandleBuildingIdChange({
         state,
         errors,
         setState,
         setErrors,
-        items: buildings_state
+        items: availableBuildings
     });
     const handleEmailChange = makeHandleEmailChange({state, errors, setState, setErrors});
     const handleZipCodeChange = makeHandleZipCodeChange({state, errors, setState, setErrors});
     const handleDefaultChange = makeHandleDefaultChange({state, errors, setState, setErrors});
     const handleEmailBlur = makeHandleEmailBlur({state, errors, setState, setErrors, users_checkEmailExist});
+    const handleLocationChange = makeHandleLocationChange({state, errors, setState, setErrors});
     const handleZipCodeBlur = makeHandleZipCodeBlur({
         state,
         errors,
@@ -100,6 +126,7 @@ export const ManageUsersAddUserPage = ({history}) => {
         zip_code: handleZipCodeBlur,
     };
     const key_keyValue = {
+        location_id: locations_keyValue,
         zip_code: zipCodes_keyValue,
         building_id: buildings_keyValue,
     };
@@ -107,8 +134,11 @@ export const ManageUsersAddUserPage = ({history}) => {
         email: handleEmailChange,
         zip_code: handleZipCodeChange,
         building_id: handleBuildingIdChange,
+        location_id: handleLocationChange,
     };
     const key_disabled = {
+        zip_code: !state.location_id,
+        building_id: !state.location_id,
         building_name: !isOtherBuilding,
         address: !isOtherBuilding,
     };

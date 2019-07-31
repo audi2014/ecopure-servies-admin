@@ -14,6 +14,7 @@ import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 
 export const MUInputText = ({title, field, value, onChange, keyValue, ...rest}) => <TextField
+    inputProps={{autoComplete:"hack-"+field}}
     onChange={e => {
         let v = e.currentTarget.value;
         if (rest.maxLength) {
