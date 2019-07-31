@@ -6,6 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from "@material-ui/core/Typography/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {MUInputCheckboxes} from "../ManageUsersAddUser/components";
+import {USERS_FIELD_TITLE} from "./columns";
 
 const useStyles = makeStyles(theme => ({
 
@@ -29,8 +30,13 @@ export const VisibleColumnsDialog = ({title = 'Columns', items = [], value = [],
 
             </DialogTitle>
 
-            <MUInputCheckboxes title={title} field={title} value={value} items={items}
-                               onChange={(f,v) => setValue(v)}/>
+            <MUInputCheckboxes
+                item_title={USERS_FIELD_TITLE}
+                title={title}
+                field={title}
+                value={value}
+                items={items}
+                onChange={(f, v) => setValue(v)}/>
         </Dialog>
     );
 

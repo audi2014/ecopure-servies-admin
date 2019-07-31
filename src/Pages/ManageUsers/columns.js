@@ -1,4 +1,3 @@
-
 export const TABLE_COLUMNS_USER = [
     {title: 'Id', field: 'id'},
     {title: 'Email', field: 'email'},
@@ -6,6 +5,8 @@ export const TABLE_COLUMNS_USER = [
     {title: 'Last name', field: 'last_name'},
     {title: 'Building name', field: 'building_name'},
     {title: 'Address', field: 'address'},
+    {title: 'Apt Num', field: 'apt_num'},
+    {title: 'Zip Code', field: 'zip_code'},
     {title: 'Registration Date', field: 'registration_date',},
     {title: 'Meeting Point Start', field: 'meeting_point_start',},
     {title: 'Meeting Point End', field: 'meeting_point_end',},
@@ -28,9 +29,7 @@ export const TABLE_COLUMNS_USER = [
     {title: 'Pa Flag', field: 'pa_flag'},
     {title: 'Home Clng Prof Flag', field: 'home_clng_prof_flag'},
     {title: 'Num Br', field: 'num_br'},
-    {title: 'Apt Num', field: 'apt_num'},
     {title: 'Phone', field: 'phone'},
-    {title: 'Zip Code', field: 'zip_code'},
     {title: 'Frequency', field: 'frequency'},
     {title: 'Pet Type', field: 'pet_type'},
     {title: 'Home Condition', field: 'home_condition'},
@@ -42,23 +41,10 @@ export const TABLE_COLUMNS_USER = [
     {title: 'Token', field: 'token'},
 ];
 
-export const fieldsUser = TABLE_COLUMNS_USER.map(c => c.field);
-// export const initialVisibleFields = [
-//     'email',
-//     'first_name',
-//     'last_name',
-//     'building_name',
-//     'address',
-//     'apt_num',
-//     'zip_code',
-// ];
+export const USERS_FIELDS = TABLE_COLUMNS_USER.map(c => c.field);
+export const USERS_FIELD_TITLE = TABLE_COLUMNS_USER.reduce((prev,curr)=>{
+    prev[curr.field] = curr.title ||  curr.field;
+    return prev;
+},{});
 
-export const initialVisibleFields = [
-    'email',
-    'start_clean_date',
-    'date_last_email',
-    'registration_date',
-    'meeting_point_end',
-    'meeting_point_start',
-];
 

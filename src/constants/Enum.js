@@ -70,3 +70,5 @@ export const AddOnValueType_Title = {
     'FIXED': 'Fixed',
     'PER_ROOM': 'Per Room',
 };
+
+export const COOKIE_KEY_USER_COLUMNS = 'USER_COLUMNS';
