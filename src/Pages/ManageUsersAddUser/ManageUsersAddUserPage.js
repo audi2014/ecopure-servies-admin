@@ -67,7 +67,7 @@ export const ManageUsersAddUserPage = ({history}) => {
     ;
 
     const availableZipCodes = (zip_state || [])
-        .filter(item => +item.location_id === +state.location_id )
+        .filter(item => +item.location_id === +state.location_id)
         .map(item => item.zipcode)
         .sort((a, b) => a.localeCompare(b));
 
