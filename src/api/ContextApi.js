@@ -6,6 +6,9 @@ import {_post} from "./core/coreApi";
 import {ErrorContext, WithModalError} from "./core/ModalError";
 import {AuthController} from "../Auth/AuthController";
 
+const users_SendSetUpPassword = ({email, full_name, token,}) =>
+    _manageUsersApiRequest('send_setup_password', {email, full_name, token,});
+
 const Domain_Requests = {
     locations: {
         locations_GetAll: () => _get(`/locations?is_deleted=null`),
@@ -113,9 +116,18 @@ const Domain_Requests = {
         users_GetPage: (data) => _manageUsersApiRequest('query', {
             ...data
         }),
-        users_Register: (data) => _legacyApiRequest('create_user', data),
+        users_Register: (data) => _legacyApiRequest('create_user', data)
+            .then(registerRes => {
+                if (registerRes && registerRes.token) {
+                    return users_SendSetUpPassword({
+                        email: data.email,
+                        full_name: `${data.first_name} ${data.last_name}`,
+                        token: registerRes.token
+                    }).then(() => registerRes)
+                } else return registerRes;
+            }),
+        users_SendSetUpPassword: users_SendSetUpPassword,
         users_HomeCleaning: (data) => _legacyApiRequest('home_cleaning', data),
-
         users_checkEmailExist: (data) => _legacyApiRequest('check_email_exist', data),
         users_addBillingInfo: ({email, cc_number, exp_date, cvv, cc_zip,}) =>
             _post(`/crypto-helper/encrypt/card`, {email, cc_number, exp_date, cvv, cc_zip,})
