@@ -40,7 +40,7 @@ export const MUInputSelect = ({title, field, value, onChange, keyValue = {}, ...
     keyValue={keyValue}
 />;
 
-export const MUInputCheckboxes = ({title, field, value = [], items = [],item_title={}, onChange}) => {
+export const MUInputCheckboxes = ({title, field, value = [], items = [], item_title = {}, onChange}) => {
     value = value.filter((v, i, a) => a.indexOf(v) === i && items.includes(v));
     const handleChange = item => {
         if (value.includes(item)) {
@@ -50,8 +50,7 @@ export const MUInputCheckboxes = ({title, field, value = [], items = [],item_tit
         }
     };
     return <React.Fragment>
-        <FormLabel component="legend">{title}</FormLabel>
-
+        {title ? <FormLabel component="legend">{title}</FormLabel> : null}
         <List>
             {items.map(item => (
                 <ListItem button onClick={() => handleChange(item)} key={item}>

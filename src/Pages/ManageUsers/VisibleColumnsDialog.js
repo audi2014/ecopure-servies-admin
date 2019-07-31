@@ -23,7 +23,7 @@ export const VisibleColumnsDialog = ({title = 'Columns', items = [], value = [],
     return (
         <Dialog onClose={onClose} open={open}>
             <DialogTitle disableTypography>
-                <Typography variant="h6">{title}</Typography>
+                {title ? <Typography variant="h6">{title}</Typography> : null}
                 <IconButton aria-label="close" onClick={onClose} className={classes.closeButton}>
                     <CloseIcon/>
                 </IconButton>
@@ -32,7 +32,6 @@ export const VisibleColumnsDialog = ({title = 'Columns', items = [], value = [],
 
             <MUInputCheckboxes
                 item_title={USERS_FIELD_TITLE}
-                title={title}
                 field={title}
                 value={value}
                 items={items}
