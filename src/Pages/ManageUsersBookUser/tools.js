@@ -85,11 +85,11 @@ export function makeRequestData(props) {
     const mpDate = htmlDateString2Sql(meeting_point_date);
     return {
         start_clean_date: htmlDateString2Sql(start_clean_date),
-        time_initial_cleaning: htmlDateTimeString2Sql(time_initial_cleaning),
-        time_ongoing_cleaning: htmlDateTimeString2Sql(time_ongoing_cleaning),
+        time_initial_cleaning,
+        time_ongoing_cleaning,
         meeting_point_start: `${mpDate} ${mpTime_start || ''}`.trim(),
         meeting_point_end: `${mpDate} ${mpTime_end || ''}`.trim(),
-        ['add-on-services']: (rest['add-on-services'] || []).join(','),
+        'add-on-services': (rest['add-on-services'] || []).join(','),
         'promo-code': rest['promo-code'],
         num_br,
         num_bth,
