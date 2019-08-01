@@ -113,7 +113,7 @@ export const ManageUsersBookUserPage = ({match, history}) => {
                 {...state}
                 token={user.token}
             />;
-        else if(stepTitle === 'Success')
+        else if (stepTitle === 'Success')
             return <SuccessfullyBooked user_id={user_id}/>;
         else return StepTitle_columns[stepTitle].map((props) => renderItem(props));
     };
