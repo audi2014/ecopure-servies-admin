@@ -6,7 +6,29 @@ import TableBody from "@material-ui/core/TableBody/TableBody";
 import React from "react";
 import {TABLE_COLUMNS_USER} from "../ManageUsers/columns";
 
+const HIDDEN_FIELDS = [
+    'validation_status',
+    'email_counter',
+    'last_adm_message_id',
+    'active_message_to_adm',
+    'email_notification',
+    'daily_tuning',
+    'building_flag',
+    'zip_flag',
+    'pa_flag',
+    'home_clng_prof_flag',
+    'phone',
+    'frequency',
+    'pet_type',
+    'home_condition',
+    'home_access',
+    'special',
+    'promo_code',
+    'resource',
+    'token',
+];
 
+const VIEW_COLUMNS_USER_SHORT  = TABLE_COLUMNS_USER.filter(col=>!HIDDEN_FIELDS.includes(col.field));
 
 export const UserView = (props) => {
     return <Table>
@@ -17,7 +39,7 @@ export const UserView = (props) => {
             </TableRow>
         </TableHead>
         <TableBody>
-            {TABLE_COLUMNS_USER.map(({field,title}) => (
+            {(isShort ? VIEW_COLUMNS_USER_SHORT : TABLE_COLUMNS_USER).map(({field,title}) => (
                 <TableRow key={field}>
                     <TableCell component="th" scope="row">
                         {title || '~~' + field}
