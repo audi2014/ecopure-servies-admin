@@ -5,6 +5,7 @@ import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import React from "react";
 import {TABLE_COLUMNS_USER} from "../ManageUsers/columns";
+import {apiContexts} from "../../api/ContextApi";
 
 const HIDDEN_FIELDS = [
     'validation_status',
@@ -32,6 +33,13 @@ const VIEW_COLUMNS_USER_SHORT  = TABLE_COLUMNS_USER.filter(col=>!HIDDEN_FIELDS.i
 
 
 export const UserView = ({isShort, ...props}) => {
+    // const {users_cardGetById} = React.useContext(apiContexts.users);
+    // React.useEffect(() => {
+    //     users_cardGetById.request(props.id);
+    // }, [props.id]);
+
+
+    // return JSON.stringify(users_cardGetById.state)
     return <Table>
         <TableHead>
             <TableRow>
