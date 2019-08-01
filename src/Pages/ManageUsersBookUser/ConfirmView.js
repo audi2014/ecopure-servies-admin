@@ -6,15 +6,13 @@ import TableBody from "@material-ui/core/TableBody/TableBody";
 import React from "react";
 import {Field_Title} from "./columns";
 import {makeRequestData} from "./tools";
+import {getRequestStateKeys} from "./tools_component";
+
+
 
 export const ConfirmView = (props) => {
-    const {
-        token,
-        num_adults,
-        num_pets,
-        daily_tuning,
-        ...body
-    } = makeRequestData(props);
+    const body = makeRequestData(props);
+    const bookingPreviewKeys = getRequestStateKeys(props.isInitialBooking);
     return <Table>
         <TableHead>
             <TableRow>
@@ -23,14 +21,16 @@ export const ConfirmView = (props) => {
             </TableRow>
         </TableHead>
         <TableBody>
-            {Object.keys(body).map(key => (
-                <TableRow key={key}>
-                    <TableCell component="th" scope="row">
-                        {Field_Title[key] || '~~' + key}
-                    </TableCell>
-                    <TableCell align="right">{body[key] || '[EMPTY]'}</TableCell>
-                </TableRow>
-            ))}
+            {Object.keys(body)
+                .filter(key => bookingPreviewKeys.includes(key))
+                .map(key => (
+                    <TableRow key={key}>
+                        <TableCell component="th" scope="row">
+                            {Field_Title[key] || '~~' + key}
+                        </TableCell>
+                        <TableCell align="right">{body[key] || '[EMPTY]'}</TableCell>
+                    </TableRow>
+                ))}
         </TableBody>
     </Table>;
 };

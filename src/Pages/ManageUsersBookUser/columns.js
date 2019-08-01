@@ -201,16 +201,26 @@ export const columnsCard = [
     },
 ];
 
-export const StepTitle_columns = {
+export const StepTitle_columns_INITIAL = {
     'Home': columnsHome,
     'Service': columnsService,
     'Special': columnsSpecial,
     'Welcome Call': columnsCall,
     'Billing': columnsCard,
     'Confirm': [],
-    'Success':[],
+    'Success': [],
 };
 
-export const STEP_TITLES = Object.keys(StepTitle_columns);
+export const StepTitle_columns_SHORT = {
+    // 'Home': columnsHome,
+    'Service': columnsService,
+    'Special': columnsSpecial,
+    // 'Welcome Call': columnsCall,
+    'Billing': columnsCard,
+    'Confirm': [],
+    'Success': [],
+};
 
+export const STEP_TITLES_INITIAL = Object.keys(StepTitle_columns_INITIAL);
+export const STEP_TITLES_SHORT = Object.keys(StepTitle_columns_SHORT);
 

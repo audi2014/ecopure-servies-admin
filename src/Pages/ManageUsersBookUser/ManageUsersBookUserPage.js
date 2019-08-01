@@ -6,7 +6,13 @@ import {AddOn_Title} from "../../constants/Enum";
 import {Spinner} from "../../icons";
 import {BookingStepper} from "./BookingStepper";
 import {makeValidateStepWithCardUpdating} from "./tools_component";
-import {Field_Title, STEP_TITLES, StepTitle_columns} from "./columns";
+import {
+    Field_Title,
+    STEP_TITLES_INITIAL,
+    STEP_TITLES_SHORT,
+    StepTitle_columns_INITIAL,
+    StepTitle_columns_SHORT
+} from "./columns";
 import {ConfirmView} from "./ConfirmView";
 import Grid from "@material-ui/core/Grid/Grid";
 import {UserView} from "./UserView";
@@ -30,6 +36,10 @@ export const ManageUsersBookUserPage = ({match, history}) => {
         || !!users_HomeCleaning.pending
     ;
     const user = users_GetPage.state && users_GetPage.state.items && users_GetPage.state.items[0];
+    const isInitialBooking = user ? !(+user.home_clng_prof_flag) : true;
+    // const isInitialBooking = false;
+    const step_titles = isInitialBooking ? STEP_TITLES_INITIAL : STEP_TITLES_SHORT;
+    const StepTitle_columns = isInitialBooking ? StepTitle_columns_INITIAL : StepTitle_columns_SHORT;
     const handleDefaultChange = makeHandleDefaultChange({state, errors, setState, setErrors});
     const addOns = (addOn_GetByZipCode.state || []).map(item => AddOn_Title[item.addon_type] || item.addon_type);
 
@@ -105,6 +115,8 @@ export const ManageUsersBookUserPage = ({match, history}) => {
         errors,
         users_addBillingInfo_request: users_addBillingInfo.request,
         users_HomeCleaning_request: users_HomeCleaning.request,
+        StepTitle_columns,
+        isInitialBooking,
     });
 
     const getContentByStep = stepTitle => {
@@ -112,6 +124,7 @@ export const ManageUsersBookUserPage = ({match, history}) => {
             return <ConfirmView
                 {...state}
                 token={user.token}
+                isInitialBooking={isInitialBooking}
             />;
         else if (stepTitle === 'Success')
             return <SuccessfullyBooked user_id={user_id}/>;
@@ -132,7 +145,7 @@ export const ManageUsersBookUserPage = ({match, history}) => {
                     skippableSteps={['Billing']}
                     shouldNextStep={validateStep}
                     getContentByStep={getContentByStep}
-                    step_titles={STEP_TITLES}
+                    step_titles={step_titles}
                 />
             </form>
         </Grid>
@@ -140,7 +153,7 @@ export const ManageUsersBookUserPage = ({match, history}) => {
             <Typography style={{margin: 20}} variant="h6">
                 User
             </Typography>
-            <UserView {...user}/>
+            <UserView {...user} isShort={true}/>
         </Grid>
 
     </Grid>;

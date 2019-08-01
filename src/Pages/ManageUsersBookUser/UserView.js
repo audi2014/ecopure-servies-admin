@@ -30,7 +30,8 @@ const HIDDEN_FIELDS = [
 
 const VIEW_COLUMNS_USER_SHORT  = TABLE_COLUMNS_USER.filter(col=>!HIDDEN_FIELDS.includes(col.field));
 
-export const UserView = (props) => {
+
+export const UserView = ({isShort, ...props}) => {
     return <Table>
         <TableHead>
             <TableRow>

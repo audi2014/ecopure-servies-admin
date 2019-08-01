@@ -71,13 +71,6 @@ export function makeRequestData(props) {
         frequency,
         home_access,
         special,
-        token,
-//ignore
-        cc_number,
-        exp_date,
-        cc_zip,
-        cvv,
-// b-a-d k-e-y
         ...rest
 
     } = props;
@@ -100,10 +93,5 @@ export function makeRequestData(props) {
         frequency,
         home_access,
         special,
-        token,
-//hardocde fore legacy
-        num_adults: "1",
-        num_pets: "0",
-        daily_tuning: "0",
     }
 }
