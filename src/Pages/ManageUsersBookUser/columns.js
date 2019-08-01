@@ -111,18 +111,24 @@ export const columnsService = [
         }
     },
     {
-        Component: MUInputText,
-        type: 'datetime-local',
-        InputLabelProps: {shrink: true,},
+        Component: MUInputSelect,
         field: 'time_initial_cleaning',
         required: true,
+        keyValue: {
+            'Early Morning': 'Early Morning',
+            'Late Morning': 'Late Morning',
+            // '0': '-',
+        }
     },
     {
-        Component: MUInputText,
-        type: 'datetime-local',
-        InputLabelProps: {shrink: true,},
+        Component: MUInputSelect,
         field: 'time_ongoing_cleaning',
         required: true,
+        keyValue: {
+            'Early Morning': 'Early Morning',
+            'Late Morning': 'Late Morning',
+            'Afternoon': 'Afternoon',
+        }
     },
 ];
 export const columnsSpecial = [
