@@ -9,11 +9,12 @@ import Edit from '@material-ui/icons/Edit';
 import Close from '@material-ui/icons/Close';
 import Save from '@material-ui/icons/Check';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import LocationOn from '@material-ui/icons/LocationOn';
 import LocationCity from '@material-ui/icons/LocationCity';
-import AccountBalance from '@material-ui/icons/People';
+import People from '@material-ui/icons/People';
 import VpnKey from '@material-ui/icons/VpnKey';
 
-export const LocationIcon = LocationCity;
+export const LocationIcon = LocationOn;
 
 export const AddOnIcon = Extension;
 export const RegularIcon = DomainDisabled;
@@ -24,8 +25,8 @@ export const EditIcon = Edit;
 export const CancelIcon = Close;
 export const SaveIcon = Save;
 export const GoBack = KeyboardArrowLeft;
-export const BuildingIcon = AccountBalance;
-export const UserIcon = AccountBalance;
+export const BuildingIcon = LocationCity;
+export const UserIcon = People;
 export const AccessIcon = VpnKey;
 
 
