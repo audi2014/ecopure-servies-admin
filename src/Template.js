@@ -58,7 +58,7 @@ const Logo = ({className}) => {
 
     return <React.Fragment>
         <Typography variant="h6" color="inherit" noWrap className={className}>
-            Ecopure Dashboard
+            EcoPure Dashboard
         </Typography>
         {
             Config.ENVIRONMENT !== 'production'
