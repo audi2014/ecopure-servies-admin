@@ -66,6 +66,9 @@ export const ManageUsersBookUserPage = ({match, history}) => {
     };
 
     const key_onChange = {
+        'promo-code': (key, value) => {
+            handleDefaultChange(key, ("" + value).substring(0, 4));
+        },
         num_br: (key, value) => {
             if (value === 'Studio') {
                 setState({...state, num_bth: '1', num_br: value});
