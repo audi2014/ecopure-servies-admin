@@ -133,30 +133,31 @@ export const ManageUsersBookUserPage = ({match, history}) => {
 
 
     if (!user) return <Spinner/>;
+    else if (!user.token) return (<Typography style={{margin: 20}} variant="h6"> No Token In User </Typography>)
     else return <Grid container justify="center" spacing={8}>
-        <Grid item xs={12} md={6} lg={4}>
-            <Typography style={{margin: 20}} variant="h6">
-                Booking
-            </Typography>
-            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <Grid item xs={12} md={6} lg={4}>
+                <Typography style={{margin: 20}} variant="h6">
+                    Booking
+                </Typography>
+                <form noValidate autoComplete="off" onSubmit={handleSubmit}>
 
-                <BookingStepper
-                    pending={isAnyRequestPending}
-                    skippableSteps={['Billing']}
-                    shouldNextStep={validateStep}
-                    getContentByStep={getContentByStep}
-                    step_titles={step_titles}
-                />
-            </form>
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-            <Typography style={{margin: 20}} variant="h6">
-                User
-            </Typography>
-            <UserView {...user} isShort={true}/>
-        </Grid>
+                    <BookingStepper
+                        pending={isAnyRequestPending}
+                        skippableSteps={['Billing']}
+                        shouldNextStep={validateStep}
+                        getContentByStep={getContentByStep}
+                        step_titles={step_titles}
+                    />
+                </form>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+                <Typography style={{margin: 20}} variant="h6">
+                    User
+                </Typography>
+                <UserView {...user} isShort={true}/>
+            </Grid>
 
-    </Grid>;
+        </Grid>;
 };
 
 const initialState = {
