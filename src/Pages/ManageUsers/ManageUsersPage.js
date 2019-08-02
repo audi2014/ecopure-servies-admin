@@ -18,6 +18,16 @@ export const initialVisibleFields = Cookies.getJSON(COOKIE_KEY_USER_COLUMNS) || 
     'zip_code',
 ];
 
+const table_columns_user_withRender = JSON.parse(JSON.stringify(TABLE_COLUMNS_USER)).map(c => {
+    return {
+        ...c,
+        render: ((row) => {
+            if (row[c.field] === true) return '1';
+            else if (row[c.field] === false) return '0';
+            else return '' + row[c.field];
+        })
+    }
+});
 
 export const ManageUsersPage = ({history}) => {
     const [dialogColumnsOpen, setDialogColumnsOpen] = React.useState(false);
@@ -37,18 +47,8 @@ export const ManageUsersPage = ({history}) => {
     }
 
 
-    const columns = TABLE_COLUMNS_USER
-        .filter(v => visibleColumnFields.includes(v.field))
-        .map(c => {
-            return {
-                ...c,
-                render: (row => {
-                    if (row[c.field] === true) return '1';
-                    else if (row[c.field] === false) return '0';
-                    else return '' + row[c.field];
-                })
-            }
-        });
+    const columns = table_columns_user_withRender
+        .filter(v => visibleColumnFields.includes(v.field));
 
     const onAddClick = () => history.push(`/${RoutingConstants.manageUsers}/add`);
     const {users_GetPage, users_SendSetUpPasswordById} = React.useContext(apiContexts.users);
@@ -80,7 +80,7 @@ export const ManageUsersPage = ({history}) => {
     };
 
     return <React.Fragment>
-
+        <DialogLoading open={!!users_SendSetUpPasswordById.pending} title={'Sending email...'}/>
         <VisibleColumnsDialog
             open={dialogColumnsOpen}
             onClose={handleClose}
