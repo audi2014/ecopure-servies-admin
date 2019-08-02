@@ -123,8 +123,8 @@ const Domain_Requests = {
         users_GetPage: (data) => _manageUsersApiRequest('query', {
             ...data
         }),
-        users_GetFirst: (data) => _manageUsersApiRequest('query', {
-            ...data
+        users_GetFirstById: (id) => _manageUsersApiRequest('query', {
+            filters: {id}
         }).then(r => {
             if (r && r.items && r.items[0]) return r.items[0]
             else throw new Error('User not found');
@@ -135,7 +135,7 @@ const Domain_Requests = {
                     return users_SendSetUpPasswordById(registerRes.id)
                         .then(() => registerRes)
                 } else {
-                    console.error('no id in create_user response',registerRes);
+                    console.error('no id in create_user response', registerRes);
                     return registerRes;
                 }
             }),

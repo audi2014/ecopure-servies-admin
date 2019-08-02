@@ -15,7 +15,7 @@ import {
 } from "./columns";
 import {ConfirmView} from "./ConfirmView";
 import Grid from "@material-ui/core/Grid/Grid";
-import {UserView} from "../ManageUsers/UserView";
+import {UserView} from "../ManageUsersEditUser/UserView";
 import {SuccessfullyBooked} from "./SuccessfullyBooked";
 
 
@@ -23,17 +23,17 @@ export const ManageUsersBookUserPage = ({match, history}) => {
     const user_id = +match.params.user_id;
 
     const {addOn_GetByZipCode} = React.useContext(apiContexts.addOn);
-    const {users_GetFirst, users_addBillingInfo, users_HomeCleaning, users_RequireTokenById} = React.useContext(apiContexts.users);
+    const {users_GetFirstById, users_addBillingInfo, users_HomeCleaning, users_RequireTokenById} = React.useContext(apiContexts.users);
     const [state, setState] = React.useState(initialState);
     const [errors, setErrors] = React.useState({});
 
     const isAnyRequestPending =
-        !!users_GetFirst.pending
+        !!users_GetFirstById.pending
         || !!addOn_GetByZipCode.pending
         || !!users_addBillingInfo.pending
         || !!users_HomeCleaning.pending
     ;
-    const user = users_GetFirst.state;
+    const user = users_GetFirstById.state;
     const isInitialBooking = user ? !(+user.home_clng_prof_flag) : true;
     // const isInitialBooking = false;
     const step_titles = isInitialBooking ? STEP_TITLES_INITIAL : STEP_TITLES_SHORT;
@@ -42,7 +42,7 @@ export const ManageUsersBookUserPage = ({match, history}) => {
     const addOns = (addOn_GetByZipCode.state || []).map(item => AddOn_Title[item.addon_type] || item.addon_type);
 
     React.useEffect(() => {
-        users_GetFirst.request({filters: {id: user_id}});
+        users_GetFirstById.request(user_id);
     }, [user_id]);
 
     React.useEffect(() => {
@@ -61,7 +61,7 @@ export const ManageUsersBookUserPage = ({match, history}) => {
             addOn_GetByZipCode.request(user.zip_code);
             if (!user.token) {
                 users_RequireTokenById.request(user.id).then(token => {
-                    users_GetFirst.setState({...user,token});
+                    users_GetFirstById.setState({...user, token});
                 })
             }
         }
@@ -133,9 +133,10 @@ export const ManageUsersBookUserPage = ({match, history}) => {
         else return StepTitle_columns[stepTitle].map((props) => renderItem(props));
     };
 
-    if(users_GetFirst.pending)return <Spinner/>;
+    if (users_GetFirstById.pending) return <Spinner/>;
     else if (!user) return null;
-    else if (!user.token) return (<Typography style={{margin: 20}} variant="h6">Updating User Token...<Spinner/></Typography>)
+    else if (!user.token) return (
+        <Typography style={{margin: 20}} variant="h6">Updating User Token...<Spinner/></Typography>)
     else return <Grid container justify="center" spacing={8}>
             <Grid item xs={12} md={6} lg={4}>
                 <Typography style={{margin: 20}} variant="h6">
