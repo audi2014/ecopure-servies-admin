@@ -22,20 +22,18 @@ import {SuccessfullyBooked} from "./SuccessfullyBooked";
 export const ManageUsersBookUserPage = ({match, history}) => {
     const user_id = +match.params.user_id;
 
-
     const {addOn_GetByZipCode} = React.useContext(apiContexts.addOn);
-    const {users_GetPage, users_addBillingInfo, users_HomeCleaning} = React.useContext(apiContexts.users);
+    const {users_GetFirst, users_addBillingInfo, users_HomeCleaning, users_RequireTokenById} = React.useContext(apiContexts.users);
     const [state, setState] = React.useState(initialState);
     const [errors, setErrors] = React.useState({});
 
-
     const isAnyRequestPending =
-        !!users_GetPage.pending
+        !!users_GetFirst.pending
         || !!addOn_GetByZipCode.pending
         || !!users_addBillingInfo.pending
         || !!users_HomeCleaning.pending
     ;
-    const user = users_GetPage.state && users_GetPage.state.items && users_GetPage.state.items[0];
+    const user = users_GetFirst.state;
     const isInitialBooking = user ? !(+user.home_clng_prof_flag) : true;
     // const isInitialBooking = false;
     const step_titles = isInitialBooking ? STEP_TITLES_INITIAL : STEP_TITLES_SHORT;
@@ -44,9 +42,8 @@ export const ManageUsersBookUserPage = ({match, history}) => {
     const addOns = (addOn_GetByZipCode.state || []).map(item => AddOn_Title[item.addon_type] || item.addon_type);
 
     React.useEffect(() => {
-        users_GetPage.request({filters: {id: user_id}});
+        users_GetFirst.request({filters: {id: user_id}});
     }, [user_id]);
-
 
     React.useEffect(() => {
         if (user) {
@@ -61,7 +58,12 @@ export const ManageUsersBookUserPage = ({match, history}) => {
             //     return prev;
             // }, {});
             // setState({...state, ...nextState})
-            addOn_GetByZipCode.request(user.zip_code)
+            addOn_GetByZipCode.request(user.zip_code);
+            if (!user.token) {
+                users_RequireTokenById.request(user.id).then(token => {
+                    users_GetFirst.setState({...user,token});
+                })
+            }
         }
     }, [user && user.zip_code]);
 
@@ -131,9 +133,9 @@ export const ManageUsersBookUserPage = ({match, history}) => {
         else return StepTitle_columns[stepTitle].map((props) => renderItem(props));
     };
 
-
-    if (!user) return <Spinner/>;
-    else if (!user.token) return (<Typography style={{margin: 20}} variant="h6"> No Token In User </Typography>)
+    if(users_GetFirst.pending)return <Spinner/>;
+    else if (!user) return null;
+    else if (!user.token) return (<Typography style={{margin: 20}} variant="h6">Updating User Token...<Spinner/></Typography>)
     else return <Grid container justify="center" spacing={8}>
             <Grid item xs={12} md={6} lg={4}>
                 <Typography style={{margin: 20}} variant="h6">

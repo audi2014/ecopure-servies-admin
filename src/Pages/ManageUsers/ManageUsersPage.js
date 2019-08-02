@@ -6,6 +6,7 @@ import {VisibleColumnsDialog} from "./VisibleColumnsDialog";
 import {USERS_FIELDS, TABLE_COLUMNS_USER} from "./columns";
 import Cookies from "js-cookie";
 import {COOKIE_KEY_USER_COLUMNS} from "../../constants/Enum";
+import {DialogLoading} from "./DialogLoading";
 
 export const initialVisibleFields = Cookies.getJSON(COOKIE_KEY_USER_COLUMNS) || [
     'email',
@@ -17,14 +18,6 @@ export const initialVisibleFields = Cookies.getJSON(COOKIE_KEY_USER_COLUMNS) || 
     'zip_code',
 ];
 
-// export const initialVisibleFields = [
-//     'email',
-//     'start_clean_date',
-//     'date_last_email',
-//     'registration_date',
-//     'meeting_point_end',
-//     'meeting_point_start',
-// ];
 
 export const ManageUsersPage = ({history}) => {
     const [dialogColumnsOpen, setDialogColumnsOpen] = React.useState(false);
@@ -44,10 +37,21 @@ export const ManageUsersPage = ({history}) => {
     }
 
 
-    const columns = TABLE_COLUMNS_USER.filter(v => visibleColumnFields.includes(v.field));
+    const columns = TABLE_COLUMNS_USER
+        .filter(v => visibleColumnFields.includes(v.field))
+        .map(c => {
+            return {
+                ...c,
+                render: (row => {
+                    if (row[c.field] === true) return '1';
+                    else if (row[c.field] === false) return '0';
+                    else return '' + row[c.field];
+                })
+            }
+        });
 
     const onAddClick = () => history.push(`/${RoutingConstants.manageUsers}/add`);
-    const {users_GetPage} = React.useContext(apiContexts.users);
+    const {users_GetPage, users_SendSetUpPasswordById} = React.useContext(apiContexts.users);
     const request = (query) => {
         return users_GetPage.request({
             filters: (query.filters || []).reduce(function (prev, {column, value}) {
@@ -74,12 +78,9 @@ export const ManageUsersPage = ({history}) => {
             }
         })
     };
-    // React.useEffect(() => {
-    //     request();
-    // }, []);
 
-    // return JSON.stringify(users_GetPage.state);
     return <React.Fragment>
+
         <VisibleColumnsDialog
             open={dialogColumnsOpen}
             onClose={handleClose}
@@ -88,6 +89,7 @@ export const ManageUsersPage = ({history}) => {
             items={USERS_FIELDS}
         />
         <MaterialTable
+
             options={{
                 filtering: true,
                 pageSize: 20,
@@ -96,7 +98,6 @@ export const ManageUsersPage = ({history}) => {
                 pageSizeOptions: [20, 30, 50]
             }}
             actions={[
-
                 {
                     icon: 'add',
                     tooltip: 'Add User',
@@ -108,6 +109,15 @@ export const ManageUsersPage = ({history}) => {
                     tooltip: 'Columns',
                     isFreeAction: true,
                     onClick: handleOpen
+                },
+                {
+                    icon: 'mail',
+                    tooltip: 'Send Reset Password',
+                    onClick: (event, {id}) => {
+                        if (id && !users_SendSetUpPasswordById.pending) {
+                            users_SendSetUpPasswordById.request(id)
+                        }
+                    }
                 },
                 {
                     icon: 'edit',

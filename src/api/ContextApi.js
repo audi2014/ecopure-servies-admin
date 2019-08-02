@@ -6,8 +6,12 @@ import {_post} from "./core/coreApi";
 import {ErrorContext, WithModalError} from "./core/ModalError";
 import {AuthController} from "../Auth/AuthController";
 
-const users_SendSetUpPassword = ({email, full_name, token,}) =>
-    _manageUsersApiRequest('send_setup_password', {email, full_name, token,});
+const users_RequireTokenById = (id) =>
+    _manageUsersApiRequest('require_token_by_id', {id});
+
+const users_SendSetUpPasswordById = id =>
+    _manageUsersApiRequest('send_setup_password', {id});
+
 
 const Domain_Requests = {
     locations: {
@@ -113,20 +117,27 @@ const Domain_Requests = {
         }),
     },
     users: {
+        users_RequireTokenById,
+        users_SendSetUpPasswordById,
         users_GetPage: (data) => _manageUsersApiRequest('query', {
             ...data
         }),
+        users_GetFirst: (data) => _manageUsersApiRequest('query', {
+            ...data
+        }).then(r => {
+            if (r && r.items && r.items[0]) return r.items[0]
+            else throw new Error('User not found');
+        }),
         users_Register: (data) => _legacyApiRequest('create_user', data)
             .then(registerRes => {
-                if (registerRes && registerRes.token) {
-                    return users_SendSetUpPassword({
-                        email: data.email,
-                        full_name: `${data.first_name} ${data.last_name}`,
-                        token: registerRes.token
-                    }).then(() => registerRes)
-                } else return registerRes;
+                if (registerRes && registerRes.id) {
+                    return users_SendSetUpPasswordById(registerRes.id)
+                        .then(() => registerRes)
+                } else {
+                    console.error('no id in create_user response',registerRes);
+                    return registerRes;
+                }
             }),
-        users_SendSetUpPassword: users_SendSetUpPassword,
         users_HomeCleaning: (data) => _legacyApiRequest('home_cleaning', data),
         users_checkEmailExist: (data) => _legacyApiRequest('check_email_exist', data),
         users_addBillingInfo: ({email, cc_number, exp_date, cvv, cc_zip,}) =>
