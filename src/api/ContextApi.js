@@ -117,6 +117,7 @@ const Domain_Requests = {
         }),
     },
     users: {
+        users_cardGetById: (id) => _manageUsersApiRequest('user_card_get_by_id', {id}),
         users_RequireTokenById,
         users_SendSetUpPasswordById,
         users_GetPage: (data) => _manageUsersApiRequest('query', {

@@ -3,7 +3,7 @@ import {apiContexts} from "../../api/ContextApi";
 import {Spinner} from "../../icons";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import {UserView} from "../ManageUsersBookUser/UserView";
+import {UserView} from "../ManageUsers/UserView";
 
 export const ManageUsersEditUserPage = ({match}) => {
     const user_id = +match.params.user_id;

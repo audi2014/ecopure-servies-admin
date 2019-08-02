@@ -15,7 +15,7 @@ import {
 } from "./columns";
 import {ConfirmView} from "./ConfirmView";
 import Grid from "@material-ui/core/Grid/Grid";
-import {UserView} from "./UserView";
+import {UserView} from "../ManageUsers/UserView";
 import {SuccessfullyBooked} from "./SuccessfullyBooked";
 
 
