@@ -1,11 +1,7 @@
 import TextField from "@material-ui/core/TextField/TextField";
 import {Select} from "../../Base/BaseInput";
 import React from "react";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel/FormLabel";
-import Dialog from "@material-ui/core/Dialog/Dialog";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
@@ -14,7 +10,7 @@ import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 
 export const MUInputText = ({title, field, value, onChange, keyValue, ...rest}) => <TextField
-    inputProps={{autoComplete:"hack-"+field}}
+    inputProps={{autoComplete: "hack-" + field}}
     onChange={e => {
         let v = e.currentTarget.value;
         if (rest.maxLength) {
@@ -62,18 +58,5 @@ export const MUInputCheckboxes = ({title, field, value = [], items = [], item_ti
                 </ListItem>
             ))}
         </List>
-
-
-        {/*<FormGroup>*/}
-        {/*{items.map(v => <FormControlLabel key={v}*/}
-        {/*control={<Checkbox*/}
-        {/*value={v}*/}
-        {/*checked={value.includes(v)}*/}
-        {/*color="primary"*/}
-        {/*onChange={handleChange}*/}
-        {/*/>}*/}
-        {/*label={v}*/}
-        {/*/>)}*/}
-        {/*</FormGroup>*/}
     </React.Fragment>
 };

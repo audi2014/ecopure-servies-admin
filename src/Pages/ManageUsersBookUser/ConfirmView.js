@@ -4,9 +4,9 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import React from "react";
-import {Field_Title} from "./columns";
 import {makeRequestData} from "./tools";
 import {getRequestStateKeys} from "./tools_component";
+import {FIELD_TITLE} from "../BaseManageUsers/constants";
 
 
 
@@ -26,7 +26,7 @@ export const ConfirmView = (props) => {
                 .map(key => (
                     <TableRow key={key}>
                         <TableCell component="th" scope="row">
-                            {Field_Title[key] || '~~' + key}
+                            {FIELD_TITLE[key] || '~~' + key}
                         </TableCell>
                         <TableCell align="right">{body[key] || '[EMPTY]'}</TableCell>
                     </TableRow>

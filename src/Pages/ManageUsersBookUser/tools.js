@@ -1,57 +1,4 @@
-import {Footage_Title, Plan_Title} from "../../constants/Enum";
-
-export const generateRange = ({start = 1, count}) => (new Array(count))
-    .fill(null)
-    .reduce((prev, curr, i) => {
-        prev[i + start] = String(i + start);
-        return prev;
-    }, {});
-
-export const objectValuesToKeys = (obj) => Object.keys(obj)
-    .reduce((prev, key) => {
-        prev[obj[key]] = obj[key];
-        return prev;
-    }, {});
-
-export const FootageTitle_Title = objectValuesToKeys(Footage_Title);
-export const PlanTitle_Title = objectValuesToKeys(Plan_Title);
-
-export const NumBr_Title = {'Studio': 'Studio', ...generateRange({count: 5})};
-export const NumBth_Title = generateRange({count: 3});
-export const HomeCondition_Title = {
-    'Exceptionally Clean': 'Exceptionally Clean',
-    'Moderately Clean': 'Moderately Clean',
-    'Very Cluttered': 'Very Cluttered',
-};
-
-export const NumKids_Title = generateRange({start: 0, count: 5});
-
-function jsDate2Sql(date) {
-    return date.getFullYear()
-        + '-'
-        + ("0" + (date.getMonth() + 1)).slice(-2)
-        + '-'
-        + ("0" + date.getDate()).slice(-2);
-}
-
-function jsTime2Sql(date) {
-    return date.getHours()
-        + '-'
-        + ("0" + date.getMinutes()).slice(-2)
-        + '-'
-        + ("0" + date.getSeconds()).slice(-2);
-}
-
-export function htmlDateString2Sql(v) {
-    const time = Date.parse(v);
-    return time ? jsDate2Sql(new Date(time)) : '';
-}
-
-export function htmlDateTimeString2Sql(v) {
-    const time = Date.parse(v);
-    return time ? jsDate2Sql(new Date(time)) + ' ' + jsTime2Sql(new Date(time)) : '';
-}
-
+import {htmlDateString2Sql} from "../BaseManageUsers/tools";
 
 export function makeRequestData(props) {
     const {
@@ -61,7 +8,7 @@ export function makeRequestData(props) {
         time_ongoing_cleaning,
         meeting_point_date,
         meeting_point_time,
-//raw
+        //raw
         num_br,
         num_bth,
         footage,

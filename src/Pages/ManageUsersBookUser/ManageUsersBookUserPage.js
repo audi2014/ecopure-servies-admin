@@ -2,29 +2,29 @@ import React from "react";
 import {apiContexts} from "../../api/ContextApi";
 import Typography from "@material-ui/core/Typography/Typography";
 import {makeHandleDefaultChange} from "../ManageUsersAddUser/handlers";
-import {AddOn_Title} from "../../constants/Enum";
 import {Spinner} from "../../icons";
 import {BookingStepper} from "./BookingStepper";
 import {makeValidateStepWithCardUpdating} from "./tools_component";
+import {ConfirmView} from "./ConfirmView";
+import Grid from "@material-ui/core/Grid/Grid";
+import {SuccessfullyBooked} from "./SuccessfullyBooked";
 import {
-    Field_Title,
     STEP_TITLES_INITIAL,
     STEP_TITLES_SHORT,
     StepTitle_columns_INITIAL,
     StepTitle_columns_SHORT
-} from "./columns";
-import {ConfirmView} from "./ConfirmView";
-import Grid from "@material-ui/core/Grid/Grid";
-import {UserView} from "../ManageUsersEditUser/UserView";
-import {SuccessfullyBooked} from "./SuccessfullyBooked";
+} from "./constants";
+import {FIELD_TITLE} from "../BaseManageUsers/constants";
+import {AddOn_Title} from "../../constants/Enum";
+import {INITIAL_STATE} from "./constants";
+import {UserView} from "../BaseManageUsers/UserView";
 
-
-export const ManageUsersBookUserPage = ({match, history}) => {
+export const ManageUsersBookUserPage = ({match}) => {
     const user_id = +match.params.user_id;
 
     const {addOn_GetByZipCode} = React.useContext(apiContexts.addOn);
     const {users_GetFirstById, users_addBillingInfo, users_HomeCleaning, users_RequireTokenById} = React.useContext(apiContexts.users);
-    const [state, setState] = React.useState(initialState);
+    const [state, setState] = React.useState(INITIAL_STATE);
     const [errors, setErrors] = React.useState({});
 
     const isAnyRequestPending =
@@ -96,10 +96,8 @@ export const ManageUsersBookUserPage = ({match, history}) => {
     };
 
     const renderItem = ({Component, field, ...props}) => <Component
-        title={Field_Title[field]}
+        title={FIELD_TITLE[field]}
         disabled={key_disabled[field]}
-        // onBlur={key_onBlur[field]}
-        // keyValue={key_keyValue[field]}
         error={!!errors[field]}
         helperText={errors[field] ? errors[field] : null}
         onChange={key_onChange[field] || handleDefaultChange}
@@ -136,7 +134,7 @@ export const ManageUsersBookUserPage = ({match, history}) => {
     if (users_GetFirstById.pending) return <Spinner/>;
     else if (!user) return null;
     else if (!user.token) return (
-        <Typography style={{margin: 20}} variant="h6">Updating User Token...<Spinner/></Typography>)
+        <Typography style={{margin: 20}} variant="h6">Updating User Token...<Spinner/></Typography>);
     else return <Grid container justify="center" spacing={8}>
             <Grid item xs={12} md={6} lg={4}>
                 <Typography style={{margin: 20}} variant="h6">
@@ -162,53 +160,3 @@ export const ManageUsersBookUserPage = ({match, history}) => {
 
         </Grid>;
 };
-
-const initialState = {
-    'num_br': '',
-    'num_bth': '',
-    'footage': '',
-    'home_condition': '',
-    'num_kids': '',
-    'is830': '',
-    'frequency': '',
-    'home_access': '',
-    'special': '',
-
-    'start_clean_date': '',
-    'time_initial_cleaning': '',
-    'time_ongoing_cleaning': '',
-    'add-on-services': [],
-    'promo-code': '',
-    'meeting_point_date': '',
-    'meeting_point_time': '',
-    //card
-    'cc_number': '',
-    'exp_date': '',
-    'cc_zip': '',
-    'cvv': '',
-};
-
-// const initialState = {
-//     'num_br': '1',
-//     'num_bth': '2',
-//     'footage': '801-1000',
-//     'home_condition': 'Exceptionally Clean',
-//     'num_kids': '1',
-//     'is830': '1',
-//     'frequency': 'Move-Out',
-//     'home_access': 'I will be home',
-//     'special': '',
-//
-//     'start_clean_date': '2019-01-01',
-//     'time_initial_cleaning': '2019-01-01T01:01:00',
-//     'time_ongoing_cleaning': '2019-01-01T01:01:00',
-//     'add-on-services': ['WINDOWS', 'OVEN'],
-//     'promo-code': '',
-//     'meeting_point_date': '2019-01-01',
-//     'meeting_point_time': '08:00-09:00',
-//     //card
-//     'cc_number': '',
-//     'exp_date': '',
-//     'cc_zip': '',
-//     'cvv': '',
-// };

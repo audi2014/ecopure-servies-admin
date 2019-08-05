@@ -1,14 +1,14 @@
 import {emailHint, haveError, passwordHint, validateEmail, validatePassword} from "../Auth/AuthPage";
-import {emailAlreadyExist, zipCodeNotSupported} from "./constants";
-import {generatePassword} from "./tools";
 import {RoutingConstants} from "../../constants/RoutingConstants";
+import {MSG_EMAIL_ALREADY_EXIST, MSG_ZIPCODE_NOT_SUPPORTED} from "../BaseManageUsers/constants";
+import {generatePassword} from "../BaseManageUsers/tools";
 
 const emptyLocationChangeState = {
-    'zip_code':'',
-    'building_id':'',
-    'building_name':'',
-    'address':'',
-    'apt_num':'',
+    'zip_code': '',
+    'building_id': '',
+    'building_name': '',
+    'address': '',
+    'apt_num': '',
 };
 export const makeHandleLocationChange = ({state, errors, setState, setErrors}) => (key, value) => {
 
@@ -67,7 +67,7 @@ export const makeHandleEmailBlur = ({state, errors, setState, setErrors, users_c
     } else if (!users_checkEmailExist.pending) {
         users_checkEmailExist.request({email}).then(r => {
             if (r === 'exist') {
-                setErrors({...errors, email: emailAlreadyExist})
+                setErrors({...errors, email: MSG_EMAIL_ALREADY_EXIST})
             }
         });
     }
@@ -76,7 +76,7 @@ export const makeHandleEmailBlur = ({state, errors, setState, setErrors, users_c
 export const makeHandleZipCodeBlur = ({state, errors, setState, setErrors, pending, items = []}) => () => {
     const zip_code = state.zip_code;
     if (zip_code && !pending && !items.includes(zip_code)) {
-        setErrors({...errors, zip_code: zipCodeNotSupported})
+        setErrors({...errors, zip_code: MSG_ZIPCODE_NOT_SUPPORTED})
     }
 };
 
@@ -106,14 +106,14 @@ export const makeHandleSubmitRegister = ({state, errors, users_Register, users_c
         return users_checkEmailExist.request({email: values.email})
             .then(r => {
                 if (r === 'exist') {
-                    setErrors({...errors, email: emailAlreadyExist});
-                    throw new Error(emailAlreadyExist);
+                    setErrors({...errors, email: MSG_EMAIL_ALREADY_EXIST});
+                    throw new Error(MSG_EMAIL_ALREADY_EXIST);
                 }
             }).then(() => users_Register.request({
                 ...values,
             }).then(r => {
                 if (r) {
-                    history.push(`/${RoutingConstants.manageUsers}/${r.id}/book`)
+                    history.push(`/${RoutingConstants.manageUsers}/${r.id}/book`);
                     console.log(r);
                 }
             })).catch(e => {

@@ -4,7 +4,8 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import React from "react";
-import {TABLE_COLUMNS_USER} from "../ManageUsers/columns";
+import {FIELD_TITLE, FIELDS_DB_USER} from "./constants";
+
 const HIDDEN_FIELDS = [
     'validation_status',
     'email_counter',
@@ -28,7 +29,7 @@ const HIDDEN_FIELDS = [
 ];
 
 
-const VIEW_COLUMNS_USER_SHORT = TABLE_COLUMNS_USER.filter(col => !HIDDEN_FIELDS.includes(col.field));
+const FIELDS_DB_USER_SHORT = FIELDS_DB_USER.filter(field => !HIDDEN_FIELDS.includes(field));
 
 
 export const UserView = ({isShort, ...props}) => {
@@ -41,10 +42,10 @@ export const UserView = ({isShort, ...props}) => {
             </TableRow>
         </TableHead>
         <TableBody>
-            {(isShort ? VIEW_COLUMNS_USER_SHORT : TABLE_COLUMNS_USER).map(({field, title}) => (
+            {(isShort ? FIELDS_DB_USER_SHORT : FIELDS_DB_USER).map(field => (
                 <TableRow key={field}>
                     <TableCell component="th" scope="row">
-                        {title || '~~' + field}
+                        {FIELD_TITLE[field] || '~~' + field}
                     </TableCell>
                     <TableCell align="right">{"" + props[field]}</TableCell>
                 </TableRow>

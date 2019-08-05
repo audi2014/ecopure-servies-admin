@@ -9,48 +9,24 @@ import {
     makeHandleBuildingIdChange,
     makeHandleDefaultChange,
     makeHandleEmailBlur,
-    makeHandleEmailChange, makeHandleLocationChange, makeHandleSubmitRegister,
+    makeHandleEmailChange,
+    makeHandleLocationChange,
+    makeHandleSubmitRegister,
     makeHandleZipCodeBlur,
     makeHandleZipCodeChange
 } from "./handlers";
-import {columnsAddress, columnsProfile} from "./columns";
 import Grid from "@material-ui/core/Grid/Grid";
+import {INITIAL_STATE} from "./constants";
+import {FIELD_TITLE,} from "../BaseManageUsers/constants";
+import {FIELDS_PROPS_ADDRESS, FIELDS_PROPS_PROFILE} from "../BaseManageUsers/fields";
 
-
-const initialState = {
-    email: '',
-    first_name: '',
-    last_name: '',
-    phone: '',
-    resource: '',
-    building_id: '',
-    location_id: '',
-    building_name: '',
-    address: '',
-    apt_num: '',
-    zip_code: '',
-    flight_stairs: '',
-};
-// const initialState = {
-//     email: 'audi2014@test1.gmail.com',
-//     first_name: 'first_name',
-//     last_name: 'last_name',
-//     phone: 'phone',
-//     resource: 'Other',
-//     building_id: 'other',
-//     building_name: 'building_name',
-//     address: 'address',
-//     apt_num: 'apt_num',
-//     zip_code: '07302',
-//     flight_stairs: '11_30',
-// };
 export const ManageUsersAddUserPage = ({history}) => {
     const {users_Register, users_checkEmailExist} = React.useContext(apiContexts.users);
     const [zip_state, zip_request, zip_pending] = useZipCodes_GetByAccess();
     const [buildings_state, buildings_request, buildings_pending] = useBuildings_GetByAccess();
     const [locations_state, locations_request, locations_pending] = useLocations_GetByAccess();
 
-    const [state, setState] = React.useState(initialState);
+    const [state, setState] = React.useState(INITIAL_STATE);
     const [errors, setErrors] = React.useState({});
     React.useEffect(() => {
         zip_request();
@@ -144,6 +120,7 @@ export const ManageUsersAddUserPage = ({history}) => {
     };
 
     const renderItem = ({Component, field, ...props}) => <Component
+        title={FIELD_TITLE[field] || '~~' + field}
         disabled={key_disabled[field]}
         onBlur={key_onBlur[field]}
         keyValue={key_keyValue[field]}
@@ -155,20 +132,18 @@ export const ManageUsersAddUserPage = ({history}) => {
         field={field}
         {...props}
     />;
-
-
     return <Grid container justify="center" spacing={8}>
         <Grid item xs={12} md={6} lg={4}>
             <form noValidate autoComplete="off" onSubmit={handleSubmit}>
                 <Typography style={{margin: 20}} variant="h6">Profile</Typography>
                 <FormControl fullWidth>
-                    {columnsProfile.map((props) => renderItem(props))}
+                    {FIELDS_PROPS_PROFILE.map((props) => renderItem(props))}
                 </FormControl>
 
 
                 <Typography style={{margin: 20}} variant="h6">Address</Typography>
                 <FormControl fullWidth>
-                    {columnsAddress.map((props) => renderItem(props))}
+                    {FIELDS_PROPS_ADDRESS.map((props) => renderItem(props))}
                 </FormControl>
                 <Button
                     disabled={!!haveError(errors) || isAnyRequestPending}

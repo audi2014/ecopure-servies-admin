@@ -16,7 +16,7 @@ import {ManagerAccessPage} from "./Pages/Managers/ManagerAccessPage";
 import {SignUp} from "./Pages/Auth/SignUp";
 import {SendResetPasswordEmail} from "./Pages/Auth/SendResetPasswordEmail";
 import {LoginWithNewPassword} from "./Pages/Auth/LoginWithNewPassword";
-import {ManageUsersPage} from "./Pages/ManageUsers/ManageUsersPage";
+import {ManageUsersPage} from "./Pages/ManageUsersTable/ManageUsersPage";
 import {ManageUsersAddUserPage} from "./Pages/ManageUsersAddUser/ManageUsersAddUserPage";
 import {ManageUsersBookUserPage} from "./Pages/ManageUsersBookUser/ManageUsersBookUserPage";
 import {ManageUsersEditUserPage} from "./Pages/ManageUsersEditUser/ManageUsersEditUserPage";

@@ -121,6 +121,5 @@ export const BookingStepper = ({
                 </div>
             </StepContent>
         </Step>)}
-
     </Stepper>
-}
+};

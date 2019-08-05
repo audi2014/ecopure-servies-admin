@@ -5,8 +5,8 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from "@material-ui/core/Typography/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {MUInputCheckboxes} from "../ManageUsersAddUser/components";
-import {USERS_FIELD_TITLE} from "./columns";
+import {MUInputCheckboxes} from "../BaseManageUsers/components";
+import {If} from "../../Base/If";
 
 const useStyles = makeStyles(theme => ({
 
@@ -18,20 +18,20 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const VisibleColumnsDialog = ({title = 'Columns', items = [], value = [], setValue, open, onClose}) => {
+export const VisibleColumnsDialog = ({title = 'Columns', item_title={}, items = [], value = [], setValue, open, onClose}) => {
     const classes = useStyles();
     return (
         <Dialog onClose={onClose} open={open}>
             <DialogTitle disableTypography>
-                {title ? <Typography variant="h6">{title}</Typography> : null}
+                <If value={title}>
+                    <Typography variant="h6">{title}</Typography>
+                </If>
                 <IconButton aria-label="close" onClick={onClose} className={classes.closeButton}>
                     <CloseIcon/>
                 </IconButton>
-
             </DialogTitle>
-
             <MUInputCheckboxes
-                item_title={USERS_FIELD_TITLE}
+                item_title={item_title}
                 field={title}
                 value={value}
                 items={items}

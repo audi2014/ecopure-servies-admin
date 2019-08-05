@@ -1,18 +1,27 @@
-
-export const emailAlreadyExist = 'This email already exist';
-export const zipCodeNotSupported = 'This Zip Code Does Not Supported by your Locations';
-
-
-export const RESOURCES = {
-    'EcoPure Offic': 'EcoPure Offic',
-    'Ecopure Van': 'Ecopure Van',
-    'Facebook': 'Facebook',
-    'Friend Recommended': 'Friend Recommended',
-    'Google Search': 'Google Search',
-    'In-Network': 'In-Network',
-    'Instagram': 'Instagram',
-    'no': 'no',
-    'Other': 'Other',
-    'Saw EcoPure Van': 'Saw EcoPure Van',
-    'Yelp': 'Yelp',
+export const INITIAL_STATE = {
+    email: '',
+    first_name: '',
+    last_name: '',
+    phone: '',
+    resource: '',
+    building_id: '',
+    location_id: '',
+    building_name: '',
+    address: '',
+    apt_num: '',
+    zip_code: '',
+    flight_stairs: '',
 };
+// const INITIAL_STATE = {
+//     email: 'audi2014@test1.gmail.com',
+//     first_name: 'first_name',
+//     last_name: 'last_name',
+//     phone: 'phone',
+//     resource: 'Other',
+//     building_id: 'other',
+//     building_name: 'building_name',
+//     address: 'address',
+//     apt_num: 'apt_num',
+//     zip_code: '07302',
+//     flight_stairs: '11_30',
+// };

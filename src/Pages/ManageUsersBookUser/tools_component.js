@@ -1,5 +1,5 @@
 import {makeRequestData} from "./tools";
-import {StepTitle_columns_INITIAL, StepTitle_columns_SHORT} from "./columns";
+import {StepTitle_columns_INITIAL, StepTitle_columns_SHORT} from "./constants";
 
 
 const validateStep = ({setErrors, state, user, errors, stepTitle, StepTitle_columns}) => {
@@ -38,7 +38,7 @@ export const makeValidateStepWithCardUpdating = ({
                 setErrors({
                     ...errors,
                     meeting_point_date: `Meeting Point Must be BEFORE Start clean date ${state.start_clean_date}`
-                })
+                });
                 return false;
             } else {
                 return true;
