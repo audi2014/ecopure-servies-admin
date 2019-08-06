@@ -120,9 +120,9 @@ export const FIELDS_DB_USER = [
     'address',
     'apt_num',
     //booking
+    'status',
     'frequency',
     'is830',
-    'status',
     'home_clng_prof_flag',
     'meeting_point_start',
     'meeting_point_end',

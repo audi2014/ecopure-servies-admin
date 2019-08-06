@@ -15,6 +15,9 @@ import LocationCity from '@material-ui/icons/LocationCity';
 import People from '@material-ui/icons/People';
 import VpnKey from '@material-ui/icons/VpnKey';
 import CreditCard from '@material-ui/icons/CreditCard';
+import MoreVert from '@material-ui/icons/MoreVert';
+import Mail from '@material-ui/icons/Mail';
+import Book from '@material-ui/icons/Book';
 
 export const LocationIcon = LocationOn;
 
@@ -32,6 +35,9 @@ export const BuildingIcon = LocationCity;
 export const UserIcon = People;
 export const AccessIcon = VpnKey;
 export const CreditCardIcon = CreditCard;
+export const MoreVertIcon = MoreVert;
+export const MailIcon = Mail;
+export const BookIcon = Book;
 
 
 export const Spinner = () => <CircularProgress size={20}/>;

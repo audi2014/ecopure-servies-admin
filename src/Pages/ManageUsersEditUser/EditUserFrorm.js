@@ -1,5 +1,5 @@
 import React from "react";
-import {FIELD_TITLE} from "../BaseManageUsers/constants";
+import {FIELD_TITLE, STATUS_KEY_VALUE} from "../BaseManageUsers/constants";
 import FormControl from "@material-ui/core/FormControl/FormControl";
 import {
     makeHandleBuildingIdChange, makeHandleDefaultChange,
@@ -9,7 +9,7 @@ import {
 import {
     FIELDS_PROPS_EDIT_USER_1,
     FIELDS_PROPS_EDIT_USER_2,
-    makeGetStateDiff,
+    makeGetStateDiff, makeHandleFrequencyChange, makeHandleStatusChange,
     propsToState,
     TAB_TITLE_PROPS
 } from "./tools";
@@ -65,6 +65,8 @@ export const EditUserFrorm = ({onSubmit, pending, ...props}) => {
     };
 
     const key_onChange = {
+        status: makeHandleStatusChange({state, errors, setState, setErrors}),
+        frequency: makeHandleFrequencyChange({state, errors, setState, setErrors}),
         zip_code: makeHandleZipCodeChange({state, errors, setState, setErrors}),
         building_id: makeHandleBuildingIdChange({
             state,

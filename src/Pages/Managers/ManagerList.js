@@ -38,7 +38,7 @@ export const ManagerList = ({items = [], selectedId, onSelect, onSubmitInvite, o
                              onSubmit={onSubmitDelete}
                              deleteId={deleteId}
                              onCancel={() => setDeleteId(null)}
-                             email={deletedManagerEmail}
+                             operationDescription={`Delete manager ${deletedManagerEmail}`}
                              confirmationWord={deletedManagerEmail}
         />
 

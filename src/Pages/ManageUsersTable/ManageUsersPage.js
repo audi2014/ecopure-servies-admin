@@ -6,38 +6,26 @@ import {VisibleColumnsDialog} from "./VisibleColumnsDialog";
 import Cookies from "js-cookie";
 import {COOKIE_KEY_USER_COLUMNS} from "../../constants/Enum";
 import {DialogLoading} from "./DialogLoading";
-import {FIELD_TITLE, FIELDS_DB_USER} from "../BaseManageUsers/constants";
-
-
-export const initialVisibleFields = Cookies.getJSON(COOKIE_KEY_USER_COLUMNS) || [
-    'email',
-    'first_name',
-    'last_name',
-    'building_name',
-    'address',
-    'apt_num',
-    'zip_code',
-];
-
-const table_columns_user_withRender = FIELDS_DB_USER.map(field => {
-    return {
-        title: FIELD_TITLE[field] || '~~' + field,
-        field,
-        render: ((row) => {
-            if (row[field] === true) return '1';
-            else if (row[field] === false) return '0';
-            else return '' + row[field];
-        })
-    }
-});
-const item_title = FIELDS_DB_USER.reduce((prev, field) => {
-    prev[field] = FIELD_TITLE[field] || '~~' + field;
-    return prev;
-}, {});
+import {FIELDS_DB_USER} from "../BaseManageUsers/constants";
+import {initialVisibleFields, TABLE_COLUMNS_USER, USER_FIELD_TITLE} from "./tools";
+import {ActionsMenu} from "./ActionsMenu";
 
 export const ManageUsersPage = ({history}) => {
+    const [selectedUserIds, setSelectedUserIds] = React.useState([]);
     const [dialogColumnsOpen, setDialogColumnsOpen] = React.useState(false);
     const [visibleColumnFields, setVisibleColumnFields] = React.useState(initialVisibleFields);
+
+    const handleEditClick = id => {
+        history.push(`/${RoutingConstants.manageUsers}/${id}/edit`);
+    };
+    const handleBookClick = id => {
+        history.push(`/${RoutingConstants.manageUsers}/${id}/book`)
+    };
+    const handleSendPassword = id => {
+        if (id && !users_SendSetUpPasswordById.pending) {
+            users_SendSetUpPasswordById.request(id)
+        }
+    };
 
     function handleColumnsChange(v) {
         Cookies.set(COOKIE_KEY_USER_COLUMNS, v);
@@ -53,8 +41,22 @@ export const ManageUsersPage = ({history}) => {
     }
 
 
-    const columns = table_columns_user_withRender
-        .filter(v => visibleColumnFields.includes(v.field));
+    const columns = [
+        {
+            title: 'Actions',
+            render: (rowData) => {
+                return <ActionsMenu
+                    id={rowData.id}
+                    onBook={handleBookClick}
+                    onEdit={handleEditClick}
+                    onSendPassword={handleSendPassword}
+                />
+
+            }
+        },
+        ...TABLE_COLUMNS_USER
+            .filter(v => visibleColumnFields.includes(v.field))
+    ];
 
     const onAddClick = () => history.push(`/${RoutingConstants.manageUsers}/add`);
     const {users_GetPage, users_SendSetUpPasswordById} = React.useContext(apiContexts.users);
@@ -88,7 +90,7 @@ export const ManageUsersPage = ({history}) => {
     return <React.Fragment>
         <DialogLoading open={!!users_SendSetUpPasswordById.pending} title={'Sending email...'}/>
         <VisibleColumnsDialog
-            item_title={item_title}
+            item_title={USER_FIELD_TITLE}
             open={dialogColumnsOpen}
             onClose={handleClose}
             value={visibleColumnFields}
@@ -98,6 +100,7 @@ export const ManageUsersPage = ({history}) => {
         <MaterialTable
 
             options={{
+                selection: true,
                 filtering: true,
                 pageSize: 20,
                 exportAllData: true,
@@ -117,29 +120,7 @@ export const ManageUsersPage = ({history}) => {
                     isFreeAction: true,
                     onClick: handleOpen
                 },
-                {
-                    icon: 'mail',
-                    tooltip: 'Send Reset Password',
-                    onClick: (event, {id}) => {
-                        if (id && !users_SendSetUpPasswordById.pending) {
-                            users_SendSetUpPasswordById.request(id)
-                        }
-                    }
-                },
-                {
-                    icon: 'edit',
-                    tooltip: 'View/Edit',
-                    onClick: (event, rowData) => {
-                        history.push(`/${RoutingConstants.manageUsers}/${rowData.id}/edit`)
-                    }
-                },
-                {
-                    icon: 'book',
-                    tooltip: 'Book',
-                    onClick: (event, rowData) => {
-                        history.push(`/${RoutingConstants.manageUsers}/${rowData.id}/book`)
-                    }
-                },
+
 
             ]}
             title="Manage Users"
@@ -147,6 +128,8 @@ export const ManageUsersPage = ({history}) => {
             data={query =>
                 request(query)
             }
+
+            onSelectionChange={(rows) => setSelectedUserIds(rows.map(r => r.id))}
         />
     </React.Fragment>
 

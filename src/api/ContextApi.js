@@ -118,6 +118,7 @@ const Domain_Requests = {
     },
     users: {
         users_editByIdAndData: (id, data) => _manageUsersApiRequest('edit_user', {id, ...data}),
+        users_deleteById: (id) => _manageUsersApiRequest('delete_user_by_id', {id}),
         users_cardGetById: (id) => _manageUsersApiRequest('user_card_get_by_id', {id}),
         users_RequireTokenById,
         users_SendSetUpPasswordById,

@@ -13,6 +13,8 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import {FIELD_TITLE, FIELDS_CARD} from "./constants";
 import {FIELDS_PROPS_CARD} from "./fields";
+import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import Typography from "@material-ui/core/Typography/Typography";
 
 export const ModalCard = ({onSubmit, pending, ...card}) => {
     const [open, setOpen] = React.useState(false);
@@ -40,9 +42,11 @@ export const ModalCard = ({onSubmit, pending, ...card}) => {
     };
     return (
         <React.Fragment>
-            <IconButton aria-label="close" onClick={handleOpen}>
-                <CreditCardIcon/>
-            </IconButton>
+            <Tooltip title={'Card'}>
+                <IconButton aria-label="close" onClick={handleOpen}>
+                    <CreditCardIcon/>
+                </IconButton>
+            </Tooltip>
             <Dialog
                 fullWidth
                 maxWidth={'sm'}

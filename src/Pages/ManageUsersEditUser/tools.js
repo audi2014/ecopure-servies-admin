@@ -1,4 +1,4 @@
-import {FIELDS_DB_USER} from "../BaseManageUsers/constants";
+import {FIELDS_DB_USER, STATUS_KEY_VALUE} from "../BaseManageUsers/constants";
 import {FIELDS_PROPS_ALL} from "../BaseManageUsers/fields";
 import {sqlStringToHtmlDate, sqlStringToHtmlDateTime} from "../BaseManageUsers/tools";
 
@@ -38,6 +38,30 @@ export const makeGetStateDiff =(initialState)=> (state) => {
         }
     });
     return changes;
+};
+
+export const makeHandleStatusChange = ({state, errors, setState, setErrors}) => (key, value) => {
+    if ('' + value !== '1') {
+        setState({...state, [key]: value, frequency: (STATUS_KEY_VALUE[value] || '')});
+        setErrors({...errors, [key]: '', frequency: ''});
+    } else {
+        setState({...state, [key]: value,frequency:''});
+        setErrors({...errors, [key]: '', frequency:''});
+    }
+};
+export const makeHandleFrequencyChange = ({state, errors, setState, setErrors}) => (key, value) => {
+    if (value === 'Inactive' || value === 'Post') {
+        setState({
+            ...state,
+            [key]: value,
+            status: (Object.keys(STATUS_KEY_VALUE)
+                .find(key => STATUS_KEY_VALUE[key] === value))
+        });
+        setErrors({...errors, [key]: '', status: ''});
+    } else {
+        setState({...state, [key]: value, status: '1'});
+        setErrors({...errors, [key]: '', status: ''});
+    }
 };
 
 

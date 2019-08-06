@@ -11,8 +11,8 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
 
 
-export const DeleteManagerDialog = ({className, onSubmit, email, confirmationWord, deleteId, onCancel}) => {
-    if (!confirmationWord) confirmationWord = 'DELETE';
+export const DeleteManagerDialog = ({ onSubmit, operationDescription, confirmationWord, deleteId, onCancel}) => {
+    if (!confirmationWord) confirmationWord = 'CONFIRM';
     const [pending, setPending] = useState(false);
     const [word, setWord] = useState('');
     const [error, setError] = useState(null);
@@ -31,7 +31,7 @@ export const DeleteManagerDialog = ({className, onSubmit, email, confirmationWor
                 setPending(false);
             })
         } else {
-            setError('type ' + confirmationWord + ' to confirm delete');
+            setError('type ' + confirmationWord + ' to confirm ' + operationDescription);
         }
     };
     const handleWordChange = e => {
@@ -40,20 +40,17 @@ export const DeleteManagerDialog = ({className, onSubmit, email, confirmationWor
         setWord(e.currentTarget.value.trim());
     };
     return <React.Fragment>
-
         <Dialog
             open={!!deleteId}
             onClose={handleClose}
-            aria-labelledby="Confirm Delete"
-            aria-describedby={`Confirm Delete manager ${email}`}
+            aria-labelledby="Confirm"
+            aria-describedby={operationDescription}
         >
-            <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+            <DialogTitle id="alert-dialog-title">{"Confirmation"}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Type `{confirmationWord}` to delete manager {email}
+                    Type `{confirmationWord}` to {operationDescription}
                 </DialogContentText>
-
-
                 <TextField
                     disabled={pending}
                     helperText={error}
@@ -66,9 +63,7 @@ export const DeleteManagerDialog = ({className, onSubmit, email, confirmationWor
                     label="confirm"
                     fullWidth
                 />
-
             </DialogContent>
-
             <DialogActions>
                 <Button
                     disabled={pending}
@@ -82,7 +77,7 @@ export const DeleteManagerDialog = ({className, onSubmit, email, confirmationWor
                     color="primary"
                     autoFocus
                 >
-                    Send
+                    Confirm
                 </Button>}
 
             </DialogActions>

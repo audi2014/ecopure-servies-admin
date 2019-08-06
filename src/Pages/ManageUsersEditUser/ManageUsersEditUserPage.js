@@ -1,6 +1,6 @@
 import React from "react";
 import {apiContexts} from "../../api/ContextApi";
-import {EditIcon, PreviewIcon, Spinner} from "../../icons";
+import {DeleteIcon, EditIcon, PreviewIcon, Spinner} from "../../icons";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import {If} from "../../Base/If";
@@ -9,12 +9,16 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import {UserView} from "../BaseManageUsers/UserView";
 import {useBuildings_GetByAccess, useLocations_GetByAccess, useZipCodes_GetByAccess} from "../tools_effect";
 import {EditUserFrorm} from "./EditUserFrorm";
+import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import {DeleteManagerDialog} from "../Managers/DeleteManagerDialog";
+import {RoutingConstants} from "../../constants/RoutingConstants";
 
 
-export const ManageUsersEditUserPage = ({match}) => {
+export const ManageUsersEditUserPage = ({match, history}) => {
     const user_id = +match.params.user_id;
     const [readOnly, setReadOnly] = React.useState(true);
     const {
+        users_deleteById,
         users_GetFirstById,
         users_RequireTokenById,
         users_cardGetById,
@@ -72,6 +76,18 @@ export const ManageUsersEditUserPage = ({match}) => {
         })
     };
 
+    const [deleteId, setDeleteId] = React.useState(null);
+    const handleSelectDeletedUserId = () => {
+        setDeleteId(user_id);
+    };
+    const handleCancelDelete = () => {
+        setDeleteId(null);
+    };
+    const handleSubmitDelete = (id) => {
+        return users_deleteById.request(user_id)
+            .then(() => history.push(`/${RoutingConstants.manageUsers}`))
+    };
+
 
     if (users_GetFirstById.pending) return <Spinner/>;
     else if (!user) return null;
@@ -82,17 +98,33 @@ export const ManageUsersEditUserPage = ({match}) => {
     );
     else return <Grid container justify="center" spacing={8}>
             <Grid item xs={12} md={8} lg={8}>
-                <Typography style={{margin: 20}} variant="h6">
+                <Typography style={{margin: 20, textDecoration: +user.status === 0 ? 'line-through' : null}}
+                            variant="h6">
                     <If value={readOnly}>
                         <span>User Info</span>
                         <span>Edit User</span>
                     </If>
-                    <IconButton onClick={handleToggleReadOnly}>
-                        <If value={readOnly}>
-                            <EditIcon/>
-                            <PreviewIcon/>
-                        </If>
-                    </IconButton>
+                    <Tooltip title={readOnly ? 'Edit' : 'View'}>
+                        <IconButton onClick={handleToggleReadOnly}>
+                            <If value={readOnly}>
+                                <EditIcon/>
+                                <PreviewIcon/>
+                            </If>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title={'Delete forever'}>
+                        <IconButton onClick={handleSelectDeletedUserId}>
+                            <DeleteIcon/>
+                        </IconButton>
+                    </Tooltip>
+                    <DeleteManagerDialog
+
+                        onSubmit={handleSubmitDelete}
+                        operationDescription={`Delete user ${user.email} ${user.first_name} ${user.last_name}`}
+                        confirmationWord={'DELETE'}
+                        deleteId={deleteId}
+                        onCancel={handleCancelDelete}
+                    />
                     <If value={card && !users_cardGetById.pending}>
                         <ModalCard
                             {...card}
