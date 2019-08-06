@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button/Button";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import IconButton from "@material-ui/core/IconButton/IconButton";
-import {EditIcon} from "../../icons";
+import {CreditCardIcon, EditIcon, PreviewIcon} from "../../icons";
 import {If} from "../../Base/If";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
@@ -40,12 +40,9 @@ export const ModalCard = ({onSubmit, pending, ...card}) => {
     };
     return (
         <React.Fragment>
-            <Button
-                onClick={handleOpen}
-                color="secondary"
-            >
-                Card
-            </Button>
+            <IconButton aria-label="close" onClick={handleOpen}>
+                <CreditCardIcon/>
+            </IconButton>
             <Dialog
                 fullWidth
                 maxWidth={'sm'}
@@ -55,7 +52,10 @@ export const ModalCard = ({onSubmit, pending, ...card}) => {
                 <DialogTitle id="alert-dialog-title">
                     Card Information
                     <IconButton aria-label="close" onClick={handleToggleReadOnly}>
-                        <EditIcon/>
+                        <If value={readOnly}>
+                            <EditIcon/>
+                            <PreviewIcon/>
+                        </If>
                     </IconButton>
                 </DialogTitle>
                 <If value={readOnly}>

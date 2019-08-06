@@ -1,6 +1,10 @@
 import {Footage_Title, Plan_Title, Stairs_Title, AddOn_Title} from "../../constants/Enum";
 import {generateRange, objectValuesToKeys} from "./tools";
-
+export const STATUS_KEY_VALUE = {
+    '0':'Inactive',
+    '1':'Active',
+    '2':'Post',
+};
 export const HOME_ACCESS_KEY_VALUE = {
     'Key with concierge': 'Key with concierge',
     'Other': 'Other',
@@ -47,24 +51,24 @@ export const MSG_EMAIL_ALREADY_EXIST = 'This email already exist';
 export const MSG_ZIPCODE_NOT_SUPPORTED = 'This Zip Code Does Not Supported by your Locations';
 
 export const FIELD_TITLE = {
-    id:'Id',
-    registration_date:'Registration date',
-    date_last_email:'Date last email',
-    validation_status:'Validation status',
-    email_counter:'Email counter',
-    last_adm_message_id:'Last adm message_id',
-    status:'Status',
-    num_adults:'Num adults',
-    num_pets:'Num pets',
-    active_message_to_adm:'Active message to adm',
-    email_notification:'Email notification',
-    daily_tuning:'Daily tuning',
-    building_flag:'Building flag',
-    zip_flag:'Zip flag',
-    pa_flag:'Pa flag',
-    home_clng_prof_flag:'Home clng prof flag',
-    flight_stairs:'Flight stairs',
-    token:'Session Token',
+    id: 'Id',
+    registration_date: 'Registration date',
+    date_last_email: 'Date last email',
+    validation_status: 'Validation status',
+    email_counter: 'Email counter',
+    last_adm_message_id: 'Last adm message_id',
+    status: 'Status',
+    num_adults: 'Num adults',
+    num_pets: 'Num pets',
+    active_message_to_adm: 'Active message to adm',
+    email_notification: 'Email notification',
+    daily_tuning: 'Daily tuning',
+    building_flag: 'Building flag',
+    zip_flag: 'Zip flag',
+    pa_flag: 'Pa flag',
+    home_clng_prof_flag: 'Have booking',
+    flight_stairs: 'Flight stairs',
+    token: 'Session Token',
 
     num_br: "Bedrooms",
     num_bth: 'Bathrooms',
@@ -106,46 +110,50 @@ export const FIELD_TITLE = {
 };
 
 export const FIELDS_DB_USER = [
-    'id',
+    //common
     'email',
+    'phone',
     'first_name',
     'last_name',
+    'zip_code',
     'building_name',
     'address',
     'apt_num',
-    'zip_code',
-    'registration_date',
+    //booking
+    'frequency',
+    'is830',
+    'status',
+    'home_clng_prof_flag',
     'meeting_point_start',
     'meeting_point_end',
-    'date_last_email',
     'start_clean_date',
+    'promo_code',
+    //home
+    'num_adults',
+    'num_kids',
+    'num_br',
+    'num_bth',
+    'num_pets',
+    'pet_type',
+    'flight_stairs',
+    'home_condition',
+    'home_access',
+    //extra
+    'special',
+    'resource',
+    'registration_date',
+    'id',
+    'token',
     'validation_status',
     'email_counter',
     'last_adm_message_id',
-    'is830',
-    'status',
-    'num_adults',
-    'num_kids',
-    'num_pets',
-    'num_br',
-    'num_bth',
     'active_message_to_adm',
     'email_notification',
+    'date_last_email',
     'daily_tuning',
     'building_flag',
     'zip_flag',
     'pa_flag',
-    'home_clng_prof_flag',
-    'phone',
-    'frequency',
-    'pet_type',
-    'home_condition',
-    'home_access',
-    'special',
-    'promo_code',
-    'resource',
-    'flight_stairs',
-    'token',
 ];
 
 
@@ -200,7 +208,16 @@ export const FIELDS_CARD = [
 // export const ADD_ON_KEY_VALUE = objectValuesToKeys(AddOn_Title);
 export const STAIRS_KEY_VALUE = objectValuesToKeys(Stairs_Title);
 export const FOOTAGE_KEY_VALUE = objectValuesToKeys(Footage_Title);
-export const PLAN_KEY_VALUE = objectValuesToKeys(Plan_Title);
+export const PLAN_KEY_VALUE = {
+    'Weekly': 'Weekly',
+    'Bi-Weekly': 'Bi-Weekly',
+    'Monthly': 'Monthly',
+    'Occasional': 'Occasional',
+    'Value Plan': 'Value Plan',
+    'Luxury Plan': 'Luxury Plan',
+    'Inactive': 'Inactive',
+    'Post': 'Post',
+};
 export const NUM_BR_KEY_VALUE = {'Studio': 'Studio', ...generateRange({count: 5})};
 export const NUM_BTH_KEY_VALUE = generateRange({count: 3});
 export const NUM_KIDS_KEY_VALUE = generateRange({start: 0, count: 5});
@@ -209,4 +226,14 @@ export const HOME_CONDITION_KEY_VALUE = {
     'Moderately Clean': 'Moderately Clean',
     'Very Cluttered': 'Very Cluttered',
 };
+export const NUM_ADULTS_KEY_VALUE = {'-1': '-1', '0': '0', '1': '1', '2': '2', '3': '3', '4': '4'};
+export const NUM_PETS_KEY_VALUE = {'-1': '-1', '0': '0', '1': '1', '2': '2', '3': '3', '4': '4'};
+
+export const EMAIL_NOTIFICATION_KEY_VALUE =  {'1': '1', '0': '0'};
+export const DAILY_TUNING_KEY_VALUE = {'-1': '-1', '0': '0'};
+export const BUILDING_FLAG_KEY_VALUE ={'1': '1', '0': '0'};
+export const ZIP_FLAG_KEY_VALUE = {'1': '1', '0': '0'};
+export const PA_FLAG_KEY_VALUE = {'1': '1', '0': '0'};
+export const HOME_CLNG_PROF_FLAG_KEY_VALUE = {'1': '1', '0': '0'};
+
 

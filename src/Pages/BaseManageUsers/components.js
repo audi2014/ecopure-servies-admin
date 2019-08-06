@@ -33,7 +33,7 @@ export const MUInputSelect = ({title, field, value, onChange, keyValue = {}, ...
     {...rest}
     label={title}
     setValue={value => onChange(field, value)}
-    value={value || ''}
+    value={value}
     keyValue={keyValue}
 />;
 

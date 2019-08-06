@@ -1,15 +1,71 @@
 import {
-    FIELDS_ADDRESS, FIELDS_CALL, FIELDS_CARD, FIELDS_HOME,
-    FIELDS_PROFILE, FIELDS_SERVICE, FIELDS_SPECIAL,
-    FOOTAGE_KEY_VALUE, HOME_ACCESS_KEY_VALUE, HOME_CONDITION_KEY_VALUE, IS830_KEY_VALUE,
+    BUILDING_FLAG_KEY_VALUE, DAILY_TUNING_KEY_VALUE,
+    EMAIL_NOTIFICATION_KEY_VALUE,
+    FIELDS_ADDRESS,
+    FIELDS_CALL,
+    FIELDS_CARD,
+    FIELDS_HOME,
+    FIELDS_PROFILE,
+    FIELDS_SERVICE,
+    FIELDS_SPECIAL,
+    FOOTAGE_KEY_VALUE,
+    HOME_ACCESS_KEY_VALUE,
+    HOME_CLNG_PROF_FLAG_KEY_VALUE,
+    HOME_CONDITION_KEY_VALUE,
+    IS830_KEY_VALUE,
     MEETING_POINT_TIME_KEY_VALUE,
+    NUM_ADULTS_KEY_VALUE,
     NUM_BR_KEY_VALUE,
-    NUM_BTH_KEY_VALUE, NUM_KIDS_KEY_VALUE, PLAN_KEY_VALUE,
+    NUM_BTH_KEY_VALUE,
+    NUM_KIDS_KEY_VALUE,
+    NUM_PETS_KEY_VALUE,
+    PLAN_KEY_VALUE,
     RESOURCES_KEY_VALUE,
-    STAIRS_KEY_VALUE, TIME_INITIAL_CLEANING_KEY_VALUE, TIME_ONGOING_CLEANING_KEY_VALUE
+    STAIRS_KEY_VALUE,
+    STATUS_KEY_VALUE,
+    TIME_INITIAL_CLEANING_KEY_VALUE,
+    TIME_ONGOING_CLEANING_KEY_VALUE,
+    ZIP_FLAG_KEY_VALUE
 } from "./constants";
 import {MUInputCheckboxes, MUInputSelect, MUInputText} from "./components";
+
+const makeDateTime = field => ({
+    Component: MUInputText,
+    field: field,
+    type: "datetime-local",
+    InputLabelProps: {shrink: true,},
+});
 export const FIELDS_PROPS_ALL = [
+    {Component: MUInputText, field: 'id', disabled: true,},
+    {Component: MUInputText, field: 'token', disabled: true,},
+    {Component: MUInputSelect, field: 'validation_status', keyValue: {'1': '1', '0': '0'}, disabled: true,},
+    {Component: MUInputText, field: 'email_counter', disabled: true},
+    {Component: MUInputText, field: 'last_adm_message_id', disabled: true,},
+    {
+        Component: MUInputSelect,
+        field: 'num_adults',
+        keyValue: NUM_ADULTS_KEY_VALUE,
+    },
+    {
+        Component: MUInputSelect,
+        field: 'num_pets',
+        keyValue: NUM_PETS_KEY_VALUE,
+    },
+    {Component: MUInputText, field: 'active_message_to_adm', disabled: true,},
+    {Component: MUInputSelect, field: 'email_notification', keyValue: EMAIL_NOTIFICATION_KEY_VALUE,},
+    {Component: MUInputSelect, field: 'daily_tuning', keyValue: DAILY_TUNING_KEY_VALUE},
+    {Component: MUInputSelect, field: 'building_flag', keyValue: BUILDING_FLAG_KEY_VALUE, disabled: true,},
+    {Component: MUInputSelect, field: 'zip_flag', keyValue: ZIP_FLAG_KEY_VALUE, disabled: true,},
+    {Component: MUInputSelect, field: 'pa_flag', keyValue: HOME_CLNG_PROF_FLAG_KEY_VALUE, disabled: true,},
+    {Component: MUInputText, field: 'home_clng_prof_flag', keyValue: HOME_CLNG_PROF_FLAG_KEY_VALUE, disabled: true,},
+    makeDateTime('registration_date'),
+    makeDateTime('date_last_email'),
+    makeDateTime('meeting_point_start'),
+    makeDateTime('meeting_point_end'),
+    {Component: MUInputSelect, field: 'status', keyValue: STATUS_KEY_VALUE,},
+    {Component: MUInputText, field: 'promo_code',},
+
+
     {Component: MUInputText, field: 'email', type: 'email', required: true,},
     {Component: MUInputText, field: 'first_name', required: true,},
     {Component: MUInputText, field: 'last_name', required: true,},
@@ -21,25 +77,9 @@ export const FIELDS_PROPS_ALL = [
     {Component: MUInputText, field: 'building_name',},
     {Component: MUInputText, field: 'address',},
     {Component: MUInputText, field: 'apt_num',},
-    {
-        Component: MUInputSelect,
-        title: 'How many stairs in climb?',
-        field: 'flight_stairs',
-        keyValue: STAIRS_KEY_VALUE
-    },
-
-    {
-        Component: MUInputSelect,
-        field: 'num_br',
-        required: true,
-        keyValue: NUM_BR_KEY_VALUE
-    },
-    {
-        Component: MUInputSelect,
-        field: 'num_bth',
-        required: true,
-        keyValue: NUM_BTH_KEY_VALUE
-    },
+    {Component: MUInputSelect, field: 'flight_stairs', keyValue: STAIRS_KEY_VALUE},
+    {Component: MUInputSelect, field: 'num_br', required: true, keyValue: NUM_BR_KEY_VALUE},
+    {Component: MUInputSelect, field: 'num_bth', required: true, keyValue: NUM_BTH_KEY_VALUE},
     {
         Component: MUInputSelect,
         field: 'footage',

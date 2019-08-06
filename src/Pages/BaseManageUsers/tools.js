@@ -28,6 +28,15 @@ export const objectValuesToKeys = (obj) => Object.keys(obj)
         return prev;
     }, {});
 
+export function sqlStringToHtmlDateTime(v) {
+    const unix = Date.parse(v);
+    const date = new Date(unix);
+    return unix ? jsDate2Sql(date) + 'T' + jsTime2Sql(date) : '';
+}
+export function sqlStringToHtmlDate(v) {
+    const unix = Date.parse(v);
+    return unix ? jsDate2Sql(new Date(unix)) : '';
+}
 
 function jsDate2Sql(date) {
     return date.getFullYear()
@@ -38,10 +47,10 @@ function jsDate2Sql(date) {
 }
 
 function jsTime2Sql(date) {
-    return date.getHours()
-        + '-'
+    return ("0" + date.getHours()).slice(-2)
+        + ':'
         + ("0" + date.getMinutes()).slice(-2)
-        + '-'
+        + ':'
         + ("0" + date.getSeconds()).slice(-2);
 }
 

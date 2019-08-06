@@ -66,7 +66,7 @@ export const Select = ({
     select
     label={label || ''}
     className={className}
-    value={value || ''}
+    value={(value || value === 0 || value === '0') ? value : ''}
     onChange={e => setValue(e.target.value)}
     SelectProps={{
         MenuProps: {

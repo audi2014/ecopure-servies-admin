@@ -11,6 +11,7 @@ export const INITIAL_STATE = {
     apt_num: '',
     zip_code: '',
     flight_stairs: '',
+    pet_type:'',
 };
 // const INITIAL_STATE = {
 //     email: 'audi2014@test1.gmail.com',

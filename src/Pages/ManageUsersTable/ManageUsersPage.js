@@ -128,7 +128,7 @@ export const ManageUsersPage = ({history}) => {
                 },
                 {
                     icon: 'edit',
-                    tooltip: 'Edit User',
+                    tooltip: 'View/Edit',
                     onClick: (event, rowData) => {
                         history.push(`/${RoutingConstants.manageUsers}/${rowData.id}/edit`)
                     }
