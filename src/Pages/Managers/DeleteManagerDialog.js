@@ -31,7 +31,7 @@ export const DeleteManagerDialog = ({ onSubmit, operationDescription, confirmati
                 setPending(false);
             })
         } else {
-            setError('type ' + confirmationWord + ' to confirm ' + operationDescription);
+            setError('type ' + confirmationWord + ' to confirm');
         }
     };
     const handleWordChange = e => {
@@ -49,7 +49,7 @@ export const DeleteManagerDialog = ({ onSubmit, operationDescription, confirmati
             <DialogTitle id="alert-dialog-title">{"Confirmation"}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Type `{confirmationWord}` to {operationDescription}
+                    Type `{confirmationWord}` to {operationDescription.split('\n').map((text,key)=><React.Fragment key={key}><br/>{text}</React.Fragment>)}
                 </DialogContentText>
                 <TextField
                     disabled={pending}

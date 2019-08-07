@@ -12,9 +12,11 @@ import {EditUserFrorm} from "./EditUserFrorm";
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import {DeleteManagerDialog} from "../Managers/DeleteManagerDialog";
 import {RoutingConstants} from "../../constants/RoutingConstants";
+import {useAuthEffect} from "../../Auth/AuthController";
 
 
 export const ManageUsersEditUserPage = ({match, history}) => {
+    const auth = useAuthEffect();
     const user_id = +match.params.user_id;
     const [readOnly, setReadOnly] = React.useState(true);
     const {
@@ -112,11 +114,13 @@ export const ManageUsersEditUserPage = ({match, history}) => {
                             </If>
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title={'Delete forever'}>
-                        <IconButton onClick={handleSelectDeletedUserId}>
-                            <DeleteIcon/>
-                        </IconButton>
-                    </Tooltip>
+                    <If value={auth.haveAdminAccess()}>
+                        <Tooltip title={'Delete forever'}>
+                            <IconButton onClick={handleSelectDeletedUserId}>
+                                <DeleteIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </If>
                     <DeleteManagerDialog
 
                         onSubmit={handleSubmitDelete}

@@ -30,3 +30,54 @@ export const USER_FIELD_TITLE = FIELDS_DB_USER.reduce((prev, field) => {
     prev[field] = FIELD_TITLE[field] || '~~' + field;
     return prev;
 }, {});
+
+export const makeTableActions = ({onAddClick, handleDeleteClick, handleOpen, auth}) => {
+    const actions = [
+        {
+            icon: 'add',
+            tooltip: 'Add User',
+            isFreeAction: true,
+            onClick: onAddClick
+        },
+        {
+            icon: 'view_column',
+            tooltip: 'Columns',
+            isFreeAction: true,
+            onClick: handleOpen
+        },
+    ];
+    if (auth.haveAdminAccess()) {
+        actions.push({
+            icon: 'delete',
+            tooltip: 'Delete selected Users',
+            onClick: handleDeleteClick
+        })
+    }
+    return actions;
+};
+
+
+export const makeTableRequest = (request) => query => request({
+    filters: (query.filters || []).reduce(function (prev, {column, value}) {
+        prev[column.field] = value;
+        return prev;
+    }, {}),
+    orderBy: (query.orderBy && query.orderBy.field) || '',
+    orderDirection: query.orderDirection || 'asc',
+    search: query.search || '',
+    offset: (query.page) * query.pageSize,
+    count: query.pageSize,
+}).then(result => {
+    if (!result) {
+        return {
+            data: [],
+            page: 0,
+            totalCount: 0,
+        };
+    }
+    return {
+        data: result.items,
+        page: Math.ceil((result.offset) / query.pageSize),
+        totalCount: result.total,
+    }
+});
