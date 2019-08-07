@@ -16,43 +16,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
-export const LocationsEditZipCodes = ({location_id}) => {
-
-    const {
-        locationsZipcode_GetByLocationId,
-        locationsZipcode_InsertByData,
-        locationsZipcode_DeleteById
-    } = React.useContext(apiContexts.locationsZipcode);
-    const items = locationsZipcode_GetByLocationId.state || [];
-
-    React.useEffect(() => {
-        locationsZipcode_GetByLocationId.request(location_id);
-    }, [location_id]);
-
-
-    const insertByZipCode = (zipcode) => locationsZipcode_InsertByData.request({location_id, zipcode})
-        .then(r => {
-            locationsZipcode_GetByLocationId.request(location_id);
-        });
-    const deleteById = (id) => locationsZipcode_DeleteById.request(id)
-        .then(r => {
-            locationsZipcode_GetByLocationId.request(location_id);
-        });
-
-    if (
-        !!locationsZipcode_GetByLocationId.pending
-        || !!locationsZipcode_InsertByData.pending
-        || !!locationsZipcode_DeleteById.pending
-    ) return <Spinner/>;
-    return <View
-        items={items}
-        location_id={location_id}
-        deleteById={deleteById}
-        insertByZipCode={insertByZipCode}
-    />
-};
-const View = ({items, insertByZipCode, deleteById}) => {
+export const LocationsEditZipCodes = ({items, insertByZipCode, deleteById, disabled}) => {
     const [newZipCode, setNewZipCode] = useState('');
     const classes = useStyles();
 
@@ -64,7 +28,7 @@ const View = ({items, insertByZipCode, deleteById}) => {
             {items.map(item => <Chip
                 key={item.zipcode}
                 color="primary"
-                onDelete={() => deleteById(item.id)}
+                onDelete={disabled ? null : () => deleteById(item.id)}
                 variant="outlined"
                 label={item.zipcode}
             />)}
@@ -82,6 +46,7 @@ const View = ({items, insertByZipCode, deleteById}) => {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <SubmitButton
+                                    disabled={disabled}
                                     type={'button'}
                                     onClick={() => insertByZipCode(newZipCode).then(r => setNewZipCode(''))}
                                 />

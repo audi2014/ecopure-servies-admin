@@ -5,7 +5,17 @@ import {BaseItem} from "./BaseItem";
 import {makeEditableData} from "./tools";
 
 
-export const BaseItemUpdationPage = ({renderTitle, data, reload, onSave, children, editableTemplate = null, ...rest}) => {
+export const BaseItemUpdationPage = ({
+                                         disabled,
+                                         renderTitle,
+                                         data,
+                                         reload,
+                                         onSave,
+                                         onDelete,
+                                         children,
+                                         editableTemplate = null,
+                                         ...rest
+                                     }) => {
 
     if (data === null) return <Spinner/>;
     if (data === false) return <Typography style={{margin: 20}} variant="h6">Item not found</Typography>;
@@ -21,6 +31,8 @@ export const BaseItemUpdationPage = ({renderTitle, data, reload, onSave, childre
         }
     );
     return <BaseItem
+        onDelete={onDelete}
+        disabled={disabled}
         key={`${id}`}
         editableData={editableData}
         editableTemplate={editableTemplate}

@@ -18,6 +18,8 @@ import CreditCard from '@material-ui/icons/CreditCard';
 import MoreVert from '@material-ui/icons/MoreVert';
 import Mail from '@material-ui/icons/Mail';
 import Book from '@material-ui/icons/Book';
+import WifiOff from '@material-ui/icons/WifiOff';
+import Wifi from '@material-ui/icons/Wifi';
 
 export const LocationIcon = LocationOn;
 
@@ -25,6 +27,8 @@ export const AddOnIcon = Extension;
 export const RegularIcon = DomainDisabled;
 export const CustomModelIcon = Domain;
 export const DeleteIcon = Delete;
+export const DisableIcon = WifiOff;
+export const EnableIcon = Wifi;
 export const AddIcon = Add;
 export const EditIcon = Edit;
 export const PreviewIcon = Pageview;

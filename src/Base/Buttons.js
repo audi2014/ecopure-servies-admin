@@ -1,10 +1,10 @@
 import Button from "@material-ui/core/Button/Button";
 import React from "react";
-import {CheckCircleOutline, Done, HighlightOff, History} from '@material-ui/icons';
+import { Done, HighlightOff, History} from '@material-ui/icons';
 import {makeStyles} from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
 import {RoutingConstants} from "../constants/RoutingConstants";
-import {DeleteIcon, GoBack} from "../icons";
+import {DeleteIcon, DisableIcon, EnableIcon, GoBack} from "../icons";
 import Fab from "@material-ui/core/Fab/Fab";
 
 const useStyles = makeStyles(theme => ({
@@ -39,7 +39,19 @@ export const ButtonCreate = ({disabled, onClick}) => {
         <Done className={classes.rightIcon}/>
     </Button>
 };
-export const ButtonReset = ({disabled, onClick}) => {
+export const ButtonDeleteForewer = ({disabled,onClick}) => {
+    const classes = useStyles();
+    return <Button
+        disabled={disabled}
+        className={classes.button}
+        variant="contained"
+        color="default"
+        onClick={onClick}>
+        Delete forever
+        <DeleteIcon color="secondary"/>
+    </Button>;
+}
+export const ButtonReset = ({disabled, onClick, }) => {
     const classes = useStyles();
     return <Button
         disabled={disabled}
@@ -52,19 +64,20 @@ export const ButtonReset = ({disabled, onClick}) => {
     </Button>
 };
 
-export const ButtonToggleDisable = ({onClick, isDisabled}) => {
+export const ButtonToggleDisable = ({onClick, isDisabled, disabled}) => {
     const classes = useStyles();
     return <Button variant="contained" color="default" className={classes.button}
+                   disabled={disabled}
                    onClick={onClick}>
         {
             isDisabled
-                ? 'Restore'
-                : 'Delete'
+                ? 'Reactivate'
+                : 'Deactivate'
         }
         {
             isDisabled
-                ? <CheckCircleOutline className={classes.rightIcon}/>
-                : <DeleteIcon color="secondary" className={classes.rightIcon}/>
+                ? <EnableIcon className={classes.rightIcon}/>
+                : <DisableIcon color="secondary" className={classes.rightIcon}/>
         }
     </Button>
 };

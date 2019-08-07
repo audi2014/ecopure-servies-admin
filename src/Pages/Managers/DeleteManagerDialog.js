@@ -11,7 +11,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
 
 
-export const DeleteManagerDialog = ({ onSubmit, operationDescription, confirmationWord, deleteId, onCancel}) => {
+export const DeleteManagerDialog = ({ title='Confirmation', onSubmit, operationDescription, confirmationWord, deleteId, onCancel, ...reset}) => {
     if (!confirmationWord) confirmationWord = 'CONFIRM';
     const [pending, setPending] = useState(false);
     const [word, setWord] = useState('');
@@ -41,15 +41,16 @@ export const DeleteManagerDialog = ({ onSubmit, operationDescription, confirmati
     };
     return <React.Fragment>
         <Dialog
+            {...reset}
             open={!!deleteId}
             onClose={handleClose}
             aria-labelledby="Confirm"
             aria-describedby={operationDescription}
         >
-            <DialogTitle id="alert-dialog-title">{"Confirmation"}</DialogTitle>
+            <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Type `{confirmationWord}` to {operationDescription.split('\n').map((text,key)=><React.Fragment key={key}><br/>{text}</React.Fragment>)}
+                    Type `{confirmationWord}` to: {operationDescription.split('\n').map((text,key)=><React.Fragment key={key}><br/>{text}</React.Fragment>)}
                 </DialogContentText>
                 <TextField
                     disabled={pending}

@@ -142,7 +142,7 @@ export const AuthController = {
 };
 /**
  *
- * @return AuthController
+ * @return {AuthController}
  */
 export const useAuthEffect = () => {
     const [auth, setAuth] = React.useState(AuthController);

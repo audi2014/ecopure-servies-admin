@@ -12,6 +12,9 @@ const users_RequireTokenById = (id) =>
 const users_SendSetUpPasswordById = id =>
     _manageUsersApiRequest('send_setup_password', {id});
 
+const users_deactivateInZipCodes = (zip_codes) => _manageUsersApiRequest('deactivate_users_in_zip_codes', {zip_codes});
+const users_activateInZipCodes = (zip_codes) => _manageUsersApiRequest('activate_users_in_zip_codes', {zip_codes});
+
 
 const Domain_Requests = {
     locations: {
@@ -23,6 +26,7 @@ const Domain_Requests = {
         locations_GetById: (id) => _get(`/locations/${id}`),
         locations_UpdateById: (id, data) => _put(`/locations/${id}`, data),
         locations_InsertByData: (data) => _post(`/locations`, data),
+        locations_DeleteForewerById: (id) => _delete(`/locations/${id}`),
     },
     locationsZipcode: {
         locationsZipCode_GetAll: () => _get(`/locations-zipcode`),
@@ -117,6 +121,8 @@ const Domain_Requests = {
         }),
     },
     users: {
+        users_deactivateInZipCodes,
+        users_activateInZipCodes,
         users_editByIdAndData: (id, data) => _manageUsersApiRequest('edit_user', {id, ...data}),
         users_deleteById: (id) => _manageUsersApiRequest('delete_user_by_id', {id}),
         users_deleteBulk: (ids) => _manageUsersApiRequest('delete_user_bulk', {ids}),

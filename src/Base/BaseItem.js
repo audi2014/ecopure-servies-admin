@@ -2,7 +2,13 @@ import {useState} from "react";
 import Typography from "@material-ui/core/Typography/Typography";
 import {EditableFields} from "./EditableFields";
 import Grid from "@material-ui/core/Grid/Grid";
-import {ButtonCreate, ButtonReset, ButtonSave, ButtonToggleDisable} from "./Buttons";
+import {
+    ButtonCreate,
+    ButtonDeleteForewer,
+    ButtonReset,
+    ButtonSave,
+    ButtonToggleDisable
+} from "./Buttons";
 import React from "react";
 import {makeStyles} from "@material-ui/core";
 
@@ -28,7 +34,18 @@ const getDiff = (source, state) => {
     return count > 0 ? v : null;
 };
 
-export const BaseItem = ({editableData, editableTemplate, title, isDisabled, children, onToggleDisabled, onSave, isAdd}) => {
+export const BaseItem = ({
+                             disabled,
+                             editableData,
+                             editableTemplate,
+                             title,
+                             isDisabled,
+                             children,
+                             onToggleDisabled,
+                             onDelete,
+                             onSave,
+                             isAdd
+                         }) => {
     const classes = useStyles();
     const [state, setState] = useState({...editableData});
     const handleKeyValueChange = (key, value) => {
@@ -51,19 +68,24 @@ export const BaseItem = ({editableData, editableTemplate, title, isDisabled, chi
             direction="row"
         >
             {
+                onDelete
+                    ? <ButtonDeleteForewer onClick={onDelete} disabled={disabled}/>
+                    : null
+            }
+            {
                 onToggleDisabled
-                    ? <ButtonToggleDisable onClick={onToggleDisabled} isDisabled={isDisabled}/>
+                    ? <ButtonToggleDisable onClick={onToggleDisabled} isDisabled={isDisabled} disabled={disabled}/>
                     : null
             }
             {
                 !isAdd
-                    ? <ButtonReset disabled={!diff} onClick={handleReset}/>
+                    ? <ButtonReset disabled={!diff || disabled} onClick={handleReset}/>
                     : null
             }
             {
                 isAdd
                     ? <ButtonCreate disabled={false} onClick={handleSave}/>
-                    : <ButtonSave disabled={!diff} onClick={handleSave}/>
+                    : <ButtonSave disabled={!diff || disabled} onClick={handleSave}/>
             }
         </Grid>
         {
