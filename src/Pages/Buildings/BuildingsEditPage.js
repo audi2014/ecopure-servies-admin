@@ -52,8 +52,6 @@ export const BuildingsEditPage = ({
                 ) {
                     pushError('please select Pricing Model of Building', 'buildings_UpdateById',)
                 } else {
-                    buildings_UpdateById.request(building_id, data);
-                    buildings_UpdateById.request(building_id, data);
                     return buildings_UpdateById.request(building_id, data)
                         .then(r => {
                             if (r) {
