@@ -6,6 +6,8 @@ import {makeBuildingsEditableTemplate} from "./makeBuildingsEditableTemplate";
 import {AuthController} from "../../Auth/AuthController";
 import {useLocations_GetByAccess} from "../tools_effect";
 import {AccessDenied} from "../Auth/AccessDenied";
+import {RoutingConstants} from "../../constants/RoutingConstants";
+import {DeleteManagerDialog} from "../Managers/DeleteManagerDialog";
 
 
 export const BuildingsEditPage = ({
@@ -16,7 +18,7 @@ export const BuildingsEditPage = ({
     const building_id = +match.params.id;
     const [locations_state, locations_request] = useLocations_GetByAccess();
     const {pushError} = React.useContext(apiContexts.error);
-    const {buildingsLarge_GetById, buildings_UpdateById} = React.useContext(apiContexts.buildings);
+    const {buildingsLarge_GetById, buildings_UpdateById, buildings_DeleteForeverById} = React.useContext(apiContexts.buildings);
     const {inNetworkModel_GetAll} = React.useContext(apiContexts.inNetworkModel);
     const models = inNetworkModel_GetAll.state || [];
 
@@ -27,19 +29,43 @@ export const BuildingsEditPage = ({
         inNetworkModel_GetAll.request();
     }, [building_id]);
 
+    const [deleteId, setDeleteId] = React.useState(false);
+    const building_handleOpenDeleteConfirmation = () => {
+        setDeleteId(building_id);
+    };
+    const building_handleCancelDelete = () => {
+        setDeleteId(null);
+    };
+
+    const building_handleSubmitDelete = () => {
+        return buildings_DeleteForeverById.request(building_id)
+            .then(r => r ? history.push(`/${RoutingConstants.buildings}`) : null)
+        ;
+    };
 
     //ACCESS
     if (buildingsLarge_GetById.state && !AuthController.haveLocationAccess(buildingsLarge_GetById.state.location_id)) {
         return <AccessDenied history={history}/>
     }
-
-    return <BaseItemUpdationPage
+    return <React.Fragment>
+        <DeleteManagerDialog
+            title={'Confirm permanently delete'}
+            fullWidth
+            maxWidth={'sm'}
+            onSubmit={building_handleSubmitDelete}
+            operationDescription={`Delete building ${buildingsLarge_GetById.state ? buildingsLarge_GetById.state.name : 'Error'} FOREVER?`}
+            confirmationWord={'DELETE'}
+            deleteId={deleteId}
+            onCancel={building_handleCancelDelete}
+        />
+        <BaseItemUpdationPage
         reload={() => buildingsLarge_GetById.request(building_id)}
         editableTemplate={makeBuildingsEditableTemplate(locations_state, models)}
         renderTitle={b => <span style={{textDecoration: b.deleted_at ? 'line-through' : undefined}}>
             {getBuildingNameByLocationsArray(b, models, title)}
             </span>
         }
+        onDelete={building_handleOpenDeleteConfirmation}
         data={buildingsLarge_GetById.state}
         onSave={
             (data) => {
@@ -62,4 +88,5 @@ export const BuildingsEditPage = ({
             }
         }
     />
+    </React.Fragment>
 };

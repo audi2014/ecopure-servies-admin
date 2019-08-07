@@ -39,7 +39,7 @@ export const ButtonCreate = ({disabled, onClick}) => {
         <Done className={classes.rightIcon}/>
     </Button>
 };
-export const ButtonDeleteForewer = ({disabled,onClick}) => {
+export const ButtonDeleteForever = ({disabled,onClick}) => {
     const classes = useStyles();
     return <Button
         disabled={disabled}

@@ -4,7 +4,7 @@ import {EditableFields} from "./EditableFields";
 import Grid from "@material-ui/core/Grid/Grid";
 import {
     ButtonCreate,
-    ButtonDeleteForewer,
+    ButtonDeleteForever,
     ButtonReset,
     ButtonSave,
     ButtonToggleDisable
@@ -69,7 +69,7 @@ export const BaseItem = ({
         >
             {
                 onDelete
-                    ? <ButtonDeleteForewer onClick={onDelete} disabled={disabled}/>
+                    ? <ButtonDeleteForever onClick={onDelete} disabled={disabled}/>
                     : null
             }
             {

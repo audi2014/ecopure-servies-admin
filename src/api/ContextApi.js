@@ -26,7 +26,7 @@ const Domain_Requests = {
         locations_GetById: (id) => _get(`/locations/${id}`),
         locations_UpdateById: (id, data) => _put(`/locations/${id}`, data),
         locations_InsertByData: (data) => _post(`/locations`, data),
-        locations_DeleteForewerById: (id) => _delete(`/locations/${id}`),
+        locations_DeleteForeverById: (id) => _delete(`/locations/${id}`),
     },
     locationsZipcode: {
         locationsZipCode_GetAll: () => _get(`/locations-zipcode`),
@@ -45,6 +45,7 @@ const Domain_Requests = {
         buildingsLarge_GetByLocationId: (location_id) => _get(`/buildings-large?location_id=${location_id}&is_deleted=null&is_null_custom_pricing_model_id=null`),
         buildings_UpdateById: (id, data) => _put(`/buildings/${id}`, data),
         buildings_InsertByData: (data) => _post(`/buildings`, data),
+        buildings_DeleteForeverById: (id) => _delete(`/buildings/${id}`),
     },
     outOfNetworkFootage: {
         outOfNetworkFootage_GetByLocationId: (location_id) => _get('/pricing/out-of-network/footage?location_id=' + location_id),
@@ -125,6 +126,7 @@ const Domain_Requests = {
         users_activateInZipCodes,
         users_editByIdAndData: (id, data) => _manageUsersApiRequest('edit_user', {id, ...data}),
         users_deleteById: (id) => _manageUsersApiRequest('delete_user_by_id', {id}),
+        users_deleteByZipCodes: (zip_codes) => _manageUsersApiRequest('delete_user_by_zip_codes', {zip_codes}),
         users_deleteBulk: (ids) => _manageUsersApiRequest('delete_user_bulk', {ids}),
         users_cardGetById: (id) => _manageUsersApiRequest('user_card_get_by_id', {id}),
         users_RequireTokenById,

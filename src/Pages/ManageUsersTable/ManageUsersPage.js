@@ -16,18 +16,44 @@ import Typography from "@material-ui/core/Typography/Typography";
 export const ManageUsersPage = ({history}) => {
     const auth = useAuthEffect();
     const [deleteRows, setDeleteRows] = React.useState([]);
-    const {users_GetPage, users_SendSetUpPasswordById, users_deleteBulk} = React.useContext(apiContexts.users);
+    const {
+        users_GetPage,
+        users_SendSetUpPasswordById,
+        users_deleteBulk,
+        users_editByIdAndData
+    } = React.useContext(apiContexts.users);
     const [dialogColumnsOpen, setDialogColumnsOpen] = React.useState(false);
     const [visibleColumnFields, setVisibleColumnFields] = React.useState(initialVisibleFields);
     const tableRef = React.useRef(null);
 
 
-    const handleDeleteClick = (e, rowOrRows) => {
+    const handleDeactivateBulkClick = (e, rowOrRows) => {
+        let ids = [];
+        if (Array.isArray(rowOrRows)) {
+            ids = rowOrRows.map(item => item.id);
+        } else if (rowOrRows && typeof rowOrRows === 'object' && rowOrRows.id) {
+            ids = [rowOrRows.id];
+        } else {
+            return;
+        }
+        Promise.all(ids.map(id => users_editByIdAndData.request(id, {status: '0'})))
+            .then(() => tableRef.current.onQueryChange());
+
+    };
+    const handleDeleteBulkClick = (e, rowOrRows) => {
         if (Array.isArray(rowOrRows)) {
             setDeleteRows(rowOrRows);
         } else if (rowOrRows && typeof rowOrRows === 'object' && rowOrRows.id) {
             setDeleteRows([rowOrRows]);
         }
+    };
+    const handleDeleteId = (id) => {
+        const users = (users_GetPage.state && users_GetPage.state.items || []).filter(u => +u.id === +id);
+        setDeleteRows(users);
+    };
+    const handleDeactivateById = (id) => {
+        return users_editByIdAndData.request(id, {status: '0'})
+            .then(() => tableRef.current.onQueryChange());
     };
     const handleSubmitDelete = (rows) => {
         return users_deleteBulk.request(rows.map(r => r.id))
@@ -74,6 +100,8 @@ export const ManageUsersPage = ({history}) => {
                     onBook={handleBookClick}
                     onEdit={handleEditClick}
                     onSendPassword={handleSendPassword}
+                    onDelete={handleDeleteId}
+                    onDeactivate={handleDeactivateById}
                 />
             }
         },
@@ -84,10 +112,10 @@ export const ManageUsersPage = ({history}) => {
     const onAddClick = () => history.push(`/${RoutingConstants.manageUsers}/add`);
     const request = makeTableRequest(users_GetPage.request);
 
-    const actions = makeTableActions({onAddClick,handleDeleteClick, handleOpen ,auth})
+    const actions = makeTableActions({onAddClick, handleDeleteBulkClick, handleOpen, auth,handleDeactivateBulkClick})
 
     const options = {
-        debounceInterval:250,
+        debounceInterval: 250,
         selection: true,
         filtering: true,
         pageSize: 20,

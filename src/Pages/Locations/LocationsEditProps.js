@@ -16,7 +16,7 @@ export const LocationsEditProps = ({location_id, history}) => {
     const {
         locations_GetById,
         locations_UpdateById,
-        locations_DeleteForewerById,
+        locations_DeleteForeverById,
     } = React.useContext(apiContexts.locations);
     const {
         locationsZipcode_GetByLocationId,
@@ -26,6 +26,7 @@ export const LocationsEditProps = ({location_id, history}) => {
 
     const {
         users_deactivateInZipCodes,
+        users_deleteByZipCodes,
     } = React.useContext(apiContexts.users);
 
 
@@ -43,7 +44,8 @@ export const LocationsEditProps = ({location_id, history}) => {
         || !!locationsZipcode_DeleteById.pending
         || !!users_deactivateInZipCodes.pending
         || !!locations_UpdateById.pending
-        || !!locations_DeleteForewerById.pending
+        || !!locations_DeleteForeverById.pending
+        || !!users_deleteByZipCodes.pending
     ;
 
     const zipCode_insertByZipCode = (zipcode) => locationsZipcode_InsertByData.request({location_id, zipcode})
@@ -65,16 +67,26 @@ export const LocationsEditProps = ({location_id, history}) => {
     const location_handleOpenDeleteConfirmation = () => {
         setDeleteId(location_id);
     };
+
+    /*
+    * Конфликт ТЗ
+    * #30 когда удаляются локейшены или зип код локейшена то рассылаются уведомления всем пользователям соответствующих удаляемым зип кодам
+    * #12 "- If location is deleted, all buildings, pricing models and users associated with this location are deleted as well.
+    * */
     const location_handleSubmitDelete = () => {
-        if (zipCodes.length) {
-            users_deactivateInZipCodes
-                .request(zipCodes)
-        }
-        return locations_DeleteForewerById
-            .request(location_id)
+        // users_deactivateInZipCodes
+        //     .request(zipCodes);
+
+        return new Promise(resolve => {
+            if (zipCodes.length) {
+                resolve(users_deleteByZipCodes.request(zipCodes))
+            } else {
+                resolve(true)
+            }
+        }).then(() => locations_DeleteForeverById.request(location_id))
             .then(r => setDeleteId(null) || r)
             .then(r => r ? history.push(`/${RoutingConstants.locations}`) : null)
-        ;
+            ;
 
     };
     const location_handleCancelDelete = () => {
@@ -100,7 +112,7 @@ export const LocationsEditProps = ({location_id, history}) => {
             fullWidth
             maxWidth={'sm'}
             onSubmit={location_handleSubmitDelete}
-            operationDescription={`Delete location ${locations_GetById.state ? locations_GetById.state.name : 'Error'} FOREVER`}
+            operationDescription={`Delete location ${locations_GetById.state ? locations_GetById.state.name : 'Error'} FOREVER? All buildings, pricing models and users associated with this location will be deleted as well.`}
             confirmationWord={'DELETE'}
             deleteId={deleteId}
             onCancel={location_handleCancelDelete}
@@ -121,7 +133,7 @@ export const LocationsEditProps = ({location_id, history}) => {
             insertByZipCode={zipCode_insertByZipCode}
         />
         <UserActivationBar
-            onClose={()=>users_deactivateInZipCodes.setState(null)}
+            onClose={() => users_deactivateInZipCodes.setState(null)}
             data={users_deactivateInZipCodes.state}
             pending={users_deactivateInZipCodes.pending}
         />

@@ -31,7 +31,7 @@ export const USER_FIELD_TITLE = FIELDS_DB_USER.reduce((prev, field) => {
     return prev;
 }, {});
 
-export const makeTableActions = ({onAddClick, handleDeleteClick, handleOpen, auth}) => {
+export const makeTableActions = ({onAddClick, handleDeleteBulkClick, handleOpen, auth,handleDeactivateBulkClick}) => {
     const actions = [
         {
             icon: 'add',
@@ -45,13 +45,18 @@ export const makeTableActions = ({onAddClick, handleDeleteClick, handleOpen, aut
             isFreeAction: true,
             onClick: handleOpen
         },
+        {
+            icon: 'wifi_off',
+            tooltip: 'Deactivate selected Users',
+            onClick: handleDeactivateBulkClick
+        }
     ];
     if (auth.haveAdminAccess()) {
         actions.push({
             icon: 'delete',
             tooltip: 'Delete selected Users',
-            onClick: handleDeleteClick
-        })
+            onClick: handleDeleteBulkClick
+        });
     }
     return actions;
 };

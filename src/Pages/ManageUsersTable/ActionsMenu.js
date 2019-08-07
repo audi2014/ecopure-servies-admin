@@ -3,9 +3,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
-import {BookIcon, EditIcon, MailIcon, MoreVertIcon} from "../../icons";
+import {BookIcon, DeleteIcon, DisableIcon, EditIcon, MailIcon, MoreVertIcon} from "../../icons";
+import {If} from "../../Base/If";
 
-export const ActionsMenu = ({id, onEdit, onSendPassword, onBook}) => {
+export const ActionsMenu = ({id, onEdit, onSendPassword, onBook, onDeactivate, onDelete}) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -54,6 +55,21 @@ export const ActionsMenu = ({id, onEdit, onSendPassword, onBook}) => {
                     </ListItemIcon>
                     Send Reset Password
                 </MenuItem>
+                <MenuItem onClick={() => handleClose() || onDeactivate(id)}>
+                    <ListItemIcon>
+                        <DisableIcon/>
+                    </ListItemIcon>
+                    Deactivate
+                </MenuItem>
+                <If value={!!onDelete}>
+                    <MenuItem onClick={() => handleClose() || onDelete(id)}>
+                        <ListItemIcon>
+                            <DeleteIcon/>
+                        </ListItemIcon>
+                        Delete Forever
+                    </MenuItem>
+                </If>
+
             </Menu>
         </div>
     );
