@@ -20,7 +20,7 @@ export const useHideDeactivated = (items, itemsTitle) => {
                     Didn’t find what you’re looking for? Some {itemsTitle} may be hidden because they are deactivated. Show full list of {itemsTitle}
                 </span>
                     <span>
-                    Hide deleted {itemsTitle}
+                    Hide deactivated {itemsTitle}
                 </span>
                 </If>
             </Button>
