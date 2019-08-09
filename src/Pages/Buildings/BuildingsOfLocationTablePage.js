@@ -9,6 +9,7 @@ import {
     mapColumnsKeyValueProp
 } from "./../tools";
 import {apiContexts} from "../../api/ContextApi";
+import {predicateHideDeleted} from "../../Base/hideDeactivated";
 
 
 const columns = buildColumnsFrom([
@@ -38,7 +39,7 @@ export const BuildingsOfLocationTablePage = ({match, history, location}) => {
         isLoading={!!buildingsLarge_GetByLocationId.pending}
         renderTitle={() => getBuildingsTableNameByLocation(location, title)}
         onAddClick={() => history.push(`/${RoutingConstants.buildings}/add`)}
-        staticData={state_buildings}
+        staticData={state_buildings.filter(predicateHideDeleted)}
         onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}/edit`)}
         columns={columns}
 

@@ -7,8 +7,11 @@ import {
     mapColumnsKeyValueProp
 } from "./../tools";
 import {Select} from "../../Base/BaseInput";
-import {apiContexts} from "../../api/ContextApi";
 import {useBuildings_GetByAccess, useLocations_GetByAccess} from "../tools_effect";
+import Button from "@material-ui/core/Button/Button";
+import {If} from "../../Base/If";
+import FormControl from "@material-ui/core/FormControl/FormControl";
+import {useHideDeactivated} from "../../Base/hideDeactivated";
 
 
 const columns = buildColumnsFrom([
@@ -37,31 +40,34 @@ export const BuildingsTablePage = ({match, history}) => {
         prev[curr.id] = curr.name || 'Location #' + curr.id;
         return prev;
     }, {'all': 'All Locations'});
-    const staticData = filtered_location_id === 'all'
-        ? buildings_state
-        : buildings_state.filter(b => +b.location_id === +filtered_location_id);
+    const predicateLocationId = b => filtered_location_id === 'all' || +b.location_id === +filtered_location_id;
+    const items_filtered_by_location = buildings_state.filter(predicateLocationId);
+    const [items_filtered_by_deactivated, renderToggleHide] = useHideDeactivated(items_filtered_by_location, title);
 
     React.useEffect(() => {
         buildings_request();
         locations_request();
     }, []);
 
-    return <BaseTablePage
-        onAddClick={() => history.push(`/${RoutingConstants.buildings}/add`)}
-        renderTitle={() => <React.Fragment>
-            {title}
-            <Select
-                label={'Filter Locations'}
-                errorValue={false}
-                keyValue={LocationsId_Name}
-                value={filtered_location_id}
-                setValue={setLocationId}
-                style={{width: 200, marginLeft: 10}}/>
-        </React.Fragment>}
-        staticData={staticData}
-        isLoading={!!buildings_pending}
-        onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}/edit`)}
-        columns={columns}
+    return <React.Fragment>
+        <BaseTablePage
+            onAddClick={() => history.push(`/${RoutingConstants.buildings}/add`)}
+            renderTitle={() => <React.Fragment>
+                {title}
+                <Select
+                    label={'Filter Locations'}
+                    errorValue={false}
+                    keyValue={LocationsId_Name}
+                    value={filtered_location_id}
+                    setValue={setLocationId}
+                    style={{width: 200, marginLeft: 10}}/>
+            </React.Fragment>}
+            staticData={items_filtered_by_deactivated}
+            isLoading={!!buildings_pending}
+            onRowClick={(event, rowData, togglePanel) => history.push(`/${RoutingConstants.buildings}/${rowData.id}/edit`)}
+            columns={columns}
 
-    />
+        />
+        {renderToggleHide()}
+    </React.Fragment>
 };

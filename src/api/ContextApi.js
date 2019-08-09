@@ -36,10 +36,10 @@ const Domain_Requests = {
         locationsZipcode_InsertByData: (data) => _post(`/locations-zipcode`, data),
     },
     buildings: {
-        buildingsLarge_GetAll: () => _get(`/buildings-large?is_null_custom_pricing_model_id=null`),
+        buildingsLarge_GetAll: () => _get(`/buildings-large?is_null_custom_pricing_model_id=null&is_deleted=null`),
         buildingsLarge_GetByLocationIds: (ids = []) => {
             if (!ids.length) return new Promise(resolve => resolve([]));
-            return _get(`/buildings-large?is_null_custom_pricing_model_id=null&location_ids=${ids.join(',')}`)
+            return _get(`/buildings-large?is_null_custom_pricing_model_id=null&is_deleted=null&location_ids=${ids.join(',')}`)
         },
         buildingsLarge_GetById: (id) => _get(`/buildings-large/${id}`),
         buildingsLarge_GetByLocationId: (location_id) => _get(`/buildings-large?location_id=${location_id}&is_deleted=null&is_null_custom_pricing_model_id=null`),
