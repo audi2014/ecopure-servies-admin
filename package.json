@@ -22,7 +22,7 @@
     "start:development": "env-cmd -e development react-scripts start",
     "start:sandbox": "env-cmd -e sandbox react-scripts start",
     "start:production": "env-cmd -e production react-scripts start",
-    "start:local": "env-cmd -e local react-scripts start",
+    "start:local-production": "env-cmd -e local-production react-scripts start",
     "build": "./build-remote-copy.sh",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

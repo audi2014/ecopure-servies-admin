@@ -53,7 +53,7 @@ export const makeValidateStepWithCardUpdating = ({
             const body = makeRequestData(state);
             const bodyFiltered = getRequestStateKeys(isInitialBooking)
                 .reduce((prev, key) => {
-                    prev[key] = body[key];
+                    prev[key] = body[key] || '';
                     return prev;
                 }, {});
 
@@ -72,15 +72,45 @@ export const makeValidateStepWithCardUpdating = ({
     }
 };
 
+const REQUEST_KEYS_INITIAL = [
+    "num_br",
+    "num_bth",
+    "footage",
+    "home_condition",
+    "num_kids",
+    "pet_type",
+    "start_clean_date",
+    "is830",
+    "frequency",
+    "home_access",
+    "time_initial_cleaning",
+    "time_ongoing_cleaning",
+    "add-on-services",
+    "special",
+    "promo-code",
+    "meeting_point_start",
+    "meeting_point_end",
+    "cc_number",
+    "exp_date",
+    "cvv",
+    "cc_zip",
+];
+const REQUEST_KEYS_SHORT = [
+    "start_clean_date",
+    "is830",
+    "frequency",
+    "home_access",
+    "time_initial_cleaning",
+    "time_ongoing_cleaning",
+    "add-on-services",
+    "special",
+    "promo-code",
+    "cc_number",
+    "exp_date",
+    "cvv",
+    "cc_zip",
+];
 
-const getAllStepFields = step => Object.keys(step)
-    .reduce((prev, stepTitle) => {
-        step[stepTitle]
-            .forEach(({field}) => prev.push(field));
-        return prev;
-    }, []);
-const BOOKING_PREVIEW_KEYS_INITIAL = getAllStepFields(StepTitle_columns_INITIAL);
-const BOOKING_PREVIEW_KEYS_SHORT = getAllStepFields(StepTitle_columns_SHORT);
-export const getRequestStateKeys = (isInitialBooking) => isInitialBooking ? BOOKING_PREVIEW_KEYS_INITIAL : BOOKING_PREVIEW_KEYS_SHORT;
+export const getRequestStateKeys = (isInitialBooking) => isInitialBooking ? REQUEST_KEYS_INITIAL : REQUEST_KEYS_SHORT;
 
 

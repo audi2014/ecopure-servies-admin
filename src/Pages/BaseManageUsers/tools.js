@@ -33,9 +33,10 @@ export function sqlStringToHtmlDateTime(v) {
     const date = new Date(unix);
     return unix ? jsDate2Sql(date) + 'T' + jsTime2Sql(date) : '';
 }
+
 export function sqlStringToHtmlDate(v) {
-    const unix = Date.parse(v);
-    return unix ? jsDate2Sql(new Date(unix)) : '';
+    const date = dateStringToDateWithTimezoneFix(v);
+    return date ? jsDate2Sql(date) : '';
 }
 
 function jsDate2Sql(date) {
@@ -54,12 +55,10 @@ function jsTime2Sql(date) {
         + ("0" + date.getSeconds()).slice(-2);
 }
 
-export function htmlDateString2Sql(v) {
-    const time = Date.parse(v);
-    return time ? jsDate2Sql(new Date(time)) : '';
-}
-
-export function htmlDateTimeString2Sql(v) {
-    const time = Date.parse(v);
-    return time ? jsDate2Sql(new Date(time)) + ' ' + jsTime2Sql(new Date(time)) : '';
-}
+const dateStringToDateWithTimezoneFix = (str) => {
+    const unixms = Date.parse(str);
+    if (!unixms) return null;
+    const date = new Date(unixms);
+    const offsetms = date.getTimezoneOffset() * 60 * 1000;
+    return new Date(date.getTime() + offsetms);
+};
